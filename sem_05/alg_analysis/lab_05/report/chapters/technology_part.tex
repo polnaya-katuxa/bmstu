@@ -1,0 +1,245 @@
+\chapter{Технологическая часть}
+
+В данном разделе будет представлена реализация алгоритмов конвейерных вычислений, токенизации, применения правил к токенам и сортировки токенов по алфавиту. Также будут указаны обязательные требования к ПО, средства реализации алгоритмов и результаты проведённого тестирования программы.
+
+\section{Требования к ПО}
+Для программы выделен перечень требований:
+\begin{itemize}
+	\item программой предоставляется интерфейс в формате меню с возможностью ввода пути к директории с обрабатываемыми документами и количества обрабатываемых документов (заявок);
+	\item программой обрабатываются документы, находящиеся в указанной директории;
+	\item программой принимается путь к конфигурационному файлу с правилами токенизации в качестве параметра при запуске;
+	\item программой предлагается повторно выполнить ввод при невалидном выборе пункта меню;
+	\item программой производится аварийное завершение с текстом об ошибке при иных ошибках;
+	\item программой проводится модульное тестирование функций реализации конвейерных вычислений, токенизации, применения правил к токенам;
+	\item программой производятся замеры времени выполнения;
+	\item программой сортируются токены по возрастанию в лексикографическом порядке;
+	\item программой допускается только ввод файлов, текст которых содержит буквы русского алфавита, арабские цифры и знаки препинания.
+\end{itemize}
+
+\section{Средства реализации}
+Для реализации данной работы был выбран язык программирования Go \cite{web_item2}. Выбор обусловлен наличием в $Go$ библиотек для тестирования ПО и проведения замеров времени выполнения в микросекундах \cite{web_item12}\cite{web_item15}, а также необходимых для реализации поставленных цели и задач средств. Также, $Go$ предоставляет возможность реализовывать потокобезопасные очереди и конвейеры при использовании каналов типа $chan$ и параллельных операций $goroutine$, которые могут выполняться независимо от функции, в которой они запущены \cite{item16}. В качестве среды разработки была выбрана $GoLand$ \cite{web_item4}.
+
+\section{Реализация алгоритмов}
+В листингах \ref{code:lin1}~--~\ref{code:goroutines2} представлены реализации функций линейных и параллельных конвейерных вычислений, и подпрограмм токенизации и применения правил к токенам в листингах \ref{code:token}~--~\ref{code:rule2}. 
+
+\begin{code}
+\caption{Листинг функции линейных конвейерных вычислений (начало)}
+\label{code:lin1}
+\begin{minted}{go}
+func LaunchLinear(docs []document.Document, rules []rule.Rule) 
+[]document.Document {
+	result := make([]document.Document, 0)
+	tasks := make([]Task, 0)
+
+	for _, v := range docs {
+		input := make(chan Task, len(docs))
+		tokenized := make(chan Task, len(docs))
+		ruled := make(chan Task, len(docs))
+		sorted := make(chan Task, len(docs))
+
+		task := Task{
+			Doc:       v,
+			TimeFirst: time.Now(),
+		}
+		input <- task
+		close(input)
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг функции линейных конвейерных вычислений (окончание листинга \ref{code:lin1})}
+\label{code:lin2}
+\begin{minted}{go}
+		tokeniser(input, tokenized)
+		ruler(tokenized, ruled, rules)
+		sorter(ruled, sorted)
+
+		res := <-sorted
+
+		result = append(result, res.Doc)
+		tasks = append(tasks, res)
+	}
+
+	LogTasks(tasks)
+
+	return result
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции параллельных конвейерных вычислений (начало)}
+\label{code:par1}
+\begin{minted}{go}
+func LaunchParallel(docs []document.Document, rules []rule.Rule) 
+[]document.Document {
+	result := make([]document.Document, 0)
+	tasks := make([]Task, 0)
+	input := make(chan Task, len(docs))
+	tokenized := make(chan Task, len(docs))
+	ruled := make(chan Task, len(docs))
+	sorted := make(chan Task, len(docs))
+	for _, v := range docs {
+		task := Task{
+			Doc:       v,
+			TimeFirst: time.Now(),
+		}
+		input <- task
+	}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции параллельных конвейерных вычислений (окончание листинга \ref{code:par1})}
+\label{code:par2}
+\begin{minted}{go}
+	go tokeniser(input, tokenized)
+	go ruler(tokenized, ruled, rules)
+	go sorter(ruled, sorted)
+	close(input)
+
+	for v := range sorted {
+		result = append(result, v.Doc)
+		tasks = append(tasks, v)
+	}
+	LogTasks(tasks)
+	return result
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функций-обработчиков (начало)}
+\label{code:goroutines1}
+\begin{minted}{go}
+func tokeniser(in <-chan Task, out chan<- Task) {
+	for v := range in {
+		v.TimeStart1 = time.Now()
+		v.Doc.Tokenize()
+		v.TimeEnd1 = time.Now()
+		out <- v
+	}
+	close(out)
+}
+
+func ruler(in <-chan Task, out chan<- Task, rules []rule.Rule) {
+	for v := range in {
+		v.TimeStart2 = time.Now()
+		v.Doc.ApplyRules(rules)
+		v.TimeEnd2 = time.Now()
+		out <- v
+	}
+	close(out)
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функций-обработчиков (окончание листинга \ref{code:goroutines1})}
+\label{code:goroutines2}
+\begin{minted}{go}
+func sorter(in <-chan Task, out chan<- Task) {
+	for v := range in {
+		v.TimeStart3 = time.Now()
+		sort.Strings(v.Doc.Tokens)
+		v.TimeEnd3 = time.Now()
+		out <- v
+	}
+	close(out)
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции токенизации}
+\label{code:token}
+\begin{minted}{go}
+func (doc *Document) Tokenize() {
+	doc.Tokens = nil
+	re := regexp.MustCompile(`([^0-9а-яА-ЯЁё-])`) //|[+]
+	splitted := re.Split(doc.Text, -1)
+	for i := range splitted {
+		if splitted[i] != "" && splitted[i] != "-" {
+			doc.Tokens = append(doc.Tokens,
+			strings.ToLower(splitted[i]))
+		}
+	}
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции применения правил к токенам (начало)}
+\label{code:rule1}
+\begin{minted}{go}
+func (doc *Document) ApplyRules(rules []rule.Rule) error {
+	if len(doc.Tokens) == 0 {
+		return errors.New("no tokens")
+	}
+	if len(rules) == 0 {
+		return nil
+	}
+	ruled := make([]string, 0)
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции применения правил к токенам (окончание листинга \ref{code:rule1})}
+\label{code:rule2}
+\begin{minted}{go}
+	for i := 0; i < len(doc.Tokens); i++ {
+		ruleInd := -1
+
+		for j := 0; j < len(rules) && ruleInd < 0; j++ {
+			ruleInd = j
+
+			for k := 0; k < len(rules[j].Option) &&
+			ruleInd >= 0; k++ {
+				if i+k >= len(doc.Tokens) ||
+				doc.Tokens[i+k] != rules[j].Option[k] {
+					ruleInd = -1
+				}
+			}
+		}
+
+		if ruleInd < 0 {
+			ruled = append(ruled, doc.Tokens[i])
+		} else {
+			ruled = append(ruled, rules[ruleInd].Standard)
+			i += len(rules[ruleInd].Option) - 1
+		}
+	}
+
+	doc.Tokens = ruled
+
+	return nil
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\section{Тестирование}
+В таблице \ref{table:tests} представлены тесты для конвейерной обработки данных. Все тесты пройдены успешно. Документы для тестов либо составлялись вручную, либо копировались со случайных сайтов.
+
+\begin{table}[H]
+  \caption{\label{table:tests} Тесты для конвейерной обработки данных}
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      % &  &  & \\
+      %\cline{3-5}
+      № &  Количество заявок & Результат \\ \hline
+      1 & 0 & Сообщение об ошибке \\ \hline
+      2 & -3 & Сообщение об ошибке \\ \hline
+      3 & 1 & Журналирование конвейерных вычислений \\ \hline
+      4 & 3 & Журналирование конвейерных вычислений  \\ \hline
+      5 & 8 & Журналирование конвейерных вычислений\\ \hline
+      6 & 10 & Журналирование конвейерных вычислений \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\newpage

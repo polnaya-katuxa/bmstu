@@ -1,0 +1,23 @@
+# gnuplot -persist time.gpi
+reset
+
+set terminal pdf # size 1920, 1080 font "Helvetica,24"
+
+set output "data/time_new.pdf"
+
+set size ratio 0.5625
+
+set xlabel "Длина строки, символы"
+
+set ylabel "Время, нс"
+
+set logscale y 10
+
+set xrange [0:50]
+
+set grid
+
+# set key top left
+plot "data/time0.txt" with lp title 'Левенштейн' lw 2, \
+     "data/time1.txt" with lp title 'Дамерау-Левенштейн' lw 2, \
+     "data/time3.txt" with lp title 'Рекурсивный Дамерау-Левенштейн c кэшем' lw 2,

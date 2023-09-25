@@ -1,0 +1,283 @@
+\chapter{Технологическая часть}
+
+В данном разделе будет представлена реализация алгоритма обратной трассировки лучей. Также будут указаны требования к ПО, средства реализации алгоритмов и результаты проведённого тестирования программы.
+
+\section{Требования к ПО}
+Для автоматизации работы программы и использования сценария необходимо реализовать передачу в программу аргументов командной строки и их распознавание самой программой. Были предусмотрены следующие флаги:
+
+\begin{itemize}
+	\item флаг «-d» - передача в программу значения глубины рекурсивных погружений, за флагом следует положительное целочисленное значение;
+	\item флаги «-i», «-o» - передача в программу имени входного или выходного файла, за флагом следует строка с именем файла;
+	\item флаг «-n» - передача в программу количества выделяемых потоков;
+	\item флаг «-m» - указание программе о том, что проводятся замеры, при этом обязательно наличие параметров «-d» и «-i», а «-o» становится необязательным, так как полученное изображение в данном случае не используется;
+	\item при стандартном запуске программы, когда важно полученное изображение, передача параметров «-d», «-i» и «-o» является обязательной, в случае отсутствия обязательных параметров программой генерируется ненулевой код возврата.
+\end{itemize}
+
+\section{Средства реализации}
+В качестве языка программирования для реализации данной лабораторной работы был выбран язык программирования $C++$ \cite{web_item4}. Данный выбор обусловлен наличием инструментов для реализации многопоточности. Также был выбран фреймворк $Qt$ \cite{web_item2} в связи с наличием необходимых для работы с компьютерной графикой библиотек и встроенных средств. Для передачи сведений об объектах сцены в программу использовались файлы с расширением $txt$, $obj$, $mtl$, как наиболее широко применяемые в сфере компьютерной графики.
+
+\section{Реализация алгоритмов}
+В листингах \ref{code:ray1}~--~\ref{code:ray3} представлена реализация алгоритма обратной трассировки лучей. В листингах \ref{code:ray_one}~--~\ref{code:ray_many3} представлены реализации однопоточного и многопоточного синтеза изображения.
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма обратной трассировки лучей (начало)}
+\label{code:ray1}
+\begin{minted}{c++}
+QColor Drawing::castRay(const sight_t& sight, const int& depth)
+{
+    double intensity = 0.0;
+    double specIntensity = 0.0;
+    std::tuple<bool, double, QVector3D, int> res = sceneIntersect(sight);
+    if (depth > this->depth || !std::get<0>(res))
+        return QColor(0, 0, 0);
+
+    double t = std::get<1>(res);
+    QVector3D norm = std::get<2>(res);
+    int closest = std::get<3>(res);
+    QVector3D cam = sight.cam;
+    QVector3D dir = sight.dir;
+    QVector3D intersection = cam + dir * t;
+
+    QVector3D reflectDir = reflect(dir, norm).normalized();
+    sight_t sightRefl = {
+        .cam = intersection,
+        .dir = reflectDir
+    };
+    QColor reflectCol = castRay(sightRefl, depth + 1);
+    
+    QVector3D refractDir = refract(dir, norm, 
+    figures[closest]->getMaterial().getRefCoef()).normalized();
+    sight_t sightRefr = {
+        .cam = intersection,
+        .dir = refractDir
+    };
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма обратной трассировки лучей (продолжение листинга \ref{code:ray1})}
+\label{code:ray2}
+\begin{minted}{c++}
+    QColor refractCol = castRay(sightRefr, depth + 1);
+    
+    for (size_t k = 0; k < lightSources.size(); k++) {
+        QVector3D light = intersection - lightSources[k].getPos();
+        light = light.normalized();
+        double t1 = 0.0;
+        bool flag = false;
+        sight_t sightLight = {
+            .cam = lightSources[k].getPos(),
+            .dir = light
+        };
+        std::tuple<bool, double, QVector3D> res1 = 
+        figures[closest]->rayIntersection(sightLight, lightSources);
+
+        t1 = std::get<1>(res1);
+        std::tuple<bool, double, QVector3D, int> res2 = 
+        sceneIntersect(sightLight);
+        if (std::get<1>(res2) < t1)
+            flag = true;
+
+        if (!flag) {
+            intensity += lightSources[k].getIntensity() * 
+            std::max(0.f, QVector3D::dotProduct(norm, (-1) * light));
+
+            QVector3D mirrored = reflect(light, norm);
+            mirrored = mirrored.normalized();
+            double angle = QVector3D::dotProduct(mirrored, dir * (-1));
+            specIntensity += powf(std::max(0.0, angle), 
+            figures[closest]->getMaterial().getSpecCoef()) * 
+            lightSources[k].getIntensity();
+        }
+    }
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма обратной трассировки лучей (окончание листинга \ref{code:ray2})}
+\label{code:ray3}
+\begin{minted}{c++}
+    QColor diffColor = figures[closest]->getMaterial().getDiffColor();
+    QColor specColor = figures[closest]->getMaterial().getSpecColor();
+
+    QColor color = getColor(intensity, specIntensity, 
+    figures[closest]->getMaterial().getAlbedo(), diffColor, 
+    specColor, reflectCol, refractCol);
+
+    return color;
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации однопоточного синтеза изображения}
+\label{code:ray_one}
+\begin{minted}{c++}
+std::shared_ptr<QImage> Drawing::drawFigures()
+{
+    std::shared_ptr<QImage> image = std::make_shared<QImage>(canvasWidth, 
+    canvasHeight, QImage::Format_RGB32);
+    image->fill(Qt::black);
+    QVector3D cam = QVector3D(0, 0, 3000);
+    sight_t sight = {
+        .cam = cam 
+    };
+    
+    for (int y = 0; y < canvasHeight; y++)
+        for (int x = 0; x < canvasWidth; x++) {
+            QVector3D pix = QVector3D(x, y, 200);
+            QVector3D dir = (pix - cam).normalized();
+            sight.dir = dir;
+            QColor refColor = castRay(sight, 0);
+            image->setPixel(x, y, qRgb(refColor.red(), refColor.green(),
+            refColor.blue()));
+        }
+
+    return image;
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг функции реализации многопоточного синтеза изображения (начало)}
+\label{code:ray_many1}
+\begin{minted}{c++}
+std::shared_ptr<QImage> Drawing::drawFigures(int numThreads)
+{
+    std::shared_ptr<QImage> image = std::make_shared<QImage>(canvasWidth,
+    canvasHeight, QImage::Format_RGB32);
+    image->fill(Qt::black);
+
+    QVector3D cam = QVector3D(0, 0, 3000);
+    sight_t sight = {
+        .cam = cam
+    };
+
+    int size = canvasHeight * canvasWidth;
+    int cur = 0;
+    int win = (size / numThreads);
+    std::vector<QVector3D> limits;
+    limits.push_back(QVector3D(0,0,200));
+
+    std::vector<std::vector<uint>> colors(canvasHeight,
+    std::vector<uint>(canvasWidth, 0));
+
+    if (numThreads == 0) {
+        limits.push_back(QVector3D(canvasWidth, canvasHeight, 200));
+        drawThread(limits[0], limits[1], sight, colors);
+    } else {
+        for (int i = 0; i < numThreads; i++) {
+            cur += win;
+            limits.push_back(QVector3D(cur % canvasWidth,
+            cur / canvasWidth, 200));
+        }
+        limits[limits.size() - 1] = QVector3D(canvasWidth,
+        canvasHeight, 200);
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации многопоточного синтеза изображения (продолжение листинга \ref{code:ray_many1})}
+\label{code:ray_many2}
+\begin{minted}{c++}
+        std::vector<std::thread> threads(numThreads);
+        
+        for (int i = 0; i < numThreads; i++) {
+            threads[i] = std::thread(&Drawing::drawThread, this,
+            std::ref(limits[i]), std::ref(limits[i+1]), sight, 
+            std::ref(colors));
+        }
+        for (int i = 0; i < numThreads; i++)
+            threads[i].join();
+    }
+
+    for (int y = 0; y < canvasHeight; y++) {
+        for (int x = 0; x < canvasWidth; x++) {
+            image->setPixel(x, y, colors[y][x]);
+        }
+    }
+
+    return image;
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации многопоточного синтеза изображения (продолжение листинга \ref{code:ray_many2})}
+\label{code:ray_many3}
+\begin{minted}{c++}
+void Drawing::drawThread(QVector3D &preLim, QVector3D &lim, sight_t sight,
+std::vector<std::vector<uint>> &image)
+{
+    int startX = 0, endX = canvasWidth;
+
+    int startY = preLim.y();
+    if (preLim.x() != 0 || preLim.y() != 0) {
+        startY--;
+    }
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации многопоточного синтеза изображения (продолжение листинга \ref{code:ray_many3})}
+\label{code:ray_many4}
+\begin{minted}{c++}
+    for (int y = startY; y < lim.y(); y++)
+    {
+        if (y == startY) {
+            startX = preLim.x();
+        } else {
+            startX = 0;
+        }
+
+        if (y == lim.y() - 1) {
+            endX = lim.x();
+        } else {
+            endX = canvasWidth;
+        }
+
+        for (int x = startX; x < endX; x++) {
+            QVector3D pix = QVector3D(x, y, 200);
+            QVector3D dir = (pix - sight.cam).normalized();
+
+            sight.dir = dir;
+            QColor refColor = castRay(sight, 0);
+            image[y][x] = qRgb(refColor.red(), refColor.green(),
+            refColor.blue());
+        }
+    }
+}
+\end{minted}
+\end{code}
+
+\section{Тестирование}
+На рисунках \ref{img:p1}~---~\ref{img:p3} представлены тесты для алгоритма обратной трассировки лучей. Тестирование проводилось по проверке корректности получаемых изображений, по методологии белого ящика. Для передачи сведений об объектах сцены в программу использовались файлы с расширением $txt$, $obj$, $mtl$. Все тесты пройдены успешно.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{p1.pdf}
+    \caption{Изображение-тест №1}
+    \label{img:p1}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{p2.pdf}
+    \caption{Изображение-тест №2}
+    \label{img:p2}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{p3.pdf}
+    \caption{Изображение-тест №3}
+    \label{img:p3}
+\end{figure}
+
+\newpage

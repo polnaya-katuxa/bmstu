@@ -1,0 +1,57 @@
+mtllib 1.mtl
+
+o shtuchka
+v 243 93 282
+v 668 118 248
+v 431 34 -96
+v 522 424 80
+f 1 2 3
+f 2 3 4
+f 3 4 1
+f 4 1 2
+usemtl PinkMetal
+
+o shtuchka2
+v 111 215 -32
+v 222 624 24
+v 515 315 63
+v 209 358 358
+f 1 2 3
+f 2 3 4
+f 3 4 1
+f 4 1 2
+usemtl YellowChtoto
+
+o shtuchka3
+v 450 200 0
+v 600 200 0
+v 575 350 0
+v 575 325 -150
+f 1 2 3
+f 2 3 4
+f 3 4 1
+f 4 1 2
+usemtl BlueBehind
+
+o shtuchka4
+v 800 50 -100
+v 800 500 -100
+v 850 500 -100
+v 850 50 -100
+v 800 50 400
+v 800 500 400
+v 850 500 400
+v 850 50 400
+f 1 2 4
+f 2 3 4
+f 1 5 2
+f 5 6 2
+f 5 6 8
+f 6 7 8
+f 3 4 7
+f 4 8 7
+f 2 3 6
+f 3 7 6
+f 1 5 4
+f 5 8 4
+usemtl Steklotara

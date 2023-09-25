@@ -1,0 +1,304 @@
+\chapter{Технологическая часть}
+
+В данном разделе будет представлена реализация алгоритмов поиска редакционного расстояния. Также будут указаны обязательные требования к ПО, средства реализации алгоритмов и результаты проведённого тестирования программы.
+
+\section{Требования к ПО}
+Для программы выделен перечень требований:
+\begin{itemize}
+	\item предоставляется интерфейс в формате меню с возможностью ввода и изменения обрабатываемых строк, завершения работы с программой и выбора используемого для обработки введённых строк алгоритма поиска редакционного расстояния;
+	\item предлагается повторно выполнить ввод при невалидном выборе пункта меню;
+	\item производится аварийное завершение с текстом об ошибке при иных ошибках;
+	\item проводится модульное тестирование функций реализующих поиск редакционного расстояния;
+	\item производятся замеры времени выполнения и потребления памяти функциями поиска редакционного расстояния;
+	\item допускается ввод строк в любой раскладке.
+\end{itemize}
+
+\section{Средства реализации}
+Для реализации данной работы был выбран язык программирования Go \cite{web_item2}. Выбор обусловлен наличием в $Go$ библиотек для тестирования ПО и проведения замеров времени выполнения в наносекундах, а также необходимых для реализации поставленных цели и задач средств. В качестве среды разработки была выбрана $GoLand$ \cite{web_item4}.
+
+\section{Реализация алгоритмов}
+В листингах \ref{code:go_lev}~--~\ref{code:go_rec_dam_lev_cache3} представлены различные реализации алгоритмов нахождения расстояний Левенштейна и Дамерау~--~Левенштейна.
+
+\newpage
+
+\begin{code}
+\caption{Листинг матричной реализации алгоритма нахождения расстояния Левенштейна}
+\label{code:go_lev}
+
+\begin{minted}{go}
+func Levenshtein(s1, s2 string) int {
+	s1Rune := []rune(s1)
+	s2Rune := []rune(s2)
+	m := make([][]int, len(s1Rune)+1)
+	for i := range m {
+		m[i] = make([]int, len(s2Rune)+1)
+		m[i][0] = i
+	}
+	for j := range m[0] {
+		m[0][j] = j
+	}
+	
+	for i := 1; i < len(m); i++ {
+		for j := 1; j < len(m[i]); j++ {
+			insertOpt := m[i][j-1] + 1
+			deleteOpt := m[i-1][j] + 1
+			replaceOpt := m[i-1][j-1]
+			
+			if s1Rune[i-1] != s2Rune[j-1] {
+				replaceOpt += 1
+			}
+			m[i][j] = min(insertOpt, deleteOpt, replaceOpt)
+		}
+	}
+	if Print {
+		PrintMatrix(m)
+	}
+
+	return m[len(m)-1][len(m[0])-1]
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг матричной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна (начало)}
+\label{code:go_dam_lev}
+
+\begin{minted}{go}
+func DamerauLevenshtein(s1, s2 string) int {
+	s1Rune := []rune(s1)
+	s2Rune := []rune(s2)
+
+	m := make([][]int, len(s1Rune)+1)
+	for i := range m {
+		m[i] = make([]int, len(s2Rune)+1)
+		m[i][0] = i
+	}
+	for j := range m[0] {
+		m[0][j] = j
+	}
+
+	for i := 1; i < len(m); i++ {
+		for j := 1; j < len(m[i]); j++ {
+			insertOpt := m[i][j-1] + 1
+			deleteOpt := m[i-1][j] + 1
+			replaceOpt := m[i-1][j-1]
+			substituteOpt := math.MaxInt
+
+			if s1Rune[i-1] != s2Rune[j-1] {
+				replaceOpt += 1
+			}
+
+			if i > 1 && j > 1 {
+				if s1Rune[i-1] == s2Rune[j-2] && 
+				s1Rune[i-2] == s2Rune[j-1] {
+					substituteOpt = m[i-2][j-2] + 1
+				}
+			}
+
+			
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг матричной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна (окончание листинга \ref{code:go_dam_lev})}
+\label{code:go_dam_lev2}
+
+\begin{minted}{go}
+			m[i][j] = min(insertOpt, deleteOpt, replaceOpt, 
+			substituteOpt)
+		}
+	}
+
+	if Print {
+		PrintMatrix(m)
+	}
+
+	return m[len(m)-1][len(m[0])-1]
+}
+			
+\end{minted}
+\end{code}
+
+
+\begin{code}
+\caption{Листинг рекурсивной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна (начало)}
+\label{code:go_rec_dam_lev}
+
+\begin{minted}{go}
+func RecursiveDamerauLevenshtein(s1, s2 string) int {
+	s1Rune := []rune(s1)
+	s2Rune := []rune(s2)
+
+	return recursiveDamerauLevenshtein(s1Rune, s2Rune)
+}
+
+func recursiveDamerauLevenshtein(s1, s2 []rune) int {
+
+	if len(s1) == 0 && len(s2) == 0 {
+		return 0
+	} else if len(s1) > 0 && len(s2) == 0 {
+		return len(s1)
+	} else if len(s1) == 0 && len(s2) > 0 {
+		return len(s2)
+	} else {
+		e := 0
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг рекурсивной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна (окончание листинга \ref{code:go_rec_dam_lev})}
+\label{code:go_rec_dam_lev2}
+
+\begin{minted}{go}
+		if s1[len(s1)-1] != s2[len(s2)-1] {
+			e += 1
+		}
+
+		if len(s1) > 1 && len(s2) > 1 &&
+			(s1[len(s1)-1] == s2[len(s2)-2] && 
+			s1[len(s1)-2] == s2[len(s2)-1]) {
+			return min(recursiveDamerauLevenshtein(s1, 
+			s2[:len(s2)-1])+1,
+				recursiveDamerauLevenshtein(s1[:len(s1)-1], 
+				s2)+1,
+				recursiveDamerauLevenshtein(s1[:len(s1)-1], 
+				s2[:len(s2)-1])+e,
+				recursiveDamerauLevenshtein(s1[:len(s1)-2], 
+				s2[:len(s2)-2])+1)
+		} else {
+			return min(recursiveDamerauLevenshtein(s1, 
+			s2[:len(s2)-1])+1,
+				recursiveDamerauLevenshtein(s1[:len(s1)-1], 
+				s2)+1,
+				recursiveDamerauLevenshtein(s1[:len(s1)-1], 
+				s2[:len(s2)-1])+e)
+		}
+	}
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг рекурсивной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна с кэшем (начало)}
+\label{code:go_rec_dam_lev_cache}
+
+\begin{minted}{go}
+func RecursiveDamerauLevenshteinCached(s1, s2 string) int {
+	s1Rune := []rune(s1)
+	s2Rune := []rune(s2)
+
+	cache := make([][]int, len(s1)+1)
+	for i := range cache {
+		cache[i] = make([]int, len(s2)+1)
+		cache[i][0] = i
+	}
+	for j := range cache[0] {
+		cache[0][j] = j
+	}
+
+	for i := 1; i < len(cache); i++ {
+		for j := 1; j < len(cache[i]); j++ {
+			cache[i][j] = math.MaxInt
+		}
+	}
+
+	res := recursiveDamerauLevenshteinCached(s1Rune, s2Rune, cache)
+
+	if Print {
+		PrintMatrix(cache)
+	}
+
+	return res
+}
+
+func recursiveDamerauLevenshteinCached(s1, s2 []rune, cache [][]int) int {
+	if cache[len(s1)][len(s2)] == math.MaxInt {
+		if len(s1) == 0 && len(s2) == 0 {
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг рекурсивной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна с кэшем (продолжение листинга \ref{code:go_rec_dam_lev_cache})}
+\label{code:go_rec_dam_lev_cache2}
+
+\begin{minted}{go}
+			cache[len(s1)][len(s2)] = 0
+		} else if len(s1) > 0 && len(s2) == 0 {
+			cache[len(s1)][len(s2)] = len(s1)
+		} else if len(s1) == 0 && len(s2) > 0 {
+			cache[len(s1)][len(s2)] = len(s2)
+		} else {
+			e := 0
+			if s1[len(s1)-1] != s2[len(s2)-1] {
+				e += 1
+			}
+			if len(s1) > 1 && len(s2) > 1 &&
+				(s1[len(s1)-1] == s2[len(s2)-2] && 
+				s1[len(s1)-2] == s2[len(s2)-1]) {
+				cache[len(s1)][len(s2)] = min(
+				    recursiveDamerauLevenshteinCached(
+				    s1, s2[:len(s2)-1], cache)+1,
+					recursiveDamerauLevenshteinCached(
+					s1[:len(s1)-1], s2, cache)+1,
+					recursiveDamerauLevenshteinCached(
+					s1[:len(s1)-1], s2[:len(s2)-1], 
+					cache)+e,
+					recursiveDamerauLevenshteinCached(
+					s1[:len(s1)-2], s2[:len(s2)-2], 
+					cache)+1)
+			} else {
+				cache[len(s1)][len(s2)] = min(
+				    recursiveDamerauLevenshteinCached(
+				    s1, s2[:len(s2)-1], cache)+1,
+					recursiveDamerauLevenshteinCached(
+					s1[:len(s1)-1], s2, cache)+1,
+					recursiveDamerauLevenshteinCached(
+					s1[:len(s1)-1], s2[:len(s2)-1], 
+					cache)+e)
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг рекурсивной реализации алгоритма нахождения расстояния Дамерау~--~Левенштейна с кэшем (окончание листинга \ref{code:go_rec_dam_lev_cache2})}
+\label{code:go_rec_dam_lev_cache3}
+
+\begin{minted}{go}
+			}
+		}
+	}
+	return cache[len(s1)][len(s2)]
+}
+\end{minted}
+\end{code}
+
+\section{Тестирование}
+В таблице  представлены тесты для алгоритмов нахождения расстояний Левенштейна и Дамерау~--~Левенштейна. Тестирование проводилось по методологии чёрного ящика. Все тесты пройдены успешно.
+
+\begin{table}[H]
+  \caption{\label{table:tests} Тесты для алгоритмов нахождения расстояний Левенштейна и Дамерау~--~Левенштейна}
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+      \hline
+       &  &  & \multicolumn{2}{c|}{Ожидаемый результат} \\
+      \cline{4-5}
+      \raisebox{1.5ex}[0cm][0cm]{№} & \raisebox{1.5ex}[0cm][0cm]{$s_1$} & \raisebox{1.5ex}[0cm][0cm]{$s_2$} 
+      &  Левентшейн & Дамерау~--~Левенштейн \\ \hline
+      1 & $\varnothing$ & $\varnothing$ & 0 & 0 \\ \hline
+      2 & abc & aba & 1 & 1 \\ \hline
+      3 & text & tetx & 2 & 1 \\ \hline
+      4 & скат & кот & 2 & 2 \\ \hline
+      5 & $\varnothing$ & ababab & 6 & 6 \\ \hline
+      6 & acaca & $\varnothing$ & 5 & 5 \\ \hline
+      7 & $\varnothing$ & пюрешка & 7 & 7 \\ \hline
+      8 & сосиска & $\varnothing$ & 7 & 7 \\ \hline
+      9 & кеотон & кетоно & 2 & 2 \\ \hline
+      10 & мышь & мiшь & 1 & 1 \\ \hline
+      11 & кушнявка & укшняква & 4 & 2 \\ \hline
+      12 & привет & рпвите & 4 & 3 \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\newpage

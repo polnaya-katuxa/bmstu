@@ -1,0 +1,174 @@
+\chapter{Технологическая часть}
+
+В данном разделе будет представлена реализация алгоритмов сортировки. Также будут указаны обязательные требования к ПО, средства реализации алгоритмов и результаты проведённого тестирования программы.
+
+\section{Требования к ПО}
+Для программы выделен перечень требований:
+\begin{itemize}
+	\item программа предоставляет интерфейс в формате меню с возможностью ввода и изменения обрабатываемого массива, завершения работы с программой и выбора используемого для обработки введённого массива алгоритма сортировки;
+	\item предлагается повторно выполнить ввод при невалидном выборе пункта меню;
+	\item производится аварийное завершение с текстом об ошибке при иных ошибках;
+	\item проводится модульное тестирование функций сортировки;
+	\item производятся замеры времени выполнения и потребления памяти функциями сортировки;
+	\item вызывается исключение при вводе пустого массива;
+	\item сортируются массивы только по возрастанию;
+	\item допускается только сортировка массивов натуральных чисел.
+\end{itemize}
+
+\section{Средства реализации}
+Для реализации данной работы был выбран язык программирования Go \cite{web_item2}. Выбор обусловлен наличием в $Go$ библиотек для тестирования ПО и проведения замеров времени выполнения в наносекундах \cite{web_item11}, а также необходимых для реализации поставленных цели и задач средств. В качестве среды разработки была выбрана $GoLand$ \cite{web_item4}.
+
+\section{Реализация алгоритмов}
+В листингах \ref{code:pancake}~--~\ref{code:bead} представлены реализации алгоритмов сортировок: блинной, быстрой и сортировки бусинами, и некоторых нужных подпрограмм в листингах \ref{code:max}~--~\ref{code:flip}. 
+
+\begin{code}
+\caption{Листинг функции поиска индекса максимума массива}
+\label{code:max}
+\begin{minted}{go}
+func getIndMax(arr []int) int {
+	iMax := 0
+	for i := range arr {
+		if arr[i] > arr[iMax] {
+			iMax = i
+		}
+	}
+	return iMax
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции поиска переворота массива}
+\label{code:flip}
+\begin{minted}{go}
+func flip(arr []int) {
+	n := len(arr)
+	for left := 0; left < n; left++ {
+		arr[left], arr[n-1] = arr[n-1], arr[left]
+		n--
+	}
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг алгоритма блинной сортировки}
+\label{code:pancake}
+\begin{minted}{go}
+func Pancakesort(arr []int) {
+	for n := len(arr); n > 1; n-- {
+		iMax := getIndMax(arr[:n])
+		if iMax != n-1 {
+			flip(arr[:(iMax + 1)])
+			flip(arr[:n])
+		}
+	}
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг алгоритма быстрой сортировки}
+\label{code:quick}
+\begin{minted}{go}
+func quicksort(arr []int) {
+	n := len(arr)
+	less := make([]int, 0, n)
+	greater := make([]int, 0, n)
+	pivot := 0
+
+	if n > 1 {
+		pivot = arr[n/2]
+
+		for i, v := range arr {
+			if i != n/2 {
+				if v < pivot {
+					less = append(less, v)
+				} else {
+					greater = append(greater, v)
+				}
+			}
+		}
+
+		quicksort(less)
+		quicksort(greater)
+		
+		l := len(less)
+		g := len(greater)
+
+		for i := 0; i < l; i++ {
+			arr[i] = less[i]
+		}
+		arr[l] = pivot
+		for i := l + 1; i < l+g+1; i++ {
+			arr[i] = greater[i-l-1]
+		}
+	}
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг алгоритма сортировки бусинами}
+\label{code:bead}
+\begin{minted}{go}
+func Beadsort(arr []int) {
+	n := len(arr)
+	max := arr[getIndMax(arr)]
+	m := make([][]int, n)
+	for i := 0; i < n; i++ {
+		m[i] = make([]int, max)
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j < arr[i]; j++ {
+			m[i][j]++
+		}
+	}
+
+	for j := 0; j < max; j++ {
+		beadsInColumn := 0
+		for i := 0; i < n; i++ {
+			if m[i][j] == 1 {
+				beadsInColumn++
+				m[i][j] = 0
+			}
+		}
+		for i := n - beadsInColumn; i < n; i++ {
+			m[i][j] = 1
+		}
+	}
+
+	for i := 0; i < n; i++ {
+		beadsInRow := 0
+		for j := 0; j < max; j++ {
+			beadsInRow += m[i][j]
+		}
+		arr[i] = beadsInRow
+	}
+}
+\end{minted}
+\end{code}
+
+\section{Тестирование}
+В таблице  представлены тесты для алгоритмов блинной, быстрой и бусинной сортировки. Тестирование проводилось по методологии чёрного ящика. Все тесты пройдены успешно.
+
+\begin{table}[H]
+  \caption{\label{table:tests} Тесты для алгоритмов блинной, быстрой и бусинной сортировки}
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      % &  &  & \\
+      %\cline{3-5}
+      № &  Входной массив & Результат \\ \hline
+      1 & 4, 2, 7, 5, 8, 1, 6 & 1, 2, 4, 5, 6, 7, 8 \\ \hline
+      2 & 4, 2, 2, 5, 2, 1, 6 & 1, 2, 2, 2, 4, 5, 6 \\ \hline
+      3 & 2, 4, 5, 6, 8, 10 & 2, 4, 5, 6, 8, 10 \\ \hline
+      4 & 10, 8, 6, 5, 4, 2 & 2, 4, 5, 6, 8, 10  \\ \hline
+      5 & 2, 2, 2, 2, 2 & 2, 2, 2, 2, 2\\ \hline
+      6 & 2 & 2 \\ \hline
+      7 & 4, 2, 7, 5, 8, 10, 6, 21, 7, 3, 11, 9, 1 & 1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 10, 11, 21 \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\newpage

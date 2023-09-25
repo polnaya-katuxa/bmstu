@@ -1,0 +1,22 @@
+# gnuplot -persist time.gpi
+reset
+
+set terminal pdf # size 1920, 1080 font "Helvetica,24"
+
+set output "./time.pdf"
+
+set size ratio 0.5625
+
+set xlabel "Количество вершин графа, шт"
+
+set ylabel "Время, мкс"
+
+#set logscale y 10
+
+set xrange [0:10]
+
+set grid
+
+# set key top left
+plot "./data_bf.txt" with lp title 'BF' lw 2, \
+     "./data_aco.txt" with lp title 'ACO' lw 2, \

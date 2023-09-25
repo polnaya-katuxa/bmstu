@@ -1,0 +1,22 @@
+# gnuplot -persist time.gpi
+reset
+
+set terminal pdf # size 1920, 1080 font "Helvetica,24"
+
+set output "images/time_best_winograd.pdf"
+
+set size ratio 0.5625
+
+set xlabel "Размерность квадратной матрицы, элементы"
+
+set ylabel "Время, нс"
+
+#set logscale y 10
+
+set xrange [0:500]
+
+set grid
+
+# set key top left
+plot "data/time_best1.txt" with lp title 'Виноград' lw 1 lt rgb "slateblue1", \
+     "data/time_best2.txt" with lp title 'Улучшенный Виноград' lw 1 lt rgb "dark-turquoise",

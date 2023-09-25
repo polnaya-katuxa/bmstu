@@ -1,0 +1,318 @@
+\chapter{Технологическая часть}
+
+В данном разделе будет представлена реализация алгоритмов умножения матриц. Также будут указаны обязательные требования к ПО, средства реализации алгоритмов и результаты проведённого тестирования программы.
+
+\section{Требования к ПО}
+Для программы выделен перечень требований:
+\begin{itemize}
+	\item предоставляется интерфейс в формате меню с возможностью ввода и изменения обрабатываемых матриц, завершения работы с программой и выбора используемого для умножения введённых матриц алгоритма;
+	\item предлагается повторно выполнить ввод при невалидном выборе пункта меню;
+	\item производится аварийное завершение с текстом об ошибке при иных ошибках;
+	\item проводится модульное тестирование функций умножения матриц;
+	\item производятся замеры времени выполнения и потребления памяти функциями умножения матриц;
+	\item производятся расчёты только для матриц, содержащих целые числа.
+\end{itemize}
+
+\section{Средства реализации}
+Для реализации данной работы был выбран язык программирования Go \cite{web_item2}. Выбор обусловлен наличием в $Go$ библиотек для тестирования ПО и проведения замеров времени выполнения и потребления памяти функциями, а также необходимых для реализации поставленных цели и задач средств. В качестве среды разработки была выбрана $GoLand$ \cite{web_item4}.
+
+\section{Реализация алгоритмов}
+В листингах \ref{code:stand}~--~\ref{code:winBetter2} представлены реализации алгоритмов умножения матриц: стандартного, Винограда и оптимизированного алгоритма Винограда, и некоторых нужных подпрограмм в листингах \ref{code:rc}~--~\ref{code:ccBetter}. 
+
+\newpage
+
+\begin{code}
+\caption{Листинг функции реализации стандартного умножения матриц}
+\label{code:stand}
+\begin{minted}{go}
+func Mul(m1, m2 Matrix) (Matrix, error) {
+	if m1.N != m2.M {
+		return Matrix{}, errors.New("mul sizes error")
+	}
+
+	res := CreateEmpty(m1.M, m2.N)
+
+	for i := 0; i < res.M; i++ {
+		for j := 0; j < res.N; j++ {
+			for k := 0; k < m1.N; k++ {
+				res.Data[i][j] = res.Data[i][j] + 
+				m1.Data[i][k]*m2.Data[k][j]
+			}
+		}
+	}
+
+	return res, nil
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма Винограда умножения матриц}
+\label{code:win}
+\begin{minted}{go}
+func WinogradMulMatrix(m1 matrix.Matrix, m2 matrix.Matrix) 
+(matrix.Matrix, error) {
+	if m1.N != m2.M {
+		return matrix.Matrix{}, errors.New("mul sizes error")
+	}
+
+	res := matrix.CreateEmpty(m1.M, m2.N)
+
+	rowCoefs := rowCoefs(m1)
+	columnCoefs := columnCoefs(m2)
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма Винограда умножения матриц (продолжение листинга \ref{code:win})}
+\label{code:win2}
+\begin{minted}{go}
+	for i := 0; i < res.M; i++ {
+		for j := 0; j < res.N; j++ {
+			res.Data[i][j] = res.Data[i][j] - rowCoefs[i] -
+			 columnCoefs[j]
+
+			for k := 0; k < m1.N/2; k++ {
+				res.Data[i][j] = res.Data[i][j] + 
+				(m1.Data[i][2*k]+m2.Data[2*k+1][j])*
+					(m1.Data[i][2*k+1]+m2.Data[2*k][j])
+			}
+		}
+	}
+
+	if m1.N%2 != 0 {
+		for i := 0; i < res.M; i++ {
+			for j := 0; j < res.N; j++ {
+				res.Data[i][j] = res.Data[i][j] + 
+				m1.Data[i][m1.N-1]*m2.Data[m1.N-1][j]
+			}
+		}
+	}
+
+	return res, nil
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации оптимизированного алгоритма Винограда умножения матриц}
+\label{code:winBetter}
+\begin{minted}{go}
+func WinogradBetterMulMatrix(m1 matrix.Matrix, m2 matrix.Matrix) 
+(matrix.Matrix, error) {
+	if m1.N != m2.M {
+		return matrix.Matrix{}, errors.New("mul sizes error")
+	}
+	res := matrix.CreateEmpty(m1.M, m2.N)
+	rowCoefs := betterRowCoefs(m1)
+	columnCoefs := betterColumnCoefs(m2)
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации оптимизированного алгоритма Винограда умножения матриц (продолжение листинга \ref{code:winBetter})}
+\label{code:winBetter2}
+\begin{minted}{go}
+	isOdd := m1.N%2 != 0
+	halfN := m1.N >> 1
+	preN := m1.N - 1
+
+	for i := 0; i < res.M; i++ {
+		for j := 0; j < res.N; j++ {
+			res.Data[i][j] -= rowCoefs[i] + columnCoefs[j]
+
+			for k := 0; k < halfN; k++ {
+				res.Data[i][j] += (m1.Data[i][k<<1] + 
+				m2.Data[(k<<1)+1][j])*
+				(m1.Data[i][(k<<1)+1] + m2.Data[k<<1][j])
+			}
+
+			if isOdd {
+				res.Data[i][j] += m1.Data[i][preN] *
+				m2.Data[preN][j]
+			}
+		}
+	}
+
+	return res, nil
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма поиска произведений соседних элементов строк матрицы}
+\label{code:rc}
+\begin{minted}{go}
+func rowCoefs(m matrix.Matrix) []int {
+	coefs := make([]int, m.M)
+	for i := 0; i < m.M; i++ {
+		for j := 0; j < m.N/2; j++ {
+			coefs[i] = coefs[i] + m.Data[i][2*j]*m.Data[i][2*j+1]
+		}
+	}
+	return coefs
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации алгоритма поиска произведений соседних элементов столбцов матрицы}
+\label{code:cc}
+\begin{minted}{go}
+func columnCoefs(m matrix.Matrix) []int {
+	coefs := make([]int, m.N)
+	for j := 0; j < m.N; j++ {
+		for i := 0; i < m.M/2; i++ {
+			coefs[j] = coefs[j] + m.Data[2*i][j]*m.Data[2*i+1][j]
+		}
+	}
+	return coefs
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг функции реализации оптимизированного алгоритма поиска произведений соседних элементов строк матрицы}
+\label{code:rcBetter}
+\begin{minted}{go}
+func betterRowCoefs(m matrix.Matrix) []int {
+	coefs := make([]int, m.M)
+	halfN := m.N >> 1
+	for i := 0; i < m.M; i++ {
+		for j := 0; j < halfN; j++ {
+			coefs[i] += m.Data[i][j<<1] * m.Data[i][(j<<1)+1]
+		}
+	}
+	return coefs
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции реализации оптимизированного алгоритма поиска произведений соседних элементов столбцов матрицы}
+\label{code:ccBetter}
+\begin{minted}{go}
+func betterColumnCoefs(m matrix.Matrix) []int {
+	coefs := make([]int, m.N)
+	halfM := m.M >> 1
+	for j := 0; j < m.N; j++ {
+		for i := 0; i < halfM; i++ {
+			coefs[j] += m.Data[i<<1][j] * m.Data[(i<<1)+1][j]
+		}
+	}
+	return coefs
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\section{Тестирование}
+В таблице  представлены тесты для алгоритмов умножения матриц: стандартного, Винограда и оптимизированного алгоритма Винограда. Тестирование проводилось по методологии чёрного ящика. Все тесты пройдены успешно.
+
+\begin{table}[H]
+	\begin{center}
+		\caption{Тесты для алгоритмов умножения матриц: стандартного, Винограда и оптимизированного алгоритма Винограда}
+		\label{table:tests}
+		\begin{tabular}{|c | c | c| c |} 
+			\hline
+			\multicolumn{1}{|c|}{№} & \multicolumn{1}{c|}{Матрица A}
+			&  \multicolumn{1}{c|}{Матрица B}
+			& \multicolumn{1}{c|}{Результат} \\
+			\hline
+		
+			
+			1 & $\begin{pmatrix}
+				1\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				1\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				1\\
+			\end{pmatrix}$ \\ \hline
+			
+			2 & $\begin{pmatrix}
+				1\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				0\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				0\\
+			\end{pmatrix}$ \\ \hline
+			
+			3 & $\begin{pmatrix}
+				0 & 0 & 0\\
+				0 & 0 & 0\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				0& 0\\
+				0& 0\\
+				0& 0\\
+			\end{pmatrix}$ &$\begin{pmatrix}
+			0& 0\\
+			0& 0\\
+			\end{pmatrix}$ \\ \hline
+			
+			4 & $\begin{pmatrix}
+				0 & 3 & 0\\
+				0 & 0 & 4 \\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				0& 5\\
+				0& 0\\
+			\end{pmatrix}$ & mul sizes error \\ \hline
+			
+			5 & $\begin{pmatrix}
+				1 & 2 \\
+				3 &4\\
+				5& 6\\
+				7 & 8 \\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				1& 2\\
+				3& 4\\
+			\end{pmatrix}$ &$\begin{pmatrix}
+				7&10\\
+				15&22\\
+				23&34\\
+				31&46\\
+			\end{pmatrix}$ \\ \hline
+		
+			6 & $\begin{pmatrix}
+				1 & 2& 3\\
+				4& 5&6 \\
+				7&8&9\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				1\\
+				2\\
+				3\\
+			\end{pmatrix}$ &$\begin{pmatrix}
+				14\\
+				32\\
+				50\\
+			\end{pmatrix}$ \\ \hline
+		
+			7 & $\begin{pmatrix}
+				5& 0& 0& 1\\
+				9& 7& 0& 8\\
+				3& 6& 4& 7\\
+				0& 0& 0& 0\\
+				2& 2& 8& 2\\
+			\end{pmatrix}$ & $\begin{pmatrix}
+				0& 7& 5\\
+				0& 0& 0\\
+				0& 9& 5\\
+				0& 1& 0\\
+			\end{pmatrix}$ &$\begin{pmatrix}
+				0& 36& 25\\
+				0& 71& 45\\
+				0& 64& 35\\
+				0& 0& 0\\
+				0& 88& 50\\
+			\end{pmatrix}$ \\ \hline
+
+			
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\newpage

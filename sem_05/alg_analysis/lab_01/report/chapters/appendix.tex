@@ -1,0 +1,149 @@
+\setcounter{chapter}{5}
+\setcounter{listing}{0}
+\chapter*{Приложение А}
+\addcontentsline{toc}{chapter}{Приложение А} 
+\label{appendix}
+
+В ходе выполнения лабораторной работы в соответствии с поставленными задачами было необходимо произвести замеры потребляемой при выполнении функций, реализующих заданные алгоритмы, памяти. В связи с этим был разработан программный модуль $memory$ для измерения потребляемой функцией памяти в байтах (замеры реализованы только для функций, представляющих алгоритмы по заданию лабораторной работы). 
+
+«Бенчмарки», использованные для измерения затрачиваемого на исполнение функции времени, предоставляют возможность измерить только память, выделяемую на куче, что не соответствует поставленной задаче. 
+
+При вызове функции в языке $Go$ для неё выделяется область собственного стека, что особенно критично при рекурсивных реализациях. Соответственно, необходимо иметь возможность измерять потребляемую память и на стеке, так как в ином случае не будут получены реалистичные результаты замеров и построить зависимость, отражающую действительное потребление памяти в зависимости от длины строк, будет невозможно.
+
+В листингах \ref{code:mem_module1}~---~\ref{code:mem_module3} приведена реализация основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах.
+
+\begin{code}
+\caption{Листинг основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах (начало)}
+\label{code:mem_module1}
+
+\begin{minted}{go}
+package algorithms
+
+import (
+	"unsafe"
+)
+
+var MemoryInfo Metrics
+
+type Metrics struct {
+	current int
+	max     int
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах (продолжение листинга \ref{code:mem_module1})}
+\label{code:mem_module2}
+
+\begin{minted}{go}
+// сброс рассчитанных значений
+func (m *Metrics) Reset() {
+	m.current = 0
+	m.max = 0
+}
+
+// добавление значения к общей сумме потребляемой памяти,
+// обновление максимума
+func (m *Metrics) Add(v int) {
+	m.current += v
+	if m.current > m.max {
+		m.max = m.current
+	}
+}
+
+// вычитание значения из общей суммы потребляемой памяти
+func (m *Metrics) Done(v int) {
+	m.current -= v
+}
+
+// получение значения макс. потребления памяти за выполнение функции
+func (m *Metrics) Max() int64 {
+	return int64(m.max)
+}
+
+// получение размера типа данных
+// пример вызова: sizeOf[int]()
+func sizeOf[T any]() int {
+	var v T
+	return int(unsafe.Sizeof(v))
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах (окончание листинга \ref{code:mem_module2})}
+\label{code:mem_module3}
+
+\begin{minted}{go}
+// получение полного размера среза (заголовок + элементы)
+// пример вызова: sizeOfArray[int](10)
+func sizeOfArray[T any](n int) int {
+	return sizeOf[[]T]() + n*sizeOf[T]()
+}
+\end{minted}
+\end{code}
+
+В листингах \ref{code:mem_module_lev1}~--~\ref{code:mem_module_lev2} приведена реализация одной из функций (в данном случае функции, реализующей алгоритм поиска расстояния Левенштейна), вычисляющих потребление памяти конкретной функцией, модуля $memory$.
+
+\begin{code}
+\caption{Листинг функции, вычисляющей потребление памяти функцией, реализующей алгоритм поиска расстояния Левенштейна (начало)}
+\label{code:mem_module_lev1}
+
+\begin{minted}{go}
+func memoryLevenshtein(s1, s2 string) int {
+	n1 := len(s1)
+	n2 := len(s2)
+
+	s01 := sizeOf[string]() + n1*sizeOf[byte]()
+	s02 := sizeOf[string]() + n2*sizeOf[byte]()
+
+	n1r := len([]rune(s1))
+	n2r := len([]rune(s2))
+
+	sr01 := sizeOfArray[rune](n1r)
+	sr02 := sizeOfArray[rune](n2r)
+
+	res := sizeOf[int]()
+
+	loop1 := 2 * sizeOf[int]()
+
+	m := sizeOf[[][]int]() + sizeOfArray[int](n2r+1)*(n1r+1)
+	
+	loop2 := 5 * sizeOf[int]()
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг функции, вычисляющей потребление памяти функцией, реализующей алгоритм поиска расстояния Левенштейна (окончание листинга \ref{code:mem_module_lev1})}
+\label{code:mem_module_lev2}
+
+\begin{minted}{go}
+	minFunc := sizeOfArray[int](3) + sizeOf[int]()*3
+
+	return s01 + s02 + sr01 + sr02 + res + m + loop1 + loop2 + minFunc
+}
+\end{minted}
+\end{code}
+
+В листинге \ref{code:mem_module_use} приведен пример использования функций модуля $memory$ в реализации алгоритма поиска расстояния Левенштейна.
+
+\begin{code}
+\caption{Листинг использования функций модуля $memory$ в реализации алгоритма поиска расстояния Левенштейна}
+\label{code:mem_module_use}
+
+\begin{minted}{go}
+func Levenshtein(s1, s2 string) int {
+	MemoryInfo.Reset()
+	MemoryInfo.Add(memoryLevenshtein(s1, s2))
+	defer MemoryInfo.Done(memoryLevenshtein(s1, s2))
+	...
+}
+\end{minted}
+\end{code}
+
+Таким образом, данный модуль позволяет измерить полное потребление памяти функциями, реализующими алгоритмы поиска редакционного расстояния, и получить реалистичные данные по результатам измерений.
+
+

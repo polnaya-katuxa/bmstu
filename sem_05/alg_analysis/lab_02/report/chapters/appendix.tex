@@ -1,0 +1,133 @@
+\setcounter{chapter}{5}
+\setcounter{listing}{0}
+\chapter*{Приложение А}
+\addcontentsline{toc}{chapter}{Приложение А} 
+\label{appendix}
+
+В ходе выполнения лабораторной работы в соответствии с поставленными задачами было необходимо произвести замеры потребляемой при выполнении функций, реализующих заданные алгоритмы, памяти. В связи с этим был разработан программный модуль $memory$ для измерения потребляемой функцией памяти в байтах (замеры реализованы только для функций, представляющих алгоритмы по заданию лабораторной работы). 
+
+При вызове функции в языке $Go$ для неё выделяется область собственного стека, что особенно критично для рекурсивных алгоритмах. Соответственно, необходимо иметь возможность измерять потребляемую память и на стеке, так как в ином случае не будут получены реалистичные результаты замеров потребления памяти и построить зависимость, отражающую действительное потребление памяти в зависимости от размерности квадратной матрицы, будет невозможно.
+
+В листингах \ref{code:mem_module1}~---~\ref{code:mem_module3} приведена реализация основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах.
+
+\begin{code}
+\caption{Листинг основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах (начало)}
+\label{code:mem_module1}
+
+\begin{minted}{go}
+package algorithms
+
+import (
+	"unsafe"
+)
+
+var MemoryInfo Metrics
+
+type Metrics struct {
+	current int
+	max     int
+}
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Листинг основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах (продолжение листинга \ref{code:mem_module1})}
+\label{code:mem_module2}
+
+\begin{minted}{go}
+// сброс рассчитанных значений
+func (m *Metrics) Reset() {
+	m.current = 0
+	m.max = 0
+}
+
+// добавление значения к общей сумме потребляемой памяти,
+// обновление максимума
+func (m *Metrics) Add(v int) {
+	m.current += v
+	if m.current > m.max {
+		m.max = m.current
+	}
+}
+
+// вычитание значения из общей суммы потребляемой памяти
+func (m *Metrics) Done(v int) {
+	m.current -= v
+}
+
+// получение значения макс. потребления памяти за выполнение функции
+func (m *Metrics) Max() int64 {
+	return int64(m.max)
+}
+
+// получение размера типа данных
+// пример вызова: sizeOf[int]()
+func sizeOf[T any]() int {
+	var v T
+	return int(unsafe.Sizeof(v))
+}
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Листинг основных структур и базового функционала модуля $memory$ для измерения потребляемой функцией памяти в байтах (окончание листинга \ref{code:mem_module2})}
+\label{code:mem_module3}
+
+\begin{minted}{go}
+// получение полного размера среза (заголовок + элементы)
+// пример вызова: sizeOfArray[int](10)
+func sizeOfArray[T any](n int) int {
+	return sizeOf[[]T]() + n*sizeOf[T]()
+}
+
+// получение полного размера матрицы (заголовок + 
+//заголовки массивов + элементы)
+// sizeOfMatrix[int](10, 10)
+func sizeOfMatrix[T any](m, n int) int {
+	return sizeOf[[][]T]() + m*sizeOf[[]T]() + m*n*sizeOf[T]()
+}
+\end{minted}
+\end{code}
+
+В листинге \ref{code:mem_usual} приведена реализация одной из функций (в данном случае функции, реализующей алгоритм блинной сортировки), вычисляющих потребление памяти конкретной функцией, модуля $memory$.
+
+\begin{code}
+\caption{Листинг функции, вычисляющей потребление памяти функцией, реализующей стандартный алгоритм умножения матриц}
+\label{code:mem_usual}
+
+\begin{minted}{go}
+func MemoryUsual(m, n int) int {
+	args := 3 * sizeOf[[][]int]()
+	res := sizeOf[[][]int]()
+	loop := 3 * sizeOf[int]()
+	create := 3*sizeOf[int]() + sizeOfMatrix[int](m, n) 
+	+ sizeOf[[][]int]()
+	return args + res + loop + create
+}
+\end{minted}
+\end{code}
+
+В листинге \ref{code:mem_module_use} приведен пример использования функций модуля $memory$ в реализации стандартного алгоритма умножения матриц.
+
+\newpage
+
+\begin{code}
+\caption{Листинг использования функций модуля $memory$ в реализации стандартного алгоритма умножения матриц}
+\label{code:mem_module_use}
+
+\begin{minted}{go}
+func Mul(m1, m2 Matrix) (Matrix, error) {
+	memory.MemoryInfo.Reset()
+	memory.MemoryInfo.Add(memory.MemoryUsual(m1.M, m2.N))
+	defer memory.MemoryInfo.Done(memory.MemoryUsual(m1.M, m2.N))
+
+	...
+}
+\end{minted}
+\end{code}
+
+Таким образом, данный модуль позволяет измерить полное потребление памяти функциями, реализующими алгоритмы умножения матриц, и получить реалистичные данные по результатам измерений.
+
+

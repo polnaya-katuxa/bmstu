@@ -1,0 +1,22 @@
+# gnuplot -persist time.gpi
+reset
+
+set terminal pdf # size 1920, 1080 font "Helvetica,24"
+
+set output "./time.pdf"
+
+set size ratio 0.5625
+
+set xlabel "Количество заявок, шт"
+
+set ylabel "Время, мкс"
+
+#set logscale y 10
+
+set xrange [0:10]
+
+set grid
+
+# set key top left
+plot "./time1.txt" with lp title 'Lin' lw 2, \
+     "./time2.txt" with lp title 'Par' lw 2, \

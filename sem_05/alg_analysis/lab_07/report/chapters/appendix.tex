@@ -1,0 +1,72 @@
+\setcounter{chapter}{5}
+\setcounter{listing}{0}
+\chapter*{Приложение А}
+\addcontentsline{toc}{chapter}{Приложение А} 
+\label{appendix}
+
+\section*{Параметризация для графа №1}
+В таблице \ref{table:par1} представлены полные результаты параметризующего запуска для графа №1 из 4 вершин.
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{longtable}[c]{|l|l|l|l|l|l|}
+	\caption{Результаты параметризующего запуска для графа №1 из 4 вершин\label{t:t01}} \\ \hline
+	\endfirsthead
+	\captionsetup{labelformat=continued,labelsep=quad}
+	\caption{}\\
+	\endhead
+	$\alpha$ & $\beta$ & $\rho$ & $time$ & $ideal$ & $diff$
+	
+	\csvreader{../data/paramQ4.txt}{}
+	{\\ \hline \csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
+	\\ \hline
+		
+	\end{longtable}	
+\end{center}
+
+\newpage
+
+\section*{Параметризация для графа №2}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{longtable}[c]{|l|l|l|l|l|l|}
+	\caption{Результаты параметризующего запуска для графа №2 из 8 вершин\label{t:t02}} \\ \hline
+	\endfirsthead
+	\captionsetup{labelformat=continued,labelsep=quad}%
+	\caption{}\\
+	\endhead
+	$\alpha$ & $\beta$ & $\rho$ & $time$ & $ideal$ & $diff$
+	
+	\csvreader{../data/paramQ8.txt}{}
+	{\\ \hline \csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
+	\\ \hline
+		
+	\end{longtable}	
+\end{center}
+
+\newpage
+
+\section*{Параметризация для графа №3}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{longtable}[c]{|l|l|l|l|l|l|}
+	\caption{Результаты параметризующего запуска для графа №3 из 10 вершин\label{t:t03}} \\ \hline
+	\endfirsthead
+	\captionsetup{labelformat=continued,labelsep=quad}%
+	\caption{}\\
+	\endhead
+	$\alpha$ & $\beta$ & $\rho$ & $time$ & $ideal$ & $diff$
+	
+	\csvreader{../data/paramQ10.txt}{}
+	{\\ \hline \csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
+	\\ \hline
+		
+	\end{longtable}	
+\end{center}
+
+\newpage
+
+
+

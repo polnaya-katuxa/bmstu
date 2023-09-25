@@ -1,0 +1,23 @@
+# gnuplot -persist time.gpi
+reset
+
+set terminal pdf # size 1920, 1080 font "Helvetica,24"
+
+set output "images/time_worst.pdf"
+
+set size ratio 0.5625
+
+set xlabel "Длина массива, элементы"
+
+set ylabel "Время, нс"
+
+set logscale y 10
+
+set xrange [0:1000]
+
+set grid
+
+# set key top left
+plot "data/time_worst0.txt" with lp title 'Блинная сортировка' lw 2, \
+     "data/time_worst1.txt" with lp title 'Быстрая сортировка' lw 2, \
+     "data/time_worst2.txt" with lp title 'Бусинная сортировка' lw 2,
