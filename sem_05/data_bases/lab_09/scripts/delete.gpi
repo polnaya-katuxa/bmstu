@@ -1,0 +1,9 @@
+reset
+set terminal pdf
+set output "data/delete.pdf"
+set size ratio 0.5625
+set xlabel "Time"
+set ylabel "Duration"
+set grid
+plot "data/03_db.txt" with l title 'Postgres' lw 2 lc rgb "blue", \
+     "data/03_redis.txt" with l title 'Redis' lw 2 lc rgb "red"

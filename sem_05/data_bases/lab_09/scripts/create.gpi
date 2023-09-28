@@ -1,0 +1,9 @@
+reset
+set terminal pdf
+set output "data/create.pdf"
+set size ratio 0.5625
+set xlabel "Time"
+set ylabel "Duration"
+set grid
+plot "data/02_db.txt" with l title 'Postgres' lw 2 lc rgb "blue", \
+     "data/02_redis.txt" with l title 'Redis' lw 2 lc rgb "red"

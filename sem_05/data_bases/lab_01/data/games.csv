@@ -1,0 +1,1001 @@
+id,name,genre,release_year,company,country,age_rating,price,multiplayer_mode
+1,Asonde Shogi ga Tsuyoku Naru! Ginsei Shogi DX2,Strategy,2022,SilverStarJapan,Unknown,EC,627.1609,false
+2,Piofiore: Episodio 1926,Adventure,2020,Otomate,Japan,M,3398.4717,false
+3,Half + Half,Arcade,2019,Oculus Studios,Unknown,E,3737.7878,true
+4,F1 Clash,Racing,2019,Hutch,United Kingdom,E,9.376297,true
+5,Spinny's Journey,Puzzle,2020,Thunder Sparrow,Unknown,E,962.4561,false
+6,Deep Space Rush,Shooter,2019,BUG-Studio,Unknown,E10+,2415.6145,false
+7,Hybrid Warrior,Role-playing (RPG),2020,Cat Lab,Unknown,E,498.3007,false
+8,Sacrifice Of The Beloved,Puzzle,2019,Vishcorp Games,Unknown,M,3524.0254,true
+9,Sudoky,Puzzle,2020,Hook.gg,Unknown,E,4069.1006,false
+10,Baldur's Gate 3,Role-playing (RPG),2020,Larian Studios,Belgium,M,1192.3171,true
+11,SlideRow,Puzzle,2019,^|Ask,Unknown,E,4925.979,true
+12,Monster Bugs Eat People,Arcade,2019,Noobz from Poland,Unknown,T,629.68665,false
+13,Barrage Fantasia,Shooter,2021,l3l,Unknown,E,4543.2295,false
+14,Frontline Zed,Shooter,2019,Volcanic Games,Unknown,T,3166.0916,false
+15,Woodland Rush - Domino,Puzzle,2019,WOOLooFun,Unknown,E,878.17267,false
+16,Never Give Up,Platform,2019,Armor Games Studios,Unknown,T,3383.8267,false
+17,Angel Legion,Fighting,2019,Xingfei,Unknown,E10+,1169.4885,true
+18,Jumping Joe & Friends,Platform,2018,Qubic Games,Poland,E,4988.559,false
+19,Lost Judgment: The Kaito Files,Hack and slash/Beat 'em up,2022,Ryu ga Gotoku Studios,Japan,M,4681.1973,false
+20,Tom Clancy's Rainbow Six Extraction: Limited Edition,Shooter,2022,Ubisoft Montreal,Canada,M,2618.4343,false
+21,One person story,Puzzle,2019,Drageus Games,Unknown,E,4513.6343,false
+22,Void Excursion,Adventure,2017,Survival Studios,Unknown,E,4691.6196,false
+23,Carto,Puzzle,2020,X.D. Network Inc.,Unknown,E,2465.9907,false
+24,Touhou Genso Maroku W: Shikigami Additional Contents,Role-playing (RPG),2017,Strawberry Bose,Japan,EC,4100.9263,false
+25,Cursed Island,Shooter,2022,ChiliDog Interactive,Unknown,E10+,949.02386,false
+26,Hall of the Art Thieves,Puzzle,2019,CCJr Studios,Unknown,E10+,2608.6443,false
+27,Warzone World,Turn-based strategy (TBS),2019,Voidkiller Studios,Unknown,E,2883.7427,false
+28,Final Fantasy: Pixel Remaster,Role-playing (RPG),2021,Square Enix,Japan,E,4150.919,false
+29,One Piece: World Seeker - Extra Episode 3: The Unfinished Map,Adventure,2019,Bandai Namco Entertainment,Japan,T,2999.1753,false
+30,DimensionsVS,Fighting,2018,TeePee Studios,Unknown,T,3921.1494,false
+31,Get Ogre It,Puzzle,2020,Croix Apps,Unknown,E,1332.3335,false
+32,Arcade Archives: Frisky Tom,Puzzle,2021,HAMSTER,Japan,E,368.826,false
+33,Mega Cat Studios Collection 1,Hack and slash/Beat 'em up,2020,Mega Cat Studios,United States,T,2138.7659,false
+34,Colorfall,Music,2021,Prison Games,Unknown,E,513.4345,false
+35,Shikaku Shapes,Puzzle,2020,(archive) Hook Games,Unknown,E,197.79422,false
+36,Kakuro Magic,Puzzle,2020,Hook.gg,Unknown,E,3805.4502,false
+37,Farm Mechanic Simulator,Puzzle,2020,SimFabric,Unknown,E,4330.3657,false
+38,Pac-Man 99,Arcade,2021,Bandai Namco Entertainment,Japan,E,1439.4318,true
+39,Regular Factory: Escape Room,Puzzle,2022,mc2games,Unknown,E,3494.7961,false
+40,Cozy Grove,Puzzle,2021,The Quantum Astrophysicists Guild,United States,EC,3413.8179,false
+41,Thymesia: Cloud Version,Role-playing (RPG),2022,OverBorder Studio,Taiwan (Province of China),M,2360.161,false
+42,Dull Grey,Adventure,2019,Sometimes You,Russian Federation,E10+,3385.604,false
+43,Say No! More,Simulator,2021,Thunderful,Sweden,E10+,4352.6914,false
+44,Brick Bat Crazy,Arcade,2021,IndieRevo,Unknown,E,2373.236,false
+45,Winning Post 9: 2021,Racing,2021,Koei Tecmo Games,Japan,EC,2916.4192,false
+46,Contract Killer,Hack and slash/Beat 'em up,2022,Paperboy Games,Unknown,M,2484.4822,false
+47,ACA NEOGEO REAL BOUT FATAL FURY SPECIAL,Fighting,2017,SNK,Japan,T,4977.245,true
+48,Xenoblade Chronicles 2: Torna - The Golden Country,Role-playing (RPG),2018,Nintendo,Japan,T,886.8401,false
+49,Dynos & Ghosts,Arcade,2021,Pix Arts,Unknown,E,1249.324,false
+50,The Surge: Fire & Ice Weapon Pack,Role-playing (RPG),2017,Deck13 Interactive,Germany,M,1201.3004,false
+51,Grand Prix Racing,Racing,2021,Pix Arts,Unknown,E,2958.1785,false
+52,The Legend of Bum-bo,Puzzle,2019,Edmund McMillen,Unknown,T,3529.623,false
+53,Trover Saves The Universe - Important Cosmic Jobs,Adventure,2019,Squanch Games,United States,M,1860.749,true
+54,"Cash, Inc. Fame & Fortune Game",Simulator,2017,Lion Studios,United States,E,937.97723,false
+55,Alpine: The Simulation Game,Simulator,2021,HR Innoways,Unknown,EC,4180.879,false
+56,Abo Khashem,Role-playing (RPG),2018,Moving Dimensions,Unknown,T,2563.1008,false
+57,Castle Heroes,Role-playing (RPG),2021,We Make Games,Slovakia,E10+,4828.7793,false
+58,Trax - Build it Race it,Racing,2018,Sabec,Unknown,E,612.6932,false
+59,Dobutsu Shogi World,Card & Board Game,2019,SilverStar,Unknown,E,692.1193,false
+60,SUPERHOT: MIND CONTROL DELETE,Shooter,2020,SUPERHOT Team,Poland,T,2026.5476,false
+61,Kissed by the Baddest Bidder,Adventure,2019,Voltage,Unknown,M,4451.065,false
+62,Danger World,Role-playing (RPG),2019,Taormina Innovations LLC,Unknown,T,1815.8593,true
+63,Metroid Dread,Platform,2021,Nintendo,Japan,T,2935.8757,false
+64,Cooking Companions: Appetizer Edition,Indie,2020,Deer Dream Studios,Unknown,T,1568.9292,false
+65,Air Force Gear,Shooter,2017,Netherware Entertainment,Unknown,EC,218.21864,false
+66,Mario Party Superstars,Card & Board Game,2021,Nintendo,Japan,E10+,2881.2493,true
+67,Tiny Dragons,Puzzle,2018,Artifex Mundi,Poland,EC,2891.805,false
+68,Ace Combat 7: Skies Unknown - Deluxe Edition,Simulator,2019,Project Aces,Japan,M,4508.827,false
+69,Kirby's Dream Buffet,Platform,2022,HAL Laboratory,Japan,E,2293.0413,true
+70,Eastville Chronicles: The Drama Queen Murder,Puzzle,2019,Ocean Media,Unknown,T,4294.693,false
+71,Small World Z,Role-playing (RPG),2020,In-D Gaming,Unknown,T,2878.457,false
+72,Reigns: Kings & Queens,Role-playing (RPG),2018,Nerial,United Kingdom,T,2762.6094,false
+73,Windstorm: Ari's Arrival,Simulator,2019,Aesir Interactive,Germany,EC,1848.4502,false
+74,Life is Strange 2: Episode 4 - Faith,Adventure,2019,Square Enix,Japan,AO,1394.3374,false
+75,Jack 'n' Hat,Platform,2022,2Awesome Studio,Spain,E10+,2313.7754,false
+76,Touhou Genso Wanderer Reloaded: Satori Komeiji,Role-playing (RPG),2017,AQUA STYLE,Japan,E10+,1584.3387,false
+77,100% Orange Juice: Sora & Sham (Cuties),Strategy,2019,Orange_Juice,Japan,T,4001.3965,true
+78,Reverie: Sweet As Edition,Puzzle,2019,Rainbite Limited,Unknown,E,317.88165,false
+79,V.O.I.D.,Platform,2018,NAPE GAMES,Unknown,E10+,3898.9788,false
+80,Yume Nikki: Dream Diary,Puzzle,2018,Kadokawa Games,Japan,T,325.71622,false
+81,Borderlands 2: Commander Lilith and the Fight for Sanctuary,Shooter,2019,Aspyr Media,United States,M,3370.7556,false
+82,3D Snake . io,Arcade,2018,Timuz Games,Unknown,E,42.24048,false
+83,Path of the Warrior,Fighting,2019,Twisted Pixel,United States,E,3269.109,false
+84,Good Dreams,Indie,2018,10 Bytes,Unknown,E,289.85477,false
+85,Metro Exodus: Complete Edition,Shooter,2021,Deep Silver,Germany,M,3834.2573,false
+86,Marvel's Spider-Man Remastered,Hack and slash/Beat 'em up,2020,Insomniac Games,United States,T,3462.3303,false
+87,Robots under attack!,Puzzle,2020,Dmytro Derybas,Unknown,E,2731.7192,false
+88,Big Shot Swish,Sport,2019,ePlay Digital,Unknown,EC,3117.358,true
+89,TCG World Metaverse,Racing,2022,TCG World,United Kingdom,E,3402.3416,true
+90,Train Simulator 2021: Southwestern Expressways - Reading - Exeter Route,Simulator,2021,Digital Train Models,Unknown,E,3731.9504,false
+91,The Sims 4: First Fits Kit,Role-playing (RPG),2022,Electronic Arts,United States,T,4745.6987,false
+92,Best Month Ever!,Point-and-click,2022,Klabater,Unknown,AO,1720.6797,false
+93,Love Flute,Indie,2021,"TALESSHOP Co., Ltd.",Republic of Korea,T,3109.297,false
+94,Horizon Forbidden West: Launch Edition,Role-playing (RPG),2022,Guerrilla Games,Netherlands,T,1651.0035,false
+95,The Box Code,Puzzle,2020,Karsten Winter,Unknown,E,728.9089,false
+96,Dragon Audit,Point-and-click,2020,Archive Entertainment,Unknown,T,1866.4712,false
+97,Aion Classic,Role-playing (RPG),2021,NCsoft,Republic of Korea,T,3025.7705,true
+98,Ball Turn,Arcade,2018,wildDev,Unknown,EC,1957.0492,false
+99,Orbitblazers,Shooter,2020,ogsoftgames,Unknown,EC,1879.5378,false
+100,Arcade Archives: Elevator Action,Shooter,2017,HAMSTER,Japan,E10+,1159.3019,false
+101,Europa Universalis IV: Golden Century,Real Time Strategy (RTS),2018,Paradox Development Studio,Sweden,T,1108.993,false
+102,Life in Willowdale: Farm Adventures,Role-playing (RPG),2022,Mindscape,Netherlands,E,1047.3778,true
+103,The Outbound Ghost,Role-playing (RPG),2022,Conradical Games,Unknown,E10+,4734.687,false
+104,RXN -Raijin-,Shooter,2017,"GULTI Co., Ltd.",Unknown,E10+,4075.6926,false
+105,Mini Party,Indie,2017,Enrique Roman,Unknown,E,1641.4974,true
+106,COLINA: Legacy,Puzzle,2018,"Chance6 Studios, LLC",Unknown,T,3473.9866,false
+107,Seers Isle,Adventure,2018,Nova-Box,France,T,3396.8562,false
+108,Santa's Workshop: Unhinged,Puzzle,2019,Skywolf Game Studios,Unknown,E,4702.77,false
+109,Tom Clancy's Rainbow Six Siege: Demon Veil,Shooter,2022,Ubisoft Montreal,Canada,M,3646.2068,false
+110,A Haunting: Witching Hour,Role-playing (RPG),2017,Enyx Studios,Unknown,M,4378.968,false
+111,Fire Emblem: Three Houses – Cindered Shadows,Turn-based strategy (TBS),2020,Nintendo EAD Tokyo,Japan,T,2784.3154,true
+112,Parking Master Multiplayer,Racing,2020,Spektra Games,Turkey,E,4695.958,true
+113,Control: Deluxe Edition,Shooter,2019,Remedy Entertainment,Finland,M,1521.5334,false
+114,Deadly Premonition Origins,Shooter,2019,ToyBox,Japan,M,2577.5742,false
+115,Atari Flashback Classics Switch,Shooter,2018,"Atari, Inc.",United States,E,2636.5974,true
+116,Jack & The Diamonds,Adventure,2019,Antonio Passamani,Unknown,E,396.96838,false
+117,Cook to the Beat,Music,2019,Raccoopack Studio,Unknown,EC,2435.9717,false
+118,ACA NEOGEO TOP HUNTER: RODDY & CATHY,Fighting,2017,SNK,Japan,E10+,1122.6251,true
+119,Paleo: Rising Town,Puzzle,2018,FuryLion,Unknown,EC,2025.2849,false
+120,Banner Of The Maid,Role-playing (RPG),2019,Azure Flame Studio,Unknown,T,3976.6345,false
+121,Shores Unknown,Role-playing (RPG),2021,Vallynne,Unknown,RP,1856.8999,false
+122,Escape First 3,Puzzle,2020,OnSkull Games,Unknown,T,2648.6846,false
+123,Sid Meier's Civilization VI: New Frontier Pass,Strategy,2020,Fireaxis Games,Unknown,T,3095.3938,false
+124,King's Bounty II: Day One Edition,Role-playing (RPG),2021,Prime Matter,Germany,T,2308.408,false
+125,Cosmic Top Secret,Adventure,2018,Klassefilm,Denmark,T,2207.2983,false
+126,Pocket City,Simulator,2018,Codebrew Games,Unknown,EC,397.84766,false
+127,The Cruel King and the Great Hero,Role-playing (RPG),2021,Nippon Ichi Software,Japan,E10+,1434.7601,false
+128,PLAYERUNKNOWN'S BATTLEGROUNDS: Season 6,Shooter,2020,PUBG Corp,Unknown,T,1950.3458,false
+129,Dead End Job,Shooter,2019,Ant Workshop Ltd,United Kingdom,E10+,971.6075,false
+130,Gaijin Charenji 1: Kiss or Kill,Adventure,2018,overGame Studio,Unknown,M,531.2328,false
+131,Rune Lord,Puzzle,2019,Adept Studios GD,Unknown,E,3740.0493,false
+132,Destiny 2: Bungie 30th Anniversary Pack,Adventure,2021,Bungie,United States,T,2616.1155,false
+133,Bus Simulator 18,Simulator,2018,stillalive studios,Austria,EC,2952.0464,false
+134,"The Sims 4: Seasons, Jungle Adventure, Spooky Stuff",Role-playing (RPG),2019,Maxis,United States,T,4456.886,false
+135,Unlit - Side Scrolling Arcade,Point-and-click,2019,loOp Interactiov,Unknown,E,3723.279,false
+136,Lila's Sky Ark,Puzzle,2022,Graffiti Games,United States,T,3775.6157,false
+137,Rogue Heroes: Ruins of Tasos,Role-playing (RPG),2021,Team17,United Kingdom,E,514.35046,true
+138,Oir,Music,2017,OirGame,Unknown,E10+,1812.2308,false
+139,Allison's Diary: Rebirth,Simulator,2018,KR Games,Unknown,M,4293.3774,false
+140,Fortnite: Chapter 2 - Season 4,Shooter,2020,Epic Games,United States,T,3664.9573,false
+141,RWBY Deckbuilding Game,Strategy,2019,80Arcade,Unknown,E,355.0668,false
+142,Fortnite: Chapter 2 - Season 7,Shooter,2021,Epic Games,United States,T,812.87213,false
+143,Fortnite: Chapter 2 - Season 3,Shooter,2020,People Can Fly,Poland,T,1011.1297,false
+144,Sanicball,Racing,2018,BK-TN,Unknown,E,4843.9897,false
+145,Smart Moves,Puzzle,2020,grin robot,Unknown,E,4317.8433,false
+146,SABRE VR,Shooter,2019,Fire-Point Interactive,Unknown,E10+,3251.406,false
+147,Johnny Turbo's Arcade: Gate Of Doom,Role-playing (RPG),2018,Golem Entertainment,Unknown,E,1856.2723,true
+148,Dungeons 3: Complete Collection,Real Time Strategy (RTS),2020,Kalypso Media,Germany,M,4885.229,false
+149,Escape Area 51,Platform,2020,Trincom OHG,Unknown,E,4936.844,true
+150,Final Fantasy XV: Royal Edition,Fighting,2018,Square Enix,Japan,T,619.2588,false
+151,Fortnite: Chapter 2,Shooter,2019,People Can Fly,Poland,T,4393.3345,false
+152,Watch Dogs: Legion - Ultimate Edition,Shooter,2020,Ubisoft Toronto,Canada,AO,2307.3718,false
+153,Angrymals,Real Time Strategy (RTS),2021,Sionera Entertainment,Unknown,E,805.67633,true
+154,Crimesight,Simulator,2022,Konami Digital Entertainment,Japan,T,2461.154,false
+155,Captain Pegleg,Platform,2020,xeam,Unknown,E,1300.5469,true
+156,Boom Pilot,Shooter,2019,Oddrok,Finland,E,2416.877,false
+157,Rage of Destiny,Role-playing (RPG),2021,SkyRise Digital,Unknown,T,1671.6079,false
+158,Fortnite: Chapter 2 - Season 8,Shooter,2021,Epic Games,United States,T,833.8141,false
+159,Touhou Genso Wanderer Lotus Labyrinth R: Complete Edition,Role-playing (RPG),2021,AQUA STYLE,Japan,T,3318.4756,false
+160,Mine Runner,Arcade,2018,Comrade Studios,Unknown,E,1673.1533,false
+161,Total Arcade Racing,Racing,2020,Pretty Fly Games,Unknown,E,4362.548,false
+162,Boku no Enikki,Visual Novel,2020,Centipede630 Kosai,Unknown,E10+,277.97137,false
+163,Doodle God: Crime City,Puzzle,2018,JoyBits,Unknown,T,3207.4402,false
+164,100% Orange Juice: Toy Store Pack,Strategy,2018,Orange_Juice,Japan,T,4168.707,true
+165,The Sims 4: Moonlight Chic Kit,Role-playing (RPG),2022,Electronic Arts,United States,T,2287.6023,false
+166,SIM Dispatcher,Real Time Strategy (RTS),2020,XENBIT,Unknown,EC,2570.3264,true
+167,Zombie GO,Puzzle,2019,APPTUTTI,Unknown,E10+,2812.0764,false
+168,Boxocost,Card & Board Game,2021,Admiral Games,Unknown,E,4910.1787,true
+169,Final Fantasy XV: Episode Ignis,Adventure,2017,Square Enix,Japan,T,1887.2463,false
+170,Nice Bowling,Sport,2019,Lost Dutchman Software,United States,E,3250.6458,true
+171,ACA NEOGEO SUPER SIDEKICKS 2,Simulator,2018,HAMSTER,Japan,E,4140.9546,false
+172,ACA NEOGEO STRIKERS 1945 PLUS,Shooter,2018,"HAMSTER, Co.",Unknown,E10+,4965.3687,false
+173,Revenge of the Bird King,Platform,2018,Limited Run Games,Unknown,E,194.41518,false
+174,Knockout City: Season 1 - Welcome to Knockout City,Fighting,2022,Velan Studios,Unknown,E10+,4571.5483,false
+175,Azada: in Libro,Point-and-click,2017,ERS G-Studio,Unknown,E10+,3593.2773,false
+176,Tekken 7 + SoulCalibur VI Double Pack,Fighting,2019,Bandai Namco Entertainment,Japan,M,3355.8577,false
+177,Clea 2,Puzzle,2021,InvertMouse,Unknown,T,37.572613,false
+178,Tekken 7: Anna Williams,Fighting,2018,Bandai Namco Entertainment,Japan,M,2407.158,false
+179,Sakura MMO 2,Simulator,2019,Winged Cloud,Unknown,M,3810.137,false
+180,MLB The Show 20 - MVP Edition,Sport,2020,SIE San Diego Studio,United States,EC,1993.8982,false
+181,DOOM II + Master Levels,Shooter,2018,GT Interactive,United States,M,2818.6816,true
+182,Forza Horizon 4: Formula Drift Car Pack,Racing,2018,Microsoft Studios,Unknown,E,2048.595,false
+183,The Hundred Year Kingdom,Simulator,2022,non_non_cha,Unknown,T,797.13965,false
+184,Otome Game no Hametsu Flag Shika Nai Akuyaku Reijou ni Tensei Shiteshimatta: Haran wo Yobu Kaizoku,Adventure,2022,Otomate,Japan,E10+,2168.092,false
+185,The Chick C,Simulator,2022,Webnetic s. r. o.,Slovakia,EC,1736.0891,false
+186,Shut the Window,Indie,2018,Pixel Drop Studios,Unknown,EC,540.2069,false
+187,Kine,Music,2019,Gwen Frey,United States,E,3640.5315,false
+188,Knight's Edge,Role-playing (RPG),2021,Lightfox Games,Unknown,E10+,1262.394,true
+189,Resident Evil 2: Collector's Edition,Shooter,2019,Capcom,Japan,M,1628.6086,false
+190,Pikmin Bloom,Adventure,2021,Niantic Labs,United States,E,2230.1343,false
+191,Exa soldier Space shooter,Arcade,2018,kleon videogames,Unknown,E10+,2230.3794,false
+192,Ode,Music,2017,Ubisoft Reflections,United Kingdom,E,2083.3767,false
+193,I am Ball,Platform,2019,ManolidisAimilios,Unknown,E,1450.5902,false
+194,Destroy All Humans!: Clone Carnage,Shooter,2022,THQ Nordic,Austria,T,4857.9565,true
+195,Knight's Retreat,Puzzle,2020,Minimol Games,Unknown,E,3644.0303,false
+196,Cities: VR,Simulator,2022,Fast Travel Games,Sweden,E,2762.604,false
+197,Pirate's Gold,Puzzle,2022,Asylum Square Interactive,Germany,E,3039.57,false
+198,Psycho Squirrels,Strategy,2018,Intangible Games,Unknown,E,3560.3381,false
+199,Dungeon & Fighter Mobile,Role-playing (RPG),2022,Action Studio,Republic of Korea,RP,1484.3718,false
+200,Freight Simulator,Simulator,2020,New Games Waves,Unknown,E,4668.3604,false
+201,City Mysteries,Puzzle,2014,Teyon,Poland,E,622.9059,false
+202,A Wizard's Lizard,Role-playing (RPG),2014,Lost Decade Games,Unknown,E10+,2661.6118,false
+203,Farming Simulator,Simulator,2013,Giants Software,Switzerland,E,919.5546,false
+204,Hide and Secret Treasure of the Ages,Adventure,2016,Anarchy Enterprises,Unknown,E,3015.4053,false
+205,RollocoBall,Arcade,2016,ARTAR,Unknown,EC,2564.692,false
+206,Pawn Tactics,Shooter,2013,Sandboxd,Unknown,T,1983.484,false
+207,Alawar Hidden Realms Bundle,Point-and-click,2015,Alawar Entertainment,Russian Federation,T,194.28947,false
+208,Papa's Cupcakeria To Go!,Strategy,2015,Flipline Studios,Unknown,E,4651.787,false
+209,Star Command,Role-playing (RPG),2013,Star Command LLC,Unknown,E10+,2195.0862,false
+210,Journey To The Center Of The Earth,Puzzle,2015,InSayn,Unknown,E,566.30994,false
+211,Angry Birds: POP!,Puzzle,2014,Rovio Entertainment,Finland,E,4140.1265,true
+212,Arcade Classics 3D,Puzzle,2013,Visual Impact,Unknown,E,128.60089,false
+213,My Little Kitties,Adventure,2016,Sekai Project,United States,E,923.555,false
+214,Albion Online,Role-playing (RPG),2017,Sandbox Interactive,Unknown,E10+,245.36665,false
+215,VR Ping Pong,Simulator,2016,Reddoll Srl,Unknown,EC,3768.8464,false
+216,Scrap,Platform,2017,Woodland Games,Poland,E,3986.3562,false
+217,Scoop'n Birds,Puzzle,2017,TwinSky Games,United States,E,697.5453,false
+218,SoniPro,Music,2014,Imageepoch,Japan,T,3678.9316,false
+219,Life Is Feudal: MMO,Role-playing (RPG),2017,BITBOX Ltd.,Unknown,AO,4921.23,false
+220,AFFECTED: The Manor,Indie,2016,Fallen Planet Studios,Unknown,T,1523.8561,false
+221,Tcheco in the Castle of Lucio,Platform,2015,Marcelo Barbosa,Unknown,E10+,4541.7817,false
+222,NieR: Automata - Limited Edition Steelbook,Role-playing (RPG),2017,Square Enix,Japan,AO,4989.5605,false
+223,Jetpack Joyride Deluxe,Arcade,2014,Halfbrick Studios,Unknown,E10+,461.33853,false
+224,WitchSpring,Platform,2015,Kiwi Walks,Republic of Korea,E10+,1415.4037,false
+225,Prototype X1,Arcade,2016,Prototype Games GbR,Unknown,E10+,3802.8743,false
+226,Get That Thief Runner,Arcade,2017,Petiscaria Digital,Unknown,E,4692.105,false
+227,Dino Dini's Kick Off Revival,Simulator,2016,Dino Dini,Unknown,EC,2147.9373,false
+228,Fable: The Journey,Role-playing (RPG),2012,Lionhead Studios,United Kingdom,T,2714.8523,false
+229,The Binding of Isaac: Afterbirth+,Shooter,2017,Edmund McMillen,Unknown,M,2526.4634,true
+230,Endless Legend: Shifters,Role-playing (RPG),2016,AMPLITUDE Studios,France,T,2209.857,false
+231,Auto Battle,Role-playing (RPG),2014,Playcomet Inc.,Unknown,T,3460.8623,false
+232,Groove Heaven,Music,2013,Teyon,Poland,E10+,1215.3175,false
+233,Stunt Kite Masters VR,Simulator,2017,HandyGames,Germany,E,2703.343,false
+234,Tokyo School Life,Role-playing (RPG),2015,"M2 Co.,LTD",Unknown,T,3544.1885,false
+235,FLOWERS -Le volume sur automne-,Adventure,2016,Innocent Grey,Japan,E10+,3462.605,false
+236,Tokyo Mirage Sessions #FE,Role-playing (RPG),2015,Nintendo,Japan,T,671.9533,false
+237,Natives,Puzzle,2017,loyalsheep,Unknown,T,2153.8655,false
+238,Horizon Chase,Racing,2015,Aquiris Game Studio,Brazil,E,957.51715,false
+239,The Greatest Hero,Platform,2017,Bliculi Games,Unknown,E10+,3406.7002,false
+240,Farm Mechanic Simulator 2015,Simulator,2015,PlayWay S.A.,Poland,E,4723.715,false
+241,GOKEN,Role-playing (RPG),2017,Gianty,Unknown,T,2610.3499,false
+242,Hogi's Adventure,Platform,2017,Malistic Studio,Unknown,E,2739.679,false
+243,Airport CEO,Simulator,2017,Apoapsis Studios,Unknown,E,1152.2733,false
+244,Akiba's Trip 2+A,Role-playing (RPG),2017,ACQUIRE Corp.,Japan,T,1772.0306,false
+245,Titanic Mystery,Adventure,2015,Joindots,Unknown,T,3758.1448,false
+246,Epitaph,Puzzle,2017,Everook,Unknown,T,2055.6008,false
+247,Alien: Isolation - Last Survivor,Adventure,2014,Feral Interactive,United Kingdom,AO,2434.407,false
+248,Earthlock: Festival of Magic,Role-playing (RPG),2016,Snowcastle Games,Norway,T,4639.0635,false
+249,Rock Defender,Tactical,2016,Grapheno Games,Unknown,T,2188.6584,false
+250,SWIPE!,Indie,2017,Gabe's Games,Unknown,E,357.1176,false
+251,Marble Jetpack,Adventure,2017,BB Electronics LLC,Unknown,E,4631.8276,false
+252,The Last Wish,Adventure,2017,Rowfor Entertainment,Unknown,M,3719.6301,false
+253,Dengeki Bunko: Fighting Climax,Fighting,2014,Ecole Software,Japan,T,1737.6235,false
+254,Secret Journeys: Cities of the World,Puzzle,2014,Teyon,Poland,E,2319.1216,false
+255,Star Wars: The Old Republic - Rise of the Hutt Cartel,Role-playing (RPG),2013,BioWare Austin,United States,T,161.30289,false
+256,Time to Dodge,Indie,2016,Indie Knight,Unknown,EC,4248.3926,false
+257,Unlasting Horror,Simulator,2017,Matt Sowards,Unknown,M,1094.3788,false
+258,The Wonderful 101,Strategy,2013,PlatinumGames,Japan,T,311.6855,true
+259,League of Angels - Fire Raiders,Role-playing (RPG),2015,GTArcade Entertainment,Unknown,T,1307.6436,false
+260,F1 2015,Racing,2015,Codemasters,United Kingdom,E,2648.897,true
+261,Sature,Puzzle,2015,Ian & Elie,Unknown,E,3169.685,true
+262,RGB Express,Puzzle,2014,Bad Crane Ltd,Finland,E,4822.831,false
+263,LEVEL UP!,Platform,2013,Ranmantaru Games,Unknown,E10+,2174.742,false
+264,Abribus,Puzzle,2016,Taldius,France,E,1592.2333,false
+265,Wii Sports Club,Sport,2013,Nintendo EAD Group No. 2,Japan,E10+,70.146355,true
+266,Train Simulator 2021: Amtrak F40PH ‘California Zephyr’ Loco,Simulator,2012,Digital Train Models,Unknown,E,2727.6345,false
+267,3D After Burner II,Simulator,2015,M2,Unknown,E10+,3647.582,false
+268,My Melody: Negai ga Kanau Fushigi na Hako,Adventure,2015,Nippon Columbia,Unknown,EC,1739.7338,false
+269,Just Dance Wii U,Music,2014,Ubisoft Paris,France,EC,568.23035,false
+270,Othello,Card & Board Game,2017,Arc System Works,Japan,E,2024.4956,false
+271,Vitamin Z Graduation,Adventure,2013,HuneX,Japan,E10+,1374.0227,false
+272,Deponia Doomsday,Point-and-click,2016,Daedalic Entertainment,Germany,T,38.0704,false
+273,Fast Bubble,Indie,2017,7 Raven Studio,Unknown,E,3212.7852,false
+274,Sacra Terra: Kiss of Death,Puzzle,2013,Alawar Entertainment,Russian Federation,T,3799.018,false
+275,Card Quest,Role-playing (RPG),2017,Black Shell Media,United States,T,3854.666,false
+276,Aerofly FS 1 Flight Simulator,Simulator,2012,IPACS,Unknown,EC,3922.6,false
+277,Scooby Doo! & Looney Tunes Cartoon Universe: Adventure,Adventure,2014,WB Games,United States,E,3693.893,false
+278,Blue-Collar Astronaut,Racing,2017,Mutated Software,Unknown,E10+,2317.315,false
+279,Dr. Mario: Miracle Cure,Puzzle,2015,"Arika Co., Ltd.",Japan,E,102.403496,false
+280,Puzzle Monkeys,Puzzle,2015,Log Games,Unknown,EC,1092.6556,false
+281,Survarium,Shooter,2015,Vostok Games,Ukraine,M,2379.2878,false
+282,Winx Club: Saving Alfea,Platform,2014,Little Orbit,United Kingdom,E,536.8399,false
+283,Pro Cycling Manager 2014,Simulator,2014,Cyanide Studio,France,E,1523.496,false
+284,NBA Live 15,Sport,2014,EA Tiburon,United States,E,2562.7888,false
+285,Twin Robots,Platform,2015,Ratalaika Games,Spain,E,87.156555,true
+286,Talisman: Digital Edition - The City,Role-playing (RPG),2015,Nomad Games,United Kingdom,E,2111.5337,false
+287,Song of the Deep,Puzzle,2016,Insomniac Games,United States,E,4778.832,false
+288,The Legend of Sword and Fairy 6,Role-playing (RPG),2015,Softstar,Unknown,T,4940.9106,false
+289,Epic Mickey 2: The Power of Two,Platform,2012,Junction Point Studios,Unknown,E,931.7343,true
+290,Africa’s Legends,Puzzle,2014,Leti Arts,Ghana,E10+,3010.756,false
+291,Rugby 15,Simulator,2014,HB Studios,Canada,E,2614.6343,true
+292,Lapse: A Forgotten Future,Simulator,2017,Cornago Stefano,Unknown,E,4622.184,false
+293,Jelly Juggle,Sport,2017,Ian MacLarty,Unknown,E,4663.0435,false
+294,Volcano Climber,Arcade,2017,SPOK Games,Spain,E,1306.5211,false
+295,Sacred 2 Gold,Role-playing (RPG),2012,Ascaron,Unknown,M,2990.4727,false
+296,Pako,Racing,2014,TreeMenGames,Unknown,M,4866.635,false
+297,SUPERBEAT: XONiC,Music,2015,Sony Computer Entertainment Korea,Unknown,T,4879.671,false
+298,Mystery Tales: Eye of the Fire,Puzzle,2016,Big Fish Games,United States,E,1266.4221,false
+299,Upgrade the game 2,Shooter,2015,Suduck,Unknown,EC,3654.1636,false
+300,Zombapocalypse,Shooter,2016,Taldius,France,T,2466.119,false
+301,Dishonored: Game of the Year Edition,Adventure,2013,Arkane Studios SA,Unknown,M,3134.379,false
+302,Touhou Genso Wanderer Reloaded: Flandre Scarlet,Role-playing (RPG),2017,AQUA STYLE,Japan,E10+,2302.435,false
+303,RPG Maker MV,Role-playing (RPG),2015,Degica,Japan,E10+,2050.9307,false
+304,Resident Evil 6: Anthology,Shooter,2012,Capcom,Japan,M,2262.3818,false
+305,Teenage Mutant Ninja Turtles: Danger of the Ooze,Platform,2014,Activision,United States,E10+,509.21463,false
+306,Game of Thrones: A Telltale Games Series - Episode 5: A Nest of Vipers,Point-and-click,2015,Telltale Games,United States,M,216.03241,false
+307,Digimon All-Star Rumble,Fighting,2014,Prope,Japan,E10+,3829.232,false
+308,"Baldr Sky ""Zero""",Hack and slash/Beat 'em up,2013,Giga,Unknown,AO,4127.974,false
+309,Euro Truck Simulator 2: Scandinavia,Simulator,2015,SCS Software,Czechia,E,2633.2039,false
+310,Ninja Bullets,Shooter,2015,Taldius,France,T,195.81747,false
+311,Hanasaku Manimani,Visual Novel,2013,MAGES.,Japan,T,3400.4163,false
+312,Ittle Dew 2,Puzzle,2016,"Nicalis, Inc.",United States,E10+,1627.7412,false
+313,The Wolf Among Us: Episode 3 - A Crooked Mile,Point-and-click,2014,Telltale Games,United States,M,3490.1548,false
+314,SoulWorker,Role-playing (RPG),2016,Lion Games Studios,Unknown,AO,980.43524,false
+315,Baldr Sky: Zero 2,Hack and slash/Beat 'em up,2014,Giga,Unknown,AO,4547.8706,false
+316,Switch To Dash,Arcade,2017,AGameByMe,Unknown,E,4173.7183,false
+317,Grab the Bottle,Puzzle,2017,Kamina Dimension,Finland,E,4612.355,false
+318,Rust Bucket,Puzzle,2015,Nitrome,United Kingdom,E,3551.9265,false
+319,Storm,Puzzle,2013,EKO Software,France,E,1878.1517,false
+320,Euro Truck Simulator 2: Vive La France,Simulator,2016,SCS Software,Czechia,E,1031.5787,false
+321,Cobalt,Adventure,2016,Oxeye Game Studio,Sweden,E10+,3175.0654,true
+322,War of the Roses: Kingmaker,Hack and slash/Beat 'em up,2013,Fatshark,Sweden,AO,2664.8438,false
+323,MXGP3: The Official Motocross Videogame,Racing,2017,Milestone,Italy,E,4533.465,false
+324,Wii Fit U,Simulator,2013,Nintendo EAD Group No. 5,Japan,E,2162.2136,false
+325,Tanki Online,Shooter,2017,AlternativaPlatform,Unknown,E,1686.6376,false
+326,Nun Attack: Run & Gun,Shooter,2017,Frima Studio,Canada,T,2383.4338,false
+327,Cosmochoria,Shooter,2015,Nate Schmold,Unknown,E,3456.875,false
+328,Dragon Fantasy: The Volumes of Westeria,Role-playing (RPG),2015,Muteki,Unknown,E10+,1212.0896,false
+329,Disgaea PC,Role-playing (RPG),2016,"Nippon Ichi Software, Inc.",Japan,T,3514.7324,false
+330,Europa Universalis IV: Rights of Man,Real Time Strategy (RTS),2016,Paradox Development Studio,Sweden,T,3225.2058,false
+331,3D Super Hang-On,Racing,2013,Sega,Japan,E10+,2331.9402,false
+332,Castle Invasion: Throne Out,Indie,2016,Cat Trap Studios,United Kingdom,E,4035.0703,false
+333,The Wolf Among Us: Episode 4 - In Sheep's Clothing,Point-and-click,2014,Telltale Games,United States,M,3448.424,false
+334,Interfectorem,Puzzle,2016,Girls Make Games,Unknown,T,1692.0632,false
+335,Nova Assault,Platform,2016,Ciro Studios,Unknown,T,4346.168,false
+336,Daish Assault - The Videogame,Shooter,2017,Realsalewa Soft,Unknown,T,3109.7478,false
+337,TrackMania 2: Stadium,Racing,2013,Nadeo,France,EC,1103.8859,true
+338,Mars Defender Lite: 3D Asteroids,Shooter,2012,Psychic Software,Unknown,E,2999.524,false
+339,Strike Force Foxx,Adventure,2014,Big John Games,United States,E10+,21.565067,false
+340,Empires & Puzzles: RPG Quest,Puzzle,2017,Small Giant Games,Finland,E10+,4608.316,false
+341,Arcade Style Bot Ball Shooting Multiplayer Game,Shooter,2017,,,EC,2832.6655,false
+342,Savant - Ascent,Shooter,2013,D-Pad Studio,Norway,EC,4705.7817,false
+343,Archangel: Hellfire,Shooter,2017,Skydance Interactive,Unknown,T,2317.988,false
+344,Alchemic Dungeons,Role-playing (RPG),2015,Rogue Ninja,Unknown,E,3472.077,false
+345,Secret Empires of the Ancient World,Puzzle,2014,Teyon,Poland,E10+,3910.1929,false
+346,Trials Fusion: Riders of the Rustlands,Platform,2014,Ubisoft Kyiv,Ukraine,E10+,2508.1875,false
+347,Jotun: Valhalla Edition,Adventure,2016,Thunder Lotus Games,Canada,T,3658.382,false
+348,Tokyo Tattoo Girls,Simulator,2016,Sushi Typhoon Games,Unknown,T,364.77908,false
+349,Emergency 2013,Strategy,2012,Quadriga Games,Germany,T,3301.0188,false
+350,STANDBY,Platform,2016,HypeTrain Digital,Cyprus,E,2481.3896,false
+351,Zombie Tycoon 2: Brainhov's Revenge,Real Time Strategy (RTS),2013,Frima Studio,Canada,T,2378.1372,false
+352,Steep: Gold Edition,Simulator,2016,Ubisoft Annecy,France,T,3033.7422,false
+353,Digimon Masters Online,Role-playing (RPG),2016,"Move Games Co., Ltd.",Unknown,T,2306.8186,false
+354,Glitch Boy,Shooter,2015,Taldius,France,T,491.02106,false
+355,Call of Duty: Infinite Warfare - Jackal Assault,Shooter,2016,Activision,United States,T,2740.2703,false
+356,DreadOut Collection,Puzzle,2016,Digital Happiness,Indonesia,M,2481.321,false
+357,Rise of the Tomb Raider: Blood Ties,Shooter,2016,Crystal Dynamics,United States,M,3664.4333,false
+358,Candlelight,Platform,2016,Pixel Maverick Games,Unknown,E,2083.7725,false
+359,"Treasure Masters, Inc.: The Lost City",Puzzle,2013,Casa Games,Unknown,EC,1282.1608,false
+360,Space Demolisher,Shooter,2016,MobiArt Games,Unknown,E,438.47055,false
+361,The Legend of Kusakari,Puzzle,2016,Nnooo Pty Ltd.,Australia,E10+,3273.1414,false
+362,Flappy Turds: Gangsta Poop Grime Music Edition,Indie,2017,MegaBro Games,Unknown,EC,1860.8507,false
+363,Dr Kawashima's Devilish Brain Training,Puzzle,2017,Nintendo of Europe,Germany,EC,489.28656,false
+364,Smoots World Cup Tennis,Sport,2016,Plug In Digital,France,E10+,334.78537,false
+365,Family Kart 3D,Racing,2013,Arc System Works,Japan,E,954.4199,false
+366,Clandestine,Tactical,2015,Logic Artists,Denmark,M,2374.7073,true
+367,Skullgirls: 2nd Encore,Fighting,2015,"Marvelous USA, Inc.",Unknown,T,4702.3423,false
+368,Super Stardust Ultra,Shooter,2015,D3T Limited,United Kingdom,E,2842.3738,false
+369,Dragon's Prophet,Role-playing (RPG),2012,Runewaker Entertainment,Taiwan (Province of China),M,3626.5762,true
+370,Journey of a Special Average Balloon,Adventure,2015,TreeFall Studios,Unknown,E,2417.4792,false
+371,Duke Nukem 3D: Megaton Edition,Shooter,2013,Devolver Digital,United States,M,3612.9434,true
+372,Dress To Play: Cute Witches!,Adventure,2012,EnjoyUp Games,Unknown,E,2674.655,false
+373,BOOSTY BOT,Indie,2016,Emerald Eel Entertainment,Unknown,E,1634.9609,false
+374,Train Simulator 2021: Amtrak P42 DC 'Empire Builder' Loco,Simulator,2014,Digital Train Models,Unknown,E,3599.105,false
+375,Might & Magic Heroes VI: Shades of Darkness,Role-playing (RPG),2013,Virtuos,China,T,1425.4391,false
+376,Euro Truck Simulator 2,Racing,2012,SCS Software,Czechia,EC,3432.4285,true
+377,Madden NFL 18,Sport,2017,EA Sports,Canada,E,3650.953,true
+378,DARCADE,Platform,2017,IndieNorthSix,Unknown,M,2244.7534,false
+379,The Adventures of Bertram Fiddle: Episode 1 - A Dreadly Business,Point-and-click,2014,Rumpus,Unknown,T,3557.8113,false
+380,Game of Thrones: A Telltale Games Series - Episode 6: The Ice Dragon,Point-and-click,2015,Telltale Games,United States,M,1638.8945,false
+381,Draw a Stickman: EPIC,Puzzle,2012,Hitcents,United States,E10+,357.13654,false
+382,The Banner Saga Complete Pack,Role-playing (RPG),2016,Stoic,United States,T,3509.262,false
+383,Space Zero,Adventure,2017,Jake Johnson,Unknown,E,1842.3606,false
+384,Just Dance: Disney Party 2,Music,2015,,,E,3682.1387,true
+385,Path of Exile: The Fall of Oriath,Role-playing (RPG),2017,Grinding Gear Games,New Zealand,M,4308.275,true
+386,Thief: The Bank Heist,Shooter,2014,Eidos Montréal,Canada,M,2452.8716,false
+387,Eternium,Role-playing (RPG),2015,"Making Fun, inc.",Unknown,T,4104.4077,false
+388,Reservoir Dogs: Bloody Days,Fighting,2017,Big Star Games,Unknown,M,970.46155,false
+389,Toxic Bunny HD,Platform,2014,Celestial Games,South Africa,E,3537.364,false
+390,F1 Race Stars,Racing,2012,Codemasters,United Kingdom,EC,3321.3228,false
+391,Destiny of Spirits,Strategy,2014,Sony Computer Entertainment,Japan,T,1067.586,true
+392,Quake Champions,Shooter,2017,id Software,United States,M,4274.1953,false
+393,Hyrule Warriors: A Link Between Worlds Pack,Strategy,2016,Nintendo,Japan,T,846.665,true
+394,Hogi's Adventure Run,Adventure,2017,Malistic Studio,Unknown,E,2532.7996,false
+395,Coaster Crazy Deluxe,Puzzle,2013,Frontier Developments,United Kingdom,E10+,4829.679,false
+396,Muffin Knight,Platform,2014,Angry Mob Games,Unknown,T,1423.7247,true
+397,Dajjal's Minions,Shooter,2017,Deen Games,Canada,E,2048.429,false
+398,Hawken,Shooter,2012,Adhesive Games,Unknown,T,4275.169,true
+399,Linelight,Platform,2017,My Dog Zorro,Unknown,E,4207.346,false
+400,Giana Sisters: The Puzzle,Puzzle,2015,Chromatrix GmbH,Unknown,E,4099.0854,false
+401,Beat City,Music,2010,Universomo,Finland,E,3584.6672,false
+402,Tom Clancy's H.A.W.X 2,Simulator,2010,Ubisoft Bucharest,Romania,T,783.5726,true
+403,Mystery Case Files: Dire Grove,Puzzle,2009,Big Fish Games,United States,E10+,3158.0808,false
+404,Petz Catz Clan,Simulator,2008,(Archive) Ubisoft US,Unknown,E,3095.4028,true
+405,The Settlers 7: Paths to a Kingdom,Real Time Strategy (RTS),2010,Blue Byte Software,Germany,E10+,25.804863,true
+406,Fireburst,Racing,2010,exDream,Germany,T,2396.4004,false
+407,NBA Live 09,Sport,2008,EA Sports,Canada,E,27.859947,false
+408,UFC Undisputed 3,Fighting,2012,THQ,United States,T,927.6504,false
+409,Xia-Xia,Adventure,2012,GameMill Entertainment,United States,E,3545.196,false
+410,Shinobido 2: Revenge of Zen,Adventure,2011,ACQUIRE Corp.,Japan,M,3956.8325,false
+411,Vitamin X Evolution,Visual Novel,2008,D3 Publisher,Unknown,E10+,2239.681,false
+412,Top Gun: Hard Lock,Fighting,2012,505 Games,United States,T,3940.9438,true
+413,Crimson Gem Saga,Role-playing (RPG),2008,SEGA of Japan,Unknown,T,2426.7905,false
+414,Spore Origins,Strategy,2008,Maxis Software,Unknown,E,3179.2405,false
+415,Splice,Puzzle,2012,Cipher Prime Studios,United States,E,1903.1122,false
+416,Virtua Tennis 4,Sport,2011,Sega,Japan,E,1965.6825,false
+417,Final Fantasy Tactics A2: Grimoire of the Rift,Role-playing (RPG),2007,Square Enix,Japan,E10+,1798.201,false
+418,Rock Band Unplugged,Music,2009,MTV Games,Unknown,T,1433.2527,false
+419,Jazzy Billiards,Sport,2009,Aksys Games,United States,E,326.29523,false
+420,Mad Riders,Racing,2012,Techland,Poland,E,1672.5874,false
+421,WordJong Arcade,Puzzle,2011,Magellan Interactive,Unknown,E,1826.3909,false
+422,Gartic,Puzzle,2008,Onrizon,Brazil,E,3980.7441,false
+423,The Naked Brothers Band,Music,2008,THQ,United States,E,1829.6344,false
+424,5 in 1 Mahjong,Strategy,2011,cerasus.media,Germany,E,2219.7153,false
+425,Double Fine Happy Action Theater,Adventure,2012,Double Fine Productions,United States,E,2546.52,false
+426,Disney's All Star Cards,Simulator,2008,Disney Mobile,Unknown,E10+,3199.2356,false
+427,Midnight Pool,Sport,2008,Gameloft,France,E,1237.6284,false
+428,Tekken 3D: Prime Edition,Fighting,2012,"Arika Co., Ltd.",Japan,M,4957.8403,false
+429,LocoRoco 2,Platform,2008,SCE Japan Studio,Japan,E,1453.5544,false
+430,Getamped 2,Fighting,2008,CyberStep,Japan,T,530.2116,false
+431,Microsoft Flight,Simulator,2012,The Coalition,Canada,E,1437.1539,false
+432,Ecolibrium,Simulator,2012,Sony Computer Entertainment,Japan,E,4571.2437,false
+433,Crimson Room: Reverse,Point-and-click,2009,Takagism,Unknown,T,3170.8975,false
+434,Celebrity Sports Showdown,Sport,2008,EA Canada,Canada,E,2960.1475,false
+435,Cats & Dogs: The Revenge of Kitty Galore,Platform,2010,505 Games,United States,E,3647.289,false
+436,Hotel Dash Suite Success,Strategy,2009,PlayFirst,United States,E,3539.5327,false
+437,Pro Yakyuu Spirits 6,Sport,2009,Konami,Japan,EC,338.3419,false
+438,0D Beat Drop,Music,2009,Cyclone Zero,Unknown,E,4636.0044,true
+439,FaceBreaker,Fighting,2008,EA Sports BIG,Unknown,T,2768.449,false
+440,Joe Danger 2: The Movie,Platform,2012,Hello Games,United Kingdom,E,1554.5049,false
+441,Resistance Collection,Shooter,2012,Insomniac Games,United States,M,623.2798,true
+442,NHL 13,Simulator,2012,EA Canada,Canada,E10+,1501.2428,true
+443,SimCity Societies: Destinations,Simulator,2008,Tilted Mill Entertainment,Unknown,E,4957.419,false
+444,Castlevania: The Adventure ReBirth,Platform,2009,M2,Unknown,T,308.1156,false
+445,Pro Yakyuu Spirits 5,Sport,2008,Konami,Japan,EC,555.4325,false
+446,Dance Dance Revolution Universe 3,Music,2008,Konami,Japan,EC,985.8556,true
+447,Bruiser and Scratch,Puzzle,2009,Steel Penny Games,Unknown,E,3136.9775,false
+448,Ride! Carnival Tycoon,Simulator,2008,Gabriel Entertainment,Unknown,E,1754.589,false
+449,Let's Play Fashion Designer,Simulator,2009,Deep Silver,Germany,EC,379.87598,false
+450,Brave: A Warrior's Tale,Adventure,2009,SouthPeak Interactive,United States,E10+,3180.6812,false
+451,Hotel Transylvania,Platform,2012,GameMill Entertainment,United States,E10+,4044.9873,false
+452,Bookworm Adventures Volume 2,Puzzle,2009,PopCap Games,United States,E10+,2161.0593,false
+453,The Last Story,Role-playing (RPG),2011,Nintendo,Japan,T,1951.4336,true
+454,Lost in Shadow,Platform,2010,Hudson Soft,Japan,E10+,426.79587,false
+455,Battle Poker,Shooter,2009,Left Field Productions,Unknown,E,2379.1538,false
+456,Tales of Monkey Island: Chapter 3 - Lair of the Leviathan,Point-and-click,2009,Telltale Games,United States,T,1815.7845,false
+457,Battlestations: Pacific,Real Time Strategy (RTS),2009,Eidos Interactive,United Kingdom,T,148.12196,false
+458,Kuroko no Basket: Kiseki no Game,Sport,2012,NAMCO BANDAI Games Inc.,Unknown,EC,1098.9781,true
+459,Nail'd,Racing,2010,Deep Silver,Germany,T,4835.0674,false
+460,Major Minor's Majestic March,Music,2009,Majesco Entertainment,United States,E,2426.4526,false
+461,The War of the Worlds,Platform,2011,Other Ocean Interactive,Canada,E10+,308.61832,false
+462,Galactic Civilizations II: Endless Universe,Strategy,2008,Stardock,United States,E,271.71115,false
+463,Pac-Man Pizza Parlor,Simulator,2010,"Namco Networks America, Inc.",Unknown,E,3520.5383,false
+464,Mega Man Zero Collection,Shooter,2010,Capcom,Japan,E,3595.7847,false
+465,Aion,Role-playing (RPG),2009,NCsoft,Republic of Korea,T,1919.6814,false
+466,Aura Aura Climber,Platform,2010,Nintendo,Japan,E,4594.286,false
+467,Strong Bad's Cool Game for Attractive People Episode 4: Dangeresque 3 - The Criminal Projective,Point-and-click,2008,Telltale Games,United States,E10+,3041.1162,false
+468,Monster Jam: Path of Destruction,Racing,2010,Activision,United States,E,3882.0684,false
+469,Amnesia,Visual Novel,2011,Idea Factory,Japan,T,2347.5088,false
+470,Alliance of Valiant Arms,Shooter,2007,RED DUCK Inc.,Unknown,M,305.31726,true
+471,Frankenstein: The Dismembered Bride,Point-and-click,2009,MZone Studio,France,T,1040.8516,false
+472,Real Soccer 2011,Sport,2010,Gameloft,France,E10+,2612.7454,false
+473,New International Track & Field,Sport,2008,Konami,Japan,E10+,4815.0166,false
+474,Avenue Flo,Puzzle,2009,Glu Mobile,Unknown,E,4323.111,false
+475,Wild West Guns,Shooter,2008,Gameloft,France,T,2174.5708,false
+476,Train Conductor,Simulator,2009,The Voxel Agents,Australia,E10+,1661.4791,false
+477,Monopoly,Card & Board Game,2010,Electronic Arts,United States,E,3758.8625,true
+478,Real Kanojo,Simulator,2010,Illusion,Japan,AO,1438.9225,false
+479,Magic: The Gathering - Duels of the Planeswalkers,Strategy,2009,Stainless Games Ltd.,United Kingdom,T,3436.609,true
+480,Atelier Annie: Alchemists of Sera Island,Role-playing (RPG),2009,Gust,Japan,E10+,3683.932,false
+481,Dream Pinball 3D,Simulator,2008,SouthPeak Interactive,United States,EC,4324.203,false
+482,Hot Shots Tennis: Get a Grip,Sport,2010,Clap Hanz,Japan,E,557.3785,false
+483,Professor Layton and the Diabolical Box,Puzzle,2007,Nintendo,Japan,E10+,1461.5521,false
+484,Panic Palette Portable,Visual Novel,2008,Takuyo,Japan,E10+,3035.3591,false
+485,"Warhammer 40,000: Dawn of War II - Retribution",Real Time Strategy (RTS),2011,Relic Entertainment,Canada,AO,3650.3525,false
+486,Diaper Dash,Simulator,2009,Zemnott,United States,E,1897.8986,false
+487,Power Rangers Samurai,Fighting,2011,Inti Creates,Japan,E10+,4676.814,true
+488,Datenshi no Amai Yuuwaku x Kaikan Phrase,Adventure,2010,FuRyu,Japan,E10+,682.9806,false
+489,Ar tonelico II: Melody of Metafalica,Role-playing (RPG),2007,Gust,Japan,T,4921.5264,false
+490,Soul Eater: Monotone Princess,Adventure,2008,Square Enix,Japan,EC,1571.8492,false
+491,East India Company,Real Time Strategy (RTS),2009,Nitro Games,Finland,T,3174.8455,false
+492,Metal Gear Solid HD Edition: 2 & 3,Shooter,2011,Konami Digital Entertainment,Japan,M,2282.6353,false
+493,TetroCrate,Puzzle,2012,AppDeko,Unknown,E,1330.9238,false
+494,Cafeteria Nipponica,Puzzle,2012,Kairosoft,Japan,E,1998.7563,false
+495,Miss Princess Miss Pri,Simulator,2011,Ruby Party,Unknown,EC,587.8299,false
+496,Front Mission Evolved: Wanzer Pack 2,Shooter,2010,Double Helix Games,United States,T,4538.944,true
+497,Red Dead Redemption: Undead Nightmare,Shooter,2010,Rockstar San Diego,United States,M,2581.5847,false
+498,Kinect Adventures,Sport,2010,Microsoft Game Studios,United States,EC,837.9316,false
+499,Who's That Flying?!,Indie,2010,Mediatonic,United Kingdom,T,2680.6045,false
+500,Worms Crazy Golf,Puzzle,2011,Team17,United Kingdom,E,4815.326,false
+501,L.A. Noire: The Complete Edition,Shooter,2011,Rockstar Games,United States,M,2745.4749,false
+502,The History Channel: Great Battles Medieval,Real Time Strategy (RTS),2011,Slitherine Software UK Ltd.,United Kingdom,T,2848.8,false
+503,Rayman Raving Rabbids 2,Music,2007,Ubisoft Paris,France,E10+,1719.417,false
+504,WRC 2: FIA World Rally Championship,Racing,2011,Black Bean Games,Unknown,EC,4295.747,false
+505,No More Heroes,Hack and slash/Beat 'em up,2007,Grasshopper Manufacture,Japan,M,2888.0881,false
+506,American Girl: Kit's Mystery Challenge,Adventure,2008,THQ,United States,E,1188.1904,false
+507,Avalon Code,Role-playing (RPG),2008,Rising Star Games,United Kingdom,E10+,4251.4575,false
+508,Major League Baseball 2K9,Sport,2009,2K Sports,United States,E,3609.342,false
+509,Rance Quest,Role-playing (RPG),2011,Alicesoft,Japan,AO,3428.1328,true
+510,Secret Agent Clank,Platform,2008,"Sony Computer Entertainment, Inc. (SCEI)",Japan,E10+,634.7646,false
+511,Lost Heroes,Role-playing (RPG),2012,Lancarse,Unknown,E10+,3116.2227,false
+512,Artificial Academy,Simulator,2011,Illusion,Japan,AO,3568.829,false
+513,Front Mission Evolved: Wanzer Weapons Pack 2,Shooter,2010,Double Helix Games,United States,T,3691.2917,true
+514,Cabela's Big Game Hunter 2012 (With Top Shot Elite),Simulator,2011,Activision Value,United States,E10+,2153.4297,false
+515,Tony Hawk's Motion,Sport,2008,"Creat Studios, Inc.",Unknown,EC,1600.8337,false
+516,Strong Bad's Cool Game for Attractive People Episode 3: Baddest of the Bands,Adventure,2008,Telltale Games,United States,E10+,1469.9154,false
+517,101 Puppy Pets,Simulator,2008,SelectSoft Publishing,Unknown,E,236.87532,false
+518,A Witch's Tale,Role-playing (RPG),2009,NIS America,United States,E10+,4108.5513,false
+519,Swordigo,Platform,2012,Touch Foo,Unknown,E,2696.5496,false
+520,Madagascar Kartz,Racing,2009,Activision,United States,EC,3407.3506,false
+521,Memories Off 6: Next Relation,Visual Novel,2009,MAGES.,Japan,E10+,649.3041,false
+522,El Shaddai: Ascension of the Metatron,Platform,2011,UTV Ignition Entertainment,Unknown,M,3137.449,false
+523,Beat'n Groovy,Music,2008,Konami,Japan,E,680.4063,false
+524,Petz: Dogz Fashion,Simulator,2008,(Archive) Ubisoft US,Unknown,E,4235.508,false
+525,MTV Fan Attack,Simulator,2007,Mindscape,Netherlands,E,2411.492,false
+526,X-Men Origins: Wolverine,Hack and slash/Beat 'em up,2009,Griptonite Games,United States,T,643.0239,false
+527,Tomodachi Collection,Simulator,2009,Nintendo SPD Group No. 1,Japan,EC,4503.991,false
+528,3 on 3 NHL Arcade,Sport,2009,EA Sports,Canada,EC,404.066,false
+529,Rock of the Dead,Shooter,2010,Conspiracy Entertainment,United States,T,4974.934,true
+530,Crystal Defenders,Strategy,2008,Square Enix,Japan,E,4256.4277,false
+531,Bloons TD 4,Strategy,2009,Ninja Kiwi,New Zealand,E,2912.0972,false
+532,Monkey Quest,Adventure,2011,Nickelodeon,Unknown,E,2340.1726,false
+533,Wolfenstein,Shooter,2009,Raven Software,United States,M,3538.8445,false
+534,Final Fantasy: Crystal Chronicles - Echoes of Time,Role-playing (RPG),2009,Square Enix,Japan,E10+,2810.7107,true
+535,Pipe Mania,Puzzle,2008,Empire Interactive,United Kingdom,E,3456.0703,false
+536,Final Fantasy XIV Online,Role-playing (RPG),2010,Square Enix,Japan,T,1721.0854,false
+537,Test Drive: Ferrari Racing Legends,Racing,2012,"Atari, Inc.",United States,E,1164.6194,false
+538,Space Invaders Extreme 2,Shooter,2009,Taito Corporation,Unknown,E,1564.0922,false
+539,Tom Clancy's Splinter Cell Trilogy HD,Shooter,2011,Ubisoft Montreal,Canada,M,1148.605,true
+540,Jewel Quest II,Puzzle,2009,iWin,United States,E,3205.468,false
+541,EA Sports MMA,Fighting,2010,EA Sports,Canada,T,4867.6787,false
+542,Alan Hansen's Sports Challenge,Sport,2007,Oxygen Games,United Kingdom,E,2177.637,false
+543,Cake Mania: Main Street,Puzzle,2010,Sandlot Games,Unknown,E,486.15488,false
+544,JAM Live Music Arcade,Music,2012,Zivix,Unknown,T,1400.8995,false
+545,Lips: Canta en Español,Music,2009,Microsoft Game Studios,United States,T,4517.531,false
+546,Fairy Bloom Freesia,Platform,2011,Edelweiss,Japan,T,1892.1195,false
+547,Assassin's Creed Brotherhood,Adventure,2010,Ubisoft Montreal,Canada,AO,4950.337,false
+548,We Cheer,Music,2008,Bandai Namco Entertainment,Japan,EC,1053.3644,false
+549,Train Simulator 2021: Amtrak Acela Express EMU,Simulator,2011,Digital Train Models,Unknown,E,3275.0369,false
+550,Super Scribblenauts,Platform,2010,5th Cell,United States,T,2725.6584,false
+551,Puzzle Dimension,Puzzle,2010,Doctor Entertainment,Sweden,E,1011.4263,false
+552,Hack Time,Simulator,2012,i273 LLC,Unknown,T,1350.3798,false
+553,Super Stardust HD Impact Mode,Shooter,2011,Housemarque,Finland,E,1027.5497,false
+554,Rayman 3 HD,Platform,2012,Ubisoft Shanghai,China,E,2293.4478,false
+555,Art of Murder: Cards of Destiny,Point-and-click,2009,City Interactive,Poland,M,1408.8123,false
+556,DiRT 3,Racing,2011,Codemasters Southam,United Kingdom,T,2933.085,false
+557,Moonbase Alpha,Simulator,2010,Virtual Heroes,United States,E,913.05664,true
+558,My Word Coach,Puzzle,2007,Ubisoft Montreal,Canada,E,468.63275,false
+559,Black College Football: BCFX: The Xperience,Sport,2009,Aspyr Media,United States,E,2874.1533,false
+560,Watchmen: The End Is Nigh,Hack and slash/Beat 'em up,2009,WB Games,United States,M,1819.011,true
+561,Fight Night Round 4,Fighting,2009,EA Canada,Canada,M,2893.1726,false
+562,Spectrobes: Origins,Role-playing (RPG),2009,Disney Interactive Studios,United States,E10+,2190.7795,true
+563,Who Wants to be a Millionaire: 1st Edition,Quiz/Trivia,2007,,,EC,4333.244,false
+564,Free Realms,Puzzle,2009,Sony Online Entertainment,United States,T,1275.6564,false
+565,Continent of the Ninth Seal,Role-playing (RPG),2012,Cloud 9 Studio,Unknown,T,1981.8043,false
+566,Cubixx HD,Puzzle,2011,Laughing Jackal LTD,Unknown,E,1130.6692,false
+567,Tomb Raider: Underworld,Shooter,2008,Buzz Monkey Software,Unknown,T,1080.7968,false
+568,Meitantei Conan & Kindaichi Shounen no Jikenbo: Meguri au Futari no Meitantei,Puzzle,2009,Bandai,Japan,EC,2603.7505,false
+569,DJ Max Fever,Music,2009,Pentavision,Unknown,T,2883.5261,false
+570,Pro Yakyuu Famista DS 2010,Sport,2010,Namco,Japan,EC,526.1631,false
+571,Tokimeki Memorial 4,Simulator,2009,Konami,Japan,T,3681.9497,false
+572,LoveBeat,Music,2009,CrazyDiamond,Republic of Korea,E10+,3190.3384,false
+573,White-Water Domo,Sport,2009,Nintendo,Japan,E,4098.3154,false
+574,Man vs. Wild,Role-playing (RPG),2011,Crave Entertainment,United States,T,3875.448,false
+575,I Am Alive,Platform,2012,Darkworks,France,AO,1503.3254,false
+576,Sniper Elite V2,Shooter,2012,Rebellion Developments,United Kingdom,M,1990.8198,true
+577,Might & Magic: Clash of Heroes,Puzzle,2009,Capybara Games,Canada,T,1092.3036,false
+578,Guitar Hero World Tour,Music,2008,Activision,United States,T,2883.0933,true
+579,Dragon Ball: Raging Blast,Fighting,2009,Spike,Japan,EC,2937.8228,false
+580,Guitar Hero: Van Halen,Music,2009,Underground Development,Unknown,T,3911.8398,true
+581,Jewels of the Nile,Point-and-click,2008,SelectSoft Publishing,Unknown,E,3549.701,false
+582,Henry Hatsworth in the Puzzling Adventure,Platform,2009,EA Tiburon,United States,E,3624.5278,false
+583,Ascension to the Throne: Valkyrie,Role-playing (RPG),2008,Strategy First,Canada,M,621.98645,false
+584,Shoot Many Robots,Shooter,2012,Demiurge Studios,United States,M,1438.6757,true
+585,Doctor Who: Return to Earth,Adventure,2010,Asylum Entertainment,Unknown,EC,4137.8994,false
+586,Elder Sign: Omens,Strategy,2011,"Fantasy Flight Publishing, Inc.",Unknown,T,2793.1528,false
+587,The Lord of the Rings: Aragorn's Quest,Adventure,2010,WB Games,United States,T,3806.1282,false
+588,Bibi Blocksberg: Das große Hexenbesen-Rennen!,Racing,2010,Nurogames,Unknown,EC,2530.97,true
+589,Gallop & Ride,Simulator,2008,THQ,United States,E,4213.558,false
+590,Get Up and Dance,Music,2011,O-Games,Unknown,T,4419.9976,true
+591,9th Company: Roots Of Terror,Real Time Strategy (RTS),2009,Strategy First,Canada,T,2409.0542,false
+592,Pac-Man Power Pack,Adventure,2008,Namco Hometek,United States,E,204.65474,false
+593,Resident Evil: The Darkside Chronicles,Shooter,2009,Cavia,Japan,AO,797.905,true
+594,Imagine: Soccer Captain,Simulator,2009,,,E,4488.2944,false
+595,Real Soccer 2010,Sport,2010,Gameloft,France,E,1802.7739,false
+596,The Sims 3: Hidden Springs,Simulator,2011,The Sims Studio,United States,T,494.15118,false
+597,Kung Fu Panda: Legendary Warriors,Platform,2008,Activision,United States,E10+,1688.3811,false
+598,Resident Evil: The Umbrella Chronicles,Shooter,2007,Capcom,Japan,M,4475.999,false
+599,Resident Evil: Revelations,Shooter,2012,Capcom,Japan,M,4078.006,true
+600,My Baby First Steps,Simulator,2009,Nobilis,Unknown,E,298.57916,false
+601,Counter-Strike Avalon,Shooter,2007,Valve Corporation,United States,M,3578.245,false
+602,Magical Drop DX,Puzzle,2004,Matrix Software,Japan,E10+,2446.2576,false
+603,World War II Combat: Iwo Jima,Shooter,2006,Groove Games,Unknown,M,1098.8484,false
+604,Gunstar Super Heroes,Shooter,2005,Treasure,Japan,E10+,958.9338,false
+605,City of Villains,Role-playing (RPG),2005,Cryptic Studios,Unknown,T,336.802,false
+606,Samurai Jack: The Shadow of Aku,Adventure,2004,Sega,Japan,T,879.75464,false
+607,Black Stone: Magic & Steel,Role-playing (RPG),2003,XPEC,Taiwan (Province of China),T,2038.7095,false
+608,Tremulous,Shooter,2006,Darklegion Development,Unknown,M,4973.329,false
+609,Coded Arms,Shooter,2005,Konami,Japan,T,1508.2197,true
+610,Jet X2O,Racing,2002,Killer Game,Unknown,E,4841.674,false
+611,Upptäck rymden med Mulle Meck,Point-and-click,2004,Levande Böcker,Sweden,EC,3008.9,false
+612,Connect Four / Perfection / Trouble,Quiz/Trivia,2005,DSI Games,Unknown,E,984.0211,false
+613,Soul Nomad & the World Eaters,Role-playing (RPG),2007,Koei,Japan,T,2023.9305,false
+614,Crashday,Racing,2006,Atari,Unknown,T,3330.9663,false
+615,Spy Fiction,Adventure,2003,Access Games,Japan,M,3229.8066,false
+616,Top Spin 2,Simulator,2006,2K Sports,United States,E,1387.0887,false
+617,Colin McRae Rally 2005 Plus,Racing,2005,Six by nine,Unknown,EC,4664.394,false
+618,Catwoman,Adventure,2004,Magic Pockets,France,T,3836.172,false
+619,Backyard Baseball,Sport,2002,Humongous Entertainment,United States,E,3137.8743,true
+620,Vampire Rain,Shooter,2007,AQ Interactive,Japan,M,3201.6118,false
+621,Dragon Ball,Role-playing (RPG),2003,Bandai,Japan,EC,3530.8706,false
+622,Breeders' Cup World Thoroughbred Championships,Racing,2005,4J Studios,United Kingdom,E,4179.1914,false
+623,Dance Dance Revolution Ultramix 3,Music,2005,Konami,Japan,E10+,865.2161,false
+624,Microsoft Flight Simulator 2004: A Century of Flight,Simulator,2003,Microsoft Game Studios,United States,E,3547.6255,false
+625,Pro Yakyuu Spirits 4,Sport,2007,Konami,Japan,EC,3022.3013,false
+626,Dance Dance Revolution: Ultramix,Music,2003,Konami,Japan,E,1988.0157,false
+627,WWE Survivor Series,Fighting,2004,THQ,United States,T,3109.4553,false
+628,Freedoom,Shooter,2003,Freedoom,Unknown,M,2253.9045,false
+629,Moto Racer Advance,Racing,2002,Adeline Software International,France,E,2172.9407,false
+630,MotorStorm,Racing,2006,Evolution Studios,United Kingdom,T,1130.4238,false
+631,Battalion Wars,Real Time Strategy (RTS),2005,Nintendo,Japan,T,1184.6987,false
+632,Crazy Frog Racer 2,Racing,2006,Neko Entertainment,France,E,2231.1846,false
+633,ESPN NBA Basketball,Sport,2003,Visual Concepts,United States,E,3047.115,false
+634,Brain Boost: Beta Wave,Puzzle,2006,505 Games,United States,E,1156.884,false
+635,Disney Presents: Piglet's Big Game,Platform,2003,Gotham Games,Unknown,E,1011.7698,false
+636,Nintendogs: Best Friends,Simulator,2005,Nintendo,Japan,E,3488.4617,false
+637,Drakens Värld,Adventure,2006,Svt,Unknown,E,4255.9346,false
+638,XxxHolic: Watanuki no Izayoi Sowa,Adventure,2007,Tenky Co.,Unknown,E10+,2286.7534,false
+639,The Sims: Makin' Magic,Role-playing (RPG),2003,Maxis,United States,T,2743.5332,false
+640,Hot Wheels: Beat That!,Racing,2007,Activision,United States,E,1841.1084,false
+641,Custom Robo,Role-playing (RPG),2004,Nintendo,Japan,T,3355.8083,false
+642,MotoGP,Racing,2003,THQ Wireless,United States,E,3824.3706,false
+643,Terminator 3: The Redemption,Racing,2004,Atari,Unknown,T,1222.9296,false
+644,The Sims: Superstar,Role-playing (RPG),2003,Maxis,United States,T,2943.3088,false
+645,Children of Mana,Role-playing (RPG),2006,Square Enix,Japan,E10+,4114.087,true
+646,Mega Man ZX Advent,Shooter,2007,Inti Creates,Japan,E10+,129.75693,true
+647,Banjo-Pilot,Racing,2005,THQ,United States,E,2012.9227,true
+648,Backyard Skateboarding,Sport,2004,Humongous Entertainment,United States,E,3785.6,false
+649,Mega Man ZX,Shooter,2006,Inti Creates,Japan,E,1818.0327,false
+650,FIFA 2003,Sport,2002,Electronic Arts,United States,E,3003.6443,false
+651,World of Warcraft,Role-playing (RPG),2004,Blizzard Entertainment,United States,T,4617.9897,false
+652,Babar: To The Rescue,Platform,2006,The Game Factory,Denmark,E,1474.2305,false
+653,Monster Bomber,Puzzle,2006,Red Ant Enterprises,Unknown,E,4123.3765,false
+654,Gaelic Games: Football,Sport,2005,IR Gurus,Unknown,EC,334.3819,false
+655,One Piece: Going Baseball - Kaizoku Yakyuu,Sport,2004,NOW Production,Japan,EC,4396.102,true
+656,Franklin: A Birthday Surprise,Platform,2006,Neko Entertainment,France,E,3091.6846,false
+657,Moto GP: Ultimate racing technology,Racing,2002,Climax Brighton,United Kingdom,EC,4883.4395,false
+658,Shakugan no Shana,Role-playing (RPG),2006,VRIDGE,Japan,E10+,2266.4536,false
+659,Lumines II,Music,2006,Q Entertainment,Japan,E10+,982.4946,false
+660,Little Aid Portable,Visual Novel,2007,Takuyo,Japan,E10+,965.1566,false
+661,Professor Layton and the Curious Village,Puzzle,2007,Nintendo,Japan,E,1908.4386,false
+662,Little Aid,Visual Novel,2005,Takuyo,Japan,E10+,2718.243,false
+663,EverQuest: The Buried Sea,Role-playing (RPG),2007,Sony Online Entertainment,United States,T,884.4236,false
+664,Full House Kiss,Visual Novel,2004,Capcom,Japan,E10+,896.3652,false
+665,Panic Palette,Visual Novel,2007,Takuyo,Japan,E10+,4886.8887,false
+666,Full House Kiss 2,Visual Novel,2006,Tenky Co.,Unknown,E10+,1538.7843,false
+667,Love Drops,Adventure,2007,Sugar Beans,Unknown,E10+,4559.347,false
+668,Hot Shots Golf: Open Tee 2,Sport,2007,Clap Hanz,Japan,E,4280.7437,false
+669,Cars: Radiator Springs Adventures,Racing,2006,THQ,United States,E,3239.584,false
+670,Rugrats Go Wild!,Platform,2003,THQ,United States,E,4984.3047,false
+671,Asphalt: Urban GT,Racing,2004,Gameloft,France,E,844.0983,true
+672,Phoenix Wright: Ace Attorney − Trials and Tribulations,Adventure,2004,Capcom,Japan,T,4425.565,false
+673,Apocripha/0,Strategy,2004,GN Software,Unknown,T,1980.3345,false
+674,Tropix!,Puzzle,2006,Robot Super Brain,United States,E10+,1476.472,false
+675,Detective Conan: Nerawareta Tantei,Adventure,2003,Bandai,Japan,EC,292.39957,false
+676,Blitz: The League,Sport,2005,Midway Games,United States,M,451.12216,false
+677,Defender,Arcade,2006,Midway,United States,E,2390.0957,false
+678,England International Football,Sport,2004,Codemasters,United Kingdom,E,2904.262,true
+679,Tom Clancy's Splinter Cell: Double Agent,Shooter,2006,Ubisoft Shanghai,China,M,159.01,true
+680,Defender,Shooter,2002,Midway,United States,E,1876.31,false
+681,Me & My Katamari,Puzzle,2005,Namco,Japan,E,2321.9878,false
+682,Coffee Break,Puzzle,2005,Nobilis,Unknown,T,858.9712,false
+683,The Need for Speed Collection,Racing,2003,EA Canada,Canada,E,541.1714,false
+684,Spongebob Squarepants: The Yellow Avenger,Platform,2005,THQ,United States,E,1241.0775,false
+685,WWE SmackDown vs. Raw 2007,Fighting,2006,THQ,United States,T,4258.8257,false
+686,Hiiro no Kakera: Ano Sora no Shita de,Visual Novel,2007,Idea Factory,Japan,E10+,1325.7695,false
+687,Armored Core: Last Raven,Shooter,2005,Agetec,Unknown,T,3504.9565,false
+688,Magnetica,Puzzle,2006,Mitchell Corporation,Unknown,E,273.86786,false
+689,Armored Core: Nine Breaker,Simulator,2004,FromSoftware,Japan,T,2007.923,false
+690,Astonishia Story,Role-playing (RPG),2005,Sonnori,Republic of Korea,T,67.31001,false
+691,Sonic and the Secret Rings,Platform,2007,Sega,Japan,E,1723.1075,true
+692,Meteos: Disney Magic,Puzzle,2007,Q Entertainment,Japan,E,4160.5527,false
+693,Mario Kart DS,Racing,2005,Nintendo EAD Group No. 1,Japan,E,134.91776,false
+694,Donkey Konga 2,Music,2004,Namco,Japan,T,4558.1104,false
+695,Back to Stone,Role-playing (RPG),2006,Hidden Floor,Unknown,E,2098.102,false
+696,Sangokushi Taisen,Real Time Strategy (RTS),2005,Sega,Japan,E10+,231.97594,false
+697,The Adventures of Darwin,Strategy,2006,Vingt-et-un Systems,Unknown,E10+,951.6659,false
+698,Ten Pin Alley 2,Sport,2004,XS Games,Unknown,E,2292.2185,false
+699,Teen Titans,Hack and slash/Beat 'em up,2006,Majesco Entertainment,United States,E10+,4919.915,false
+700,World Snooker Championship 2007,Sport,2007,Sega,Japan,EC,4346.926,false
+701,WRC II Extreme,Racing,2002,Evolution Studios,United Kingdom,EC,1608.844,false
+702,Tony Hawk's Downhill Jam,Racing,2006,Toys for Bob,United States,E10+,2182.4634,false
+703,Style Book: Cinnamoroll,Simulator,2006,Bandai,Japan,EC,2396.6829,false
+704,Tony Hawk's Downhill Jam,Sport,2006,Activision,United States,E,4462.9243,false
+705,Suikoden IV,Role-playing (RPG),2004,Konami Computer Entertainment Tokyo,Japan,T,1528.2931,false
+706,Paradise Lost (2004),Visual Novel,2004,light,Unknown,AO,50.435158,false
+707,Rockstar Games presents Table Tennis,Simulator,2006,Rockstar San Diego,United States,E,4119.4497,true
+708,Operation Flashpoint: Game of the Year Edition,Shooter,2002,Codemasters,United Kingdom,M,4756.2817,false
+709,Kramer Hentai Adventure 3,Point-and-click,2006,MessYouUpMac,Unknown,AO,4586.9106,false
+710,Thomas & Friends: A Day at the Races,Puzzle,2007,Blast! Entertainment,United Kingdom,EC,73.029015,false
+711,Lock On: Modern Air Combat,Simulator,2003,Eagle Dynamics,Russian Federation,E,3711.6973,false
+712,The Sims 2: Nightlife,Role-playing (RPG),2005,Maxis,United States,T,4409.9463,false
+713,Urusei Yatsura: Endless Summer,Adventure,2005,Marvelous Entertainment,Japan,EC,28.491673,false
+714,Nancy Drew: Danger by Design,Point-and-click,2006,Her Interactive,United States,E,4020.136,false
+715,SRS: Street Racing Syndicate,Racing,2005,Eutechnyx,United Kingdom,M,1204.0125,false
+716,Spongebob Squarepants: Employee of the Month,Point-and-click,2002,THQ,United States,E,3603.626,false
+717,Scooby-Doo! Mystery Mayhem,Platform,2003,THQ,United States,E,4687.0835,false
+718,Finding Nemo: The Continuing Adventures,Puzzle,2004,THQ,United States,E,3339.748,false
+719,1080° Avalanche,Racing,2003,Nintendo,Japan,E,681.81354,true
+720,Heroes of Might and Magic V,Role-playing (RPG),2006,Freeverse Software,Unknown,T,4658.5107,false
+721,March of the Penguins,Strategy,2006,"Skyworks Interactive, Inc.",Unknown,E,4332.163,false
+722,Tom Clancy's Rainbow Six: Lockdown,Shooter,2005,Red Storm Entertainment,United States,M,3016.4734,false
+723,Peggle Extreme,Puzzle,2007,PopCap Games,United States,T,3577.6497,false
+724,Iridion II,Shooter,2003,Majesco Entertainment,United States,E,1480.9591,false
+725,M&M's Kart Racing,Racing,2005,DSI Games,Unknown,E,3283.6846,false
+726,Westward,Puzzle,2007,Sandlot Games,Unknown,E10+,3976.7185,false
+727,Cartoon Network Speedway,Racing,2003,Majesco Entertainment,United States,E,4403.4307,false
+728,Puzzle Challenge: Crosswords and More,Puzzle,2006,Crave Entertainment,United States,E,4236.0537,false
+729,CSI: Crime Scene Investigation - Dark Motives,Adventure,2004,Ubisoft Europe,Unknown,M,4464.469,false
+730,Guitar Hero Encore: Rocks the 80s,Music,2007,Activision,United States,T,3243.5159,false
+731,Angel Love Online,Role-playing (RPG),2006,Q Entertainment,Japan,EC,3407.386,false
+732,Altered Beast,Hack and slash/Beat 'em up,2005,Sega,Japan,T,2042.3657,false
+733,Mob Enforcer,Shooter,2004,ValuSoft,Unknown,M,2824.3003,false
+734,Empires: Dawn of the Modern World,Real Time Strategy (RTS),2003,Activision,United States,T,1743.3783,false
+735,Unlimited SaGa,Role-playing (RPG),2002,Square Enix,Japan,T,2222.057,false
+736,Magna Carta Portable,Role-playing (RPG),2006,Softmax,Unknown,E10+,4492.146,false
+737,Stake: Fortune Fighters,Fighting,2003,Metro 3D,Unknown,T,4127.0176,false
+738,Breakdown,Shooter,2004,Namco,Japan,M,659.73065,false
+739,EverQuest: Prophecy of Ro,Role-playing (RPG),2006,Sony Online Entertainment,United States,T,2210.4019,false
+740,The Suffering,Shooter,2004,Surreal Software,Unknown,M,993.1629,false
+741,Rugrats: Royal Ransom,Adventure,2002,THQ,United States,E,3338.9543,false
+742,Deer Hunter 2004,Shooter,2003,Southlogic Studios,Unknown,T,1070.7878,false
+743,Marcel Desailly Pro Soccer,Sport,2004,Gameloft,France,E,4080.933,false
+744,Luxor 2,Shooter,2006,MumboJumbo,Unknown,E,1555.202,false
+745,Lets Ride Corral Club,Simulator,2007,ValuSoft,Unknown,E,4424.976,false
+746,Mega Man Star Force: Leo,Platform,2006,Capcom,Japan,E,4108.3936,false
+747,Mega Man Star Force: Dragon,Role-playing (RPG),2006,Capcom,Japan,E,2988.068,false
+748,Mega Man Network Transmission,Platform,2003,Capcom,Japan,E,2529.6375,false
+749,Untold Legends: The Warrior's Code,Role-playing (RPG),2006,Sony Online Entertainment,United States,T,2474.3513,true
+750,Mega Man X: Command Mission,Role-playing (RPG),2004,Capcom Production Studio 3,Japan,E,4769.992,false
+751,Mega Man X Collection,Platform,2006,Capcom,Japan,E,1282.912,false
+752,Hooked! Real Motion Fishing,Simulator,2007,Aksys Games,United States,E,2754.452,false
+753,Dynasty Warriors Advance,Strategy,2005,Nintendo,Japan,E10+,1935.3378,false
+754,Half-Life: Chernobyl,Shooter,2003,"Companiya ""Fiks""",Unknown,M,1180.4756,false
+755,Heavenly Sword,Fighting,2007,Sony Computer Entertainment Europe,Unknown,T,442.6073,false
+756,ATV Offroad Fury Pro,Racing,2006,Climax Racing,United Kingdom,EC,1398.3964,false
+757,Naruto: Ninja Council 2,Platform,2004,Aspect,Japan,E10+,3654.618,false
+758,Defender,Shooter,2002,Midway,United States,T,3043.687,false
+759,Jazz Jackrabbit Advance,Platform,2002,Jaleco,Unknown,E,4205.2705,false
+760,Tonka Construction 2,Fighting,2004,Atari,Unknown,E,482.49002,false
+761,Kalonline,Point-and-click,2004,InixSoft,Republic of Korea,T,3144.1345,false
+762,Highland Warriors,Real Time Strategy (RTS),2003,Soft Enterprises,Unknown,T,1222.073,false
+763,X2: The Threat,Simulator,2003,Egosoft,Germany,T,3988.726,false
+764,Princess Maker 5,Simulator,2007,"CFK Co., Ltd.",Republic of Korea,AO,4846.4536,false
+765,Mobile Armor,Arcade,2002,Agetec,Unknown,T,3116.4495,false
+766,Doko Demo Issho: Toro to Nagareboshi,Adventure,2004,Sony Computer Entertainment,Japan,EC,4649.3994,false
+767,NHL Hitz Pro,Sport,2003,Midway Games,United States,E,3671.9097,false
+768,Jeanne d'Arc,Role-playing (RPG),2006,Level-5,Japan,T,4950.3774,false
+769,Monster Madness: Battle for Suburbia,Shooter,2007,SouthPeak Interactive,United States,T,4816.915,true
+770,Simple 2000 Series Vol. 105: The Maid Fuku to Kikanjuu,Hack and slash/Beat 'em up,2006,D3Publisher,Unknown,E10+,789.02484,false
+771,Soldier Elite: Aurora Watching,Tactical,2006,Metropolis Software,Poland,M,6.6383514,false
+772,Spongebob Squarepants: Creature From the Krusty Krab,Platform,2005,THQ,United States,EC,4968.2065,false
+773,Pool Party,Puzzle,2007,SouthPeak Interactive,United States,E,2385.6526,false
+774,Sports Illustrated for Kids: Football,Simulator,2003,BAM! Entertainment,United States,E,557.5514,false
+775,Ping Pals,Simulator,2004,THQ,United States,E,2758.9783,false
+776,The Sims 2: Family Fun Stuff,Role-playing (RPG),2006,Maxis,United States,T,3606.6633,false
+777,Kyou Kara Maou! Shin Makoku no Kyuujitsu,Adventure,2007,Namco Bandai Games,Japan,E10+,2546.3926,false
+778,Catan,Card & Board Game,2005,Capcom,Japan,E,2029.0428,false
+779,Railroad Tycoon 3,Simulator,2003,Gathering of Developers,United States,EC,1153.5593,false
+780,Lunar Knights,Role-playing (RPG),2006,Kojima Productions,Japan,E10+,4445.8726,false
+781,Madagascar,Platform,2005,Toys for Bob,United States,EC,3180.8901,false
+782,Secret of Evangelion,Adventure,2006,West One,Unknown,T,2021.41,false
+783,Tao's Adventure: Curse of the Demon Seal,Role-playing (RPG),2006,Konami,Japan,E,3990.6226,false
+784,ESPN MLB Baseball,Sport,2004,Visual Concepts,United States,E,3153.795,false
+785,Magic: The Gathering – Battlegrounds,Fighting,2003,Atari,Unknown,T,975.9872,false
+786,"Port Royale: Gold, Power and Pirates",Simulator,2003,Ascaron Entertainment,Germany,E,2501.4287,false
+787,Malice,Platform,2004,Mud Duck Productions,Unknown,T,4147.3276,false
+788,SpellForce 2: Dragon Storm,Real Time Strategy (RTS),2007,Phenomic Game Development,Germany,M,4419.515,false
+789,Melbourne Cup Challenge,Racing,2006,Tru Blu Entertainment,Unknown,E,3518.5105,false
+790,M&M's Break 'Em,Puzzle,2007,Destination Software,Unknown,E,1034.0149,false
+791,Princess Maker 4,Simulator,2005,Gainax,Unknown,T,1276.6431,false
+792,Pac-Man Championship Edition,Puzzle,2007,Namco Bandai Games,Japan,E,4432.6387,false
+793,High Seize,Strategy,2005,Nokia,Finland,T,3947.5571,false
+794,Medal of Honor: Heroes,Shooter,2006,EA Canada,Canada,T,4289.8354,false
+795,MechAssault: Phantom War,Shooter,2006,Majesco,Unknown,T,4399.843,false
+796,Formula One 05,Racing,2005,SCE Studio Liverpool,United Kingdom,EC,2309.015,false
+797,Mega Man Battle Network 5: Double Team DS,Role-playing (RPG),2005,Capcom,Japan,E,1465.6423,false
+798,PlanetSide,Shooter,2003,Sony Online Entertainment,United States,M,4641.8716,false
+799,Sword of the Stars: Born of Blood,Strategy,2007,Kerberos Productions,Canada,E10+,2726.401,false
+800,EverQuest: The Legacy of Ykesha,Role-playing (RPG),2003,Sony Online Entertainment,United States,T,954.5814,false
+801,Lego Creator: Knights' Kingdom,Simulator,2000,Lego Media,Unknown,E,262.0225,false
+802,Goofy's Fun House,Adventure,2001,The Code Monkeys,Unknown,E,3618.9646,false
+803,Tom Clancy's ruthless.com,Strategy,1998,Red Storm Entertainment,United States,E,2019.0316,false
+804,Circus Maximus: Chariot Wars,Racing,2002,Kodiak Interactive,Unknown,T,951.6676,false
+805,Big Air Freestyle,Racing,2002,Paradigm Entertainment,Unknown,T,900.5108,false
+806,Check Mate,Quiz/Trivia,1999,Success,Unknown,EC,23.216461,false
+807,Simple 1500 Series Vol. 64: The Kickboxing,Fighting,2001,Jorudan,Unknown,T,2479.071,false
+808,The Labyrinth Plus! Edition,Puzzle,2001,Microsoft,United States,E,4078.9766,false
+809,C: The Contra Adventure,Shooter,1998,Appaloosa Interactive,Hungary,T,4382.6973,false
+810,Super Cross Kings,Racing,2000,Freeloader,Unknown,E,2084.1738,false
+811,ClayFighter: Sculptor's Cut,Fighting,1998,Interplay Entertainment,United States,T,4579.497,true
+812,Clusterball,Fighting,2000,Daydream Software,Spain,E,3713.2969,false
+813,Actua Soccer 3,Sport,1998,Gremlin Interactive,United Kingdom,EC,188.95213,false
+814,Centre Court Tennis,Sport,1998,Hudson Soft,Japan,E,61.96818,true
+815,Temujin,Point-and-click,1997,SouthPeak Interactive,United States,T,1829.424,false
+816,Everybody's Golf 2,Sport,1999,Clap Hanz,Japan,E,2681.241,false
+817,Skipper & Skeeto - The Shadow of Mr. Shade,Point-and-click,1998,Ivanoff Interactive,Denmark,EC,1967.2095,false
+818,Tread Marks,Shooter,2000,Longbow Digital Arts,Unknown,T,3657.6572,false
+819,Flight Unlimited II,Simulator,1997,Eidos Interactive,United Kingdom,E,2020.7203,false
+820,MotoGP,Racing,2000,Namco,Japan,E,873.8921,false
+821,Wild Wild Racing,Racing,2000,Rage Software,United Kingdom,E,1298.731,false
+822,X-Squad,Adventure,2000,Square Electronic Arts,Unknown,T,2043.8832,false
+823,Dokapon: Monster Hunter,Role-playing (RPG),2001,Asmik Ace Entertainment,Unknown,E,1712.0148,false
+824,Shaun Palmer's Pro Snowboarder,Sport,2001,Activision,United States,E,1708.9716,false
+825,Daikatana,Hack and slash/Beat 'em up,2000,Kemco,Japan,E,29.311335,false
+826,Shadow Man,Adventure,1999,Acclaim Studios Teesside,Unknown,M,948.7799,false
+827,Final Fantasy VII International,Role-playing (RPG),1997,Square,Japan,E10+,3817.3037,false
+828,Mortyr 2093-1944,Shooter,1999,Mirage Interactive,Unknown,M,950.59375,false
+829,Shogo: Mobile Armor Division,Shooter,1998,Monolith Productions,United States,M,2922.6455,true
+830,Baseball Advance,Sport,2002,THQ,United States,E,1374.3951,false
+831,Gangsters: Organized Crime,Strategy,1998,Hothouse Creations,Unknown,T,1884.0364,false
+832,Muumit ja Taikurin hattu,Point-and-click,1997,Norsk Strek AS,Unknown,EC,1677.0276,false
+833,Star Wars: Episode I - Jedi Power Battles,Fighting,2000,LucasArts,United States,T,1511.1157,false
+834,Legend of Mana,Role-playing (RPG),1999,Square,Japan,T,41.109722,true
+835,Spider-Man: Mysterio's Menace,Platform,2001,Activision,United States,E,4905.632,false
+836,Quest for Camelot,Adventure,1998,Titus France,France,E,1859.7073,false
+837,The Sims: Unleashed,Role-playing (RPG),2002,Electronic Arts,United States,T,3485.5134,false
+838,F1 Racing Simulation,Racing,1998,,,E,442.66672,false
+839,Mortal Kombat Mythologies: Sub-Zero,Fighting,1997,Midway Games,United States,M,2345.9866,false
+840,Gothos,Adventure,1997,Microforum International,Unknown,M,3784.1401,false
+841,Croc,Platform,2000,Virtucraft,Unknown,E,1147.9391,false
+842,Extreme Paintbrawl 2,Shooter,1999,HeadGames,Unknown,T,1346.1309,false
+843,NBA Street,Sport,2001,EA Sports BIG,Unknown,E,1198.1163,false
+844,Duke Nukem: Land of the Babes,Shooter,2000,n-Space,United States,M,835.81506,false
+845,Heroes of Might and Magic,Role-playing (RPG),2000,3DO,Unknown,E,4147.8555,false
+846,Boss Rally,Racing,1999,Boss Game Studios,Unknown,E,2505.0154,false
+847,Star Wars: Rogue Squadron II - Rogue Leader,Shooter,2001,LucasArts,United States,T,3599.1626,false
+848,Blue's Clues: Blue's Big Musical,Music,2001,Viacom New Media,Unknown,EC,4113.6753,false
+849,The Sims: Livin' Large,Role-playing (RPG),2000,Maxis,United States,E,4730.499,false
+850,Reservoir Rat,Platform,1998,Take-Two Interactive,United States,E,2244.577,false
+851,F1 2002,Racing,2002,Electronic Arts,United States,E,4655.124,false
+852,Ark of Time,Adventure,1997,Koei,Japan,E,1695.9673,false
+853,Backyard Baseball 2003,Sport,2002,Humongous Entertainment,United States,E,967.44037,false
+854,Atari Anniversary Advance,Quiz/Trivia,2002,Infogrames,France,E,984.1081,false
+855,Bishi Bashi Special,Arcade,2000,Konami,Japan,E,3263.5913,false
+856,Armed & Delirious,Point-and-click,1997,Makh-Shevet,Unknown,T,2810.645,false
+857,PGA Championship Golf 1999 Edition,Sport,1999,Sierra On-Line,United States,E,1795.7933,false
+858,Armored Core: Project Phantasma,Shooter,1997,Agetec,Unknown,T,3769.7273,false
+859,Timeline,Puzzle,2000,Timeline Computer Entertainment,Unknown,E,1512.7833,false
+860,BANG! Gunship Elite,Simulator,2000,Rayland Interactive,Unknown,E,543.75165,false
+861,Army Men: Air Attack,Shooter,1999,3DO,Unknown,T,4850.092,true
+862,Bangai-O,Shooter,2001,Treasure,Japan,E,4374.8613,false
+863,Wayne Gretzky's 3D Hockey '98,Sport,1997,Midway,United States,E,3668.3901,false
+864,MagForce Racing,Racing,2000,Crave Entertainment,United States,E,3503.4329,false
+865,Deer Hunter 5: Tracking Trophies,Shooter,2001,Sunstorm Interactive,United States,T,516.3402,false
+866,Warlords III: Reign of Heroes,Strategy,1997,Strategic Studies Group,Unknown,E,2105.5486,false
+867,Swarm Assault,Real Time Strategy (RTS),1999,Gate 5 Software,Australia,E,2137.1912,false
+868,Kids Tetris,Puzzle,1999,Hasbro Interactive,United States,E,4972.459,true
+869,Wheel of Fortune,Quiz/Trivia,1998,Hasbro Interactive,United States,E,316.98193,false
+870,Age of Sail II,Real Time Strategy (RTS),2001,Akella,Russian Federation,E,3863.123,false
+871,Tom and Jerry in Mouse Attacks,Platform,2000,,,E,1068.2322,false
+872,FireTeam,Strategy,1998,Multitude,Unknown,T,4148.1523,false
+873,Physicus: Save the World with Science!,Adventure,1999,Ruske & Puhretmaier Edutainment,Unknown,E,3026.2136,false
+874,Pinobee: Wings of Adventure,Platform,2001,Activision,United States,E,2225.827,false
+875,Rage of Mages,Role-playing (RPG),1998,Buka Entertainment,Russian Federation,E,4185.991,false
+876,Monopoly 3,Strategy,2002,Infogrames,France,E,1667.0787,false
+877,Animation Hangman,Quiz/Trivia,1997,Memorex Software,Unknown,E,2983.4294,false
+878,Tonka Garage,Point-and-click,1998,Hasbro Interactive,United States,E,1710.8247,false
+879,The Simpsons: Virtual Springfield,Adventure,1997,Fox Interactive,Unknown,T,917.825,false
+880,Uncle Albert's Fabulous Voyage,Point-and-click,1999,Lexis Numerique,France,E,251.49454,false
+881,Run Like Hell: Hunt or Be Hunted,Shooter,2002,Capcom,Japan,M,3772.347,false
+882,PickUp Express,Puzzle,2000,Unique Development Studios,Sweden,E10+,362.88574,false
+883,Might and Magic VIII: Day of the Destroyer,Role-playing (RPG),2000,New World Computing,United States,T,3764.2742,false
+884,Army Men: World War,Shooter,2000,The 3DO Company,United States,T,1702.7931,false
+885,Amped: Freestyle Snowboarding,Sport,2001,Microsoft Game Studios,United States,E,3301.336,false
+886,Mario Golf,Sport,1999,Camelot Software Planning,Japan,E,2126.334,false
+887,NCAA March Madness '98,Sport,1998,Electronic Arts,United States,E,4423.622,false
+888,Uprising 2: Lead and Destroy,Real Time Strategy (RTS),1998,The 3DO Company,United States,T,609.09467,false
+889,Adventure at the Chateau d'Or,Adventure,2001,Karma Labs,Unknown,E,1923.9286,false
+890,The Shadow of Zorro,Adventure,2002,In Utero,Unknown,E,1187.8901,false
+891,The Quivering,Point-and-click,1999,Charybdis,United Kingdom,E10+,1398.9609,false
+892,Extreme Paintbrawl 4,Shooter,2002,Activision Value,United States,T,3225.031,false
+893,Mary-Kate & Ashley: Pocket Planner,Point-and-click,2000,Acclaim Entertainment,United States,E,313.14557,false
+894,Looney Tunes: Space Race,Racing,2000,Infogrames,France,E,3309.703,false
+895,Duke: Nuclear Winter,Shooter,1997,Simply Silly Software,Unknown,M,4120.102,false
+896,Spongebob Squarepants: Revenge of the Flying Dutchman,Platform,2002,THQ,United States,E,1796.9504,false
+897,Snowboard Kids,Racing,1997,Atlus,Japan,E,1558.3816,true
+898,Dual Heroes,Fighting,1997,Produce,Unknown,T,636.93555,true
+899,Duke Nukem: Zero Hour,Shooter,1999,Eurocom Entertainment Software,United Kingdom,M,1610.1998,true
+900,Moon: Remix RPG Adventure,Puzzle,1997,ASCII Entertainment,Unknown,T,2772.4988,false
+901,JetFighter: Full Burn,Simulator,1998,Interplay Entertainment,United States,T,3560.4255,false
+902,Twisted Metal: Black Online,Shooter,2002,Incognito Entertainment,United States,M,163.41339,true
+903,I Spy Spooky Mansion Deluxe,Point-and-click,1999,Scholastic Corporation,Unknown,E,997.0586,true
+904,PGA Championship Golf 2000,Sport,2000,Sierra On-Line,United States,E,1064.3699,false
+905,Heroes of Might and Magic II: Gold,Turn-based strategy (TBS),1998,The 3DO Company,United States,T,3497.607,false
+906,Mega Man Xtreme,Platform,2000,Capcom,Japan,E,1701.2782,false
+907,Prince of Persia: Arabian Nights,Adventure,2000,Avalanche Software,United States,T,3623.0027,false
+908,Iron Aces,Simulator,2001,Xicat Interactive,Unknown,E,4146.1484,false
+909,Blues Brothers 2000,Music,2000,Player 1,Unknown,E,790.89667,true
+910,Pac-Man All-Stars,Racing,2002,Creatures Labs,Unknown,E,1306.8654,false
+911,Mary-Kate & Ashley: Crush Course,Adventure,2001,n-Space,United States,E,4549.1353,false
+912,WarBreeds,Real Time Strategy (RTS),1998,Red Orb Entertainment,United States,T,3252.748,false
+913,Ecks vs. Sever,Shooter,2001,BAM! Entertainment,United States,T,2057.1409,false
+914,Insaniquarium,Shooter,2001,Flying Bear Entertainment,Unknown,E,2185.04,false
+915,Shadow Watch,Strategy,2000,Red Storm Entertainment,United States,T,2952.3442,false
+916,China: The Forbidden City,Adventure,1998,Cryo Interactive,France,E,3856.1333,false
+917,Blood II: The Chosen,Shooter,1998,Monolith Productions,United States,M,3139.1267,false
+918,Jeremy McGrath Supercross 98,Racing,1998,Probe Entertainment,United Kingdom,E,2514.5034,false
+919,Milo's Astro Lanes,Simulator,1998,Crave Entertainment,United States,E,1757.498,false
+920,Hired Team: Trial GOLD,Shooter,2002,New Media Generation,Unknown,M,503.0775,false
+921,Iggy's Reckin' Balls,Platform,1998,Acclaim Entertainment,United States,E,4766.035,true
+922,Jeopardy!,Simulator,1998,Take-Two Interactive,United States,E,1365.9031,true
+923,Caesars Palace,Strategy,1997,Beam Software,Australia,E,2177.3628,false
+924,Atlantis 3: The New World,Point-and-click,2001,Cryo Interactive,France,T,4230.344,false
+925,Caesars Palace II,Strategy,1998,Runecraft,United Kingdom,E,26.156973,false
+926,Caesars Palace 2000: Millennium Gold Edition,Simulator,2000,Runecraft,United Kingdom,E,1001.52844,false
+927,Inspector Gadget: Advance Mission,Platform,2001,DreamCatcher Interactive,Canada,E,1365.9607,false
+928,Evolution Worlds,Role-playing (RPG),2002,Sting Entertainment,Japan,E,2571.1672,false
+929,Phantom of Inferno,Visual Novel,2000,Nitroplus,Japan,M,756.5284,false
+930,Jurassic Park III: Danger Zone,Card & Board Game,2001,Knowledge Adventure,United States,E,4416.9043,false
+931,Jurassic Park III: Dino Defender,Platform,2001,Knowledge Adventure,United States,E,4428.667,false
+932,Spy Kids 2: Mega Mission Zone,Adventure,2002,Disney Interactive Studios,United States,E,2669.1323,false
+933,Goldie,Puzzle,2000,Midas Interactive Entertainment,Netherlands,EC,3348.5903,false
+934,Wild Metal,Strategy,1999,DMA Design,United Kingdom,T,365.31378,false
+935,Crash Team Racing,Racing,1999,Naughty Dog,United States,EC,3930.3328,false
+936,Vanguard Bandits,Role-playing (RPG),1998,Human Entertainment,Unknown,T,4399.156,false
+937,ESPN MLS GameNight,Sport,2000,Konami Computer Entertainment Tokyo,Japan,E,4121.5713,false
+938,911 Fire Rescue,Simulator,2001,Sunstorm Interactive,United States,E,2218.8286,false
+939,Soldiers at War,Real Time Strategy (RTS),1998,Random Games Inc.,Unknown,T,573.8545,false
+940,Magical Tetris Challenge,Puzzle,1998,Activision,United States,E,3007.7715,false
+941,Conflict: Desert Storm,Shooter,2002,SCi Games,Unknown,M,972.80695,true
+942,Sorry!,Strategy,1998,Third-I Productions,Unknown,E,2585.752,false
+943,Ultimate Solitaire,Puzzle,2000,ValuSoft,Unknown,E,3094.0525,false
+944,Puzzle Link 2,Puzzle,1999,Yumekobo,Unknown,E,1947.9841,false
+945,Spawn: The Eternal,Fighting,1998,Sony Interactive Studios America,United States,M,2425.0886,false
+946,International Track & Field 2000,Sport,2000,Konami,Japan,E,2001.8995,true
+947,Spongebob Squarepants: Legend of the Lost Spatula,Platform,2001,THQ,United States,E,1084.7881,false
+948,Starship Titanic,Adventure,1998,Simon & Schuster,Unknown,T,3125.065,false
+949,Star Ocean: The Second Story,Role-playing (RPG),1998,tri-Ace,Japan,E,156.90372,false
+950,Speed Busters: American Highways,Racing,1998,Ubisoft Montreal,Canada,E,4708.0835,false
+951,NBA In The Zone 2000,Simulator,1999,KCEO,Unknown,E,1376.3389,false
+952,Magical Drop F: Daibouken Mo Raku Janai!,Puzzle,1999,SAS Sakata,Unknown,T,4069.203,true
+953,Silent Hunter II,Simulator,2001,Aeon Electronic Entertainment,Unknown,T,4384.4976,false
+954,Jumpstart Spy Masters: Max Strikes Back,Arcade,2001,Knowledge Adventure,United States,E,980.37,false
+955,Fragrance Tale,Adventure,2001,Takuyo,Japan,E10+,1223.7502,false
+956,Hoshi no Mahoroba,Adventure,2002,Jorudan,Unknown,E10+,3842.19,false
+957,StarLancer,Simulator,2000,Digital Anvil,United States,T,3722.467,true
+958,You Don't Know Jack: Mock 2,Quiz/Trivia,2000,Sierra Attractions,Unknown,T,1636.9626,false
+959,Ms. Pac-Man: Quest for the Golden Maze,Arcade,2001,Creature Labs,Unknown,E,4359.5117,false
+960,MediEvil,Platform,1998,SCE Cambridge Studio,United Kingdom,T,811.77527,false
+961,Sonic Jam,Platform,1998,Sonic Team,Japan,E,764.8889,false
+962,3D Ultra Cool Pool,Sport,1999,Sierra On-Line,United States,E,4748.1934,false
+963,Inspector Gadget: Operation Madkactus,Platform,2000,DIC Entertainment,Unknown,E,2548.631,false
+964,Marble Master,Platform,1997,Software 2000,Unknown,E,387.54077,false
+965,Resident Evil 2,Shooter,1998,Sourcenext,Unknown,M,1244.3252,false
+966,Medabots AX: Metabee Version,Fighting,2002,Natsume,United States,E,1417.0785,false
+967,MLB 2003,Sport,2002,Sony Computer Entertainment of America,United States,E,4996.5806,false
+968,Project I.G.I.: I'm Going In,Shooter,2000,Innerloop Studios,Norway,M,371.24332,false
+969,Aidyn Chronicles: The First Mage,Role-playing (RPG),2001,THQ,United States,T,2092.8267,false
+970,Gilbert Goodmate and the Mushroom of Phungoria,Point-and-click,2001,Prelusion Games Inc.,Unknown,E,1440.9524,false
+971,Warzone 2100,Real Time Strategy (RTS),1999,Warzone 2100 Project,Unknown,T,2627.004,true
+972,Famicom Bunko: Hajimari no Mori,Adventure,1999,Pax Softnica,Japan,EC,874.335,false
+973,Tiny Toon Adventures: Scary Dreams,Fighting,2002,Swing! Entertainment Media,Germany,E,1721.6329,false
+974,EA Classics: Syndicate Wars & Dark Omen,Strategy,2000,Electronic Arts,United States,AO,1311.1864,false
+975,Puzzled,Puzzle,2001,Conspiracy Entertainment,United States,E,24.837135,false
+976,MechWarrior 4: Black Knight,Shooter,2001,Cyberlore Studios,United States,EC,1023.2589,false
+977,Steel Battalion,Simulator,2002,Capcom,Japan,T,1880.4034,false
+978,Scooby-Doo: Phantom of the Knight,Adventure,2001,The Learning Company,Unknown,E10+,141.2363,false
+979,Mobile Golf,Role-playing (RPG),2001,Nintendo,Japan,E,2725.0903,false
+980,Suikoden III,Role-playing (RPG),2002,Konami Computer Entertainment Tokyo,Japan,T,754.41034,false
+981,Operation Flashpoint: Resistance,Shooter,2002,Bohemia Interactive Studio,Czechia,M,3355.387,false
+982,Wetrix,Puzzle,1998,Zed Two,Unknown,E,1012.3498,false
+983,E'tude Prologue: Yureugoku Kokoro no Katachi,Simulator,1998,Takuyo,Japan,E10+,3505.4575,false
+984,Wing Commander: Secret Ops,Simulator,1998,Origin Systems,United States,T,2362.65,false
+985,The Sims,Role-playing (RPG),2000,Maxis,United States,E,1654.7001,false
+986,Jarrett and Labonte Stock Car Racing,Racing,2000,Codemasters,United Kingdom,E,3586.303,false
+987,Hot Wheels Turbo Racing,Racing,1999,Electronic Arts,United States,E,659.0305,true
+988,Giants: Citizen Kabuto,Shooter,2001,Interplay Entertainment,United States,T,1561.1489,false
+989,Conker's Bad Fur Day,Shooter,2001,Rare,United Kingdom,M,2112.8877,true
+990,Street Fighter EX3,Fighting,2000,"Arika Co., Ltd.",Japan,T,1529.4442,false
+991,Hot Wheels: Extreme Racing,Racing,2001,THQ,United States,E,2021.8867,false
+992,An Elder Scrolls Legend: Battlespire,Role-playing (RPG),1997,Bethesda Softworks,United States,M,4990.089,false
+993,Unreal,Shooter,1998,Digital Extremes,Canada,M,2111.3826,false
+994,Sonic Action 4 Pack,Platform,2001,Sega,Japan,E,3436.5708,true
+995,Fallout 2,Role-playing (RPG),1998,Black Isle Studios,Unknown,M,3986.935,false
+996,Fallout Tactics: Brotherhood of Steel,Role-playing (RPG),2001,Micro Forté,Unknown,M,2115.0134,false
+997,Superbike 2000,Racing,2000,Electronic Arts,United States,E,4802.2817,false
+998,Bomberman Max 2: Blue Advance,Puzzle,2002,Hudson Soft,Japan,E,4351.2705,false
+999,Gauntlet Dark Legacy,Hack and slash/Beat 'em up,2000,Midway Games West,Unknown,T,3250.9138,false
+1000,Bomberman Max 2: Red Advance,Puzzle,2002,Hudson Soft,Japan,E,250.09538,false

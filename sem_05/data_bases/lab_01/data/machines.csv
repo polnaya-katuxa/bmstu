@@ -1,0 +1,101 @@
+id,brand,model,country,release_year,type
+1,XBox,DZ6903,Самоа,2016,game console
+2,Lenovo,UA1261,Венесуэла,2019,computer
+3,Lenovo,RD5470,Сент-Винсент,2012,computer
+4,Acer,JR4148,Дания,2015,computer
+5,PlayStation,KQ9314,Боливия,2019,game console
+6,XBox,OX1083,Франция,2020,game console
+7,XBox,BW7124,Тувалу,2017,game console
+8,Samsung,VI7121,Тунис,2017,computer
+9,HyperPC,PA4455,Бахрейн,2010,computer
+10,XBox,GF1595,Куба,2019,game console
+11,PlayStation,JY9014,Мали,2010,game console
+12,Lenovo,BL9465,Бутан,2016,computer
+13,HyperPC,BW2964,Уганда,2017,computer
+14,Acer,OT4041,Нигер,2012,computer
+15,Asus,SA2558,Центральноафриканская,2020,computer
+16,PlayStation,DU6602,Вьетнам,2018,game console
+17,Acer,ZF1148,Россия,2011,computer
+18,XBox,UQ4269,Бангладеш,2013,game console
+19,Acer,XN2720,Эквадор,2012,computer
+20,Lenovo,CL3861,Люксембург,2020,computer
+21,Asus,TY2204,Фиджи,2013,computer
+22,Lenovo,HI8390,Малайзия,2011,computer
+23,XBox,GU5183,Гондурас,2010,game console
+24,Asus,OA6551,Маршалловы,2015,computer
+25,PlayStation,NA2091,Черногория,2018,game console
+26,Samsung,WE3393,Бурунди,2014,computer
+27,XBox,SL5862,Нидерланды,2013,game console
+28,XBox,NR9430,Болгария,2015,game console
+29,XBox,EX7872,Мавритания,2010,game console
+30,XBox,TB5526,Бутан,2016,game console
+31,PlayStation,AI5559,Сирия,2013,game console
+32,XBox,RQ3526,Швеция,2019,game console
+33,PlayStation,CE4211,Кения,2012,game console
+34,PlayStation,IP1472,Хорватия,2012,game console
+35,XBox,SJ6909,Центральноафриканская,2016,game console
+36,Samsung,LN8065,Буркина-Фасо,2017,computer
+37,Asus,BM1896,Гвинея-Бисау,2011,computer
+38,PlayStation,VJ2032,Центральноафриканская,2014,game console
+39,Samsung,CO5788,Испания,2013,computer
+40,XBox,HH9622,Армения,2016,game console
+41,PlayStation,FX8906,Сент-Китс,2017,game console
+42,HydraComputers,KV5304,Руанда,2020,computer
+43,PlayStation,LB7187,Монголия,2020,game console
+44,XBox,QS2428,Россия,2014,game console
+45,XBox,DT7474,Испания,2017,game console
+46,Apple,NL9081,Центральноафриканская,2013,computer
+47,Lenovo,ZY8331,Бурунди,2017,computer
+48,Xiaomi,AK8218,Ямайка,2018,computer
+49,Apple,ZJ5435,Чехия,2013,computer
+50,Acer,DF1170,Пакистан,2016,computer
+51,Asus,YL8450,Бутан,2010,computer
+52,Asus,CE7521,Ботсвана,2020,computer
+53,HyperPC,RP6792,Пакистан,2020,computer
+54,XBox,OT7044,Гаити,2012,game console
+55,Xiaomi,ZK5012,Киргизия,2016,computer
+56,PlayStation,TR1390,КНДР,2014,game console
+57,hp,RG9384,Бахрейн,2015,computer
+58,XBox,UQ1679,Соломоновы,2014,game console
+59,HydraComputers,VH6188,Сент-Винсент,2014,computer
+60,Acer,VY5648,Ботсвана,2010,computer
+61,Huawei,DJ1179,Великобритания,2012,computer
+62,Xiaomi,DG2139,Канада,2011,computer
+63,Xiaomi,PE4987,Босния,2014,computer
+64,Lenovo,LS8832,Мадагаскар,2010,computer
+65,XBox,PY2336,Германия,2015,game console
+66,HydraComputers,IE6147,Бразилия,2015,computer
+67,Asus,MT3607,Македония,2011,computer
+68,XBox,OS2182,Испания,2017,game console
+69,XBox,IK1469,Германия,2013,game console
+70,Samsung,VU5790,Чили,2018,computer
+71,Acer,JD7420,Камерун,2015,computer
+72,XBox,VP8109,Азербайджан,2014,game console
+73,Huawei,DI9749,Тонга,2020,computer
+74,XBox,SX8417,Ирак,2018,game console
+75,PlayStation,AV7186,Норвегия,2012,game console
+76,Samsung,LB6037,Колумбия,2014,computer
+77,XBox,JL6906,Ботсвана,2013,game console
+78,XBox,UH2062,Бельгия,2012,game console
+79,Apple,XE6599,Папуа,2011,computer
+80,PlayStation,SQ6961,Бруней,2012,game console
+81,XBox,EA8794,Барбадос,2013,game console
+82,Acer,PW9027,Перу,2015,computer
+83,Xiaomi,LU2704,Барбадос,2012,computer
+84,Apple,ZH1954,Йемен,2014,computer
+85,Lenovo,GW9238,Уганда,2015,computer
+86,XBox,XU7730,Испания,2012,game console
+87,XBox,HQ5515,Албания,2020,game console
+88,Acer,ZF7658,Вьетнам,2013,computer
+89,PlayStation,JA9850,Маршалловы,2014,game console
+90,PlayStation,OB3140,Бахрейн,2015,game console
+91,PlayStation,HX2871,Антигуа,2010,game console
+92,XBox,BS6922,Македония,2012,game console
+93,PlayStation,SX8028,Гвинея-Бисау,2015,game console
+94,XBox,LW5236,Бразилия,2014,game console
+95,Lenovo,FO8741,Малави,2019,computer
+96,PlayStation,PY2675,Сан-Томе,2017,game console
+97,Nokia,GL5362,Тонга,2017,computer
+98,XBox,NZ9424,Судан,2015,game console
+99,XBox,VF1429,Молдавия,2011,game console
+100,XBox,QC8949,Никарагуа,2013,game console

@@ -1,0 +1,7 @@
+id,name,string,cashback_percent,minimum_purchase_sum
+1,Welcome,computers.club/images/welcome.png,0,0
+2,Beginner,computers.club/images/beginner.png,5,3000
+3,Pilot,computers.club/images/pilot.png,7,6000
+4,Silver,computers.club/images/silver.png,10,10000
+5,Gold,computers.club/images/gold.png,15,20000
+6,Platinum,computers.club/images/platinum.png,25,50000
