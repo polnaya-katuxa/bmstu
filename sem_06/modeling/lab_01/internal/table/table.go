@@ -7,25 +7,6 @@ import (
 	"math"
 )
 
-const (
-	floatFmt = "%.7f"
-)
-
-type Task interface {
-	// Function argument, function
-	Function(float64, float64) float64
-
-	MinArg() float64
-	MinFunction() float64
-
-	Picard1(float64) float64
-	Picard2(float64) float64
-	Picard3(float64) float64
-	Picard4(float64) float64
-
-	Analytic(float64) float64
-}
-
 type Table struct {
 	argName  string
 	funcName string
@@ -84,17 +65,18 @@ func Generate(task Task, argName, funcName string, maxArg, step float64) Table {
 func (t *Table) Print(n int) {
 	tw := table.NewWriter()
 
-	tw.AppendHeader(table.Row{t.argName, "Analytic", "Euler", "Picard (1)", "Picard (2)", "Picard (3)", "Picard (4)"})
+	tw.AppendHeader(table.Row{t.argName, "analytic", "euler", "picard 1", "picard 2", "picard 3", "picard 4"})
+	tw.SetStyle(table.StyleDouble)
 
 	for i := 0; i < len(t.arguments); i += n {
 		tw.AppendRow(table.Row{
-			fmt.Sprintf(floatFmt, t.arguments[i]),
-			fmt.Sprintf(floatFmt, t.analytic[i]),
-			fmt.Sprintf(floatFmt, t.euler[i]),
-			fmt.Sprintf(floatFmt, t.picard1[i]),
-			fmt.Sprintf(floatFmt, t.picard2[i]),
-			fmt.Sprintf(floatFmt, t.picard3[i]),
-			fmt.Sprintf(floatFmt, t.picard4[i]),
+			fmt.Sprintf("%.7f", t.arguments[i]),
+			fmt.Sprintf("%.7f", t.analytic[i]),
+			fmt.Sprintf("%.7f", t.euler[i]),
+			fmt.Sprintf("%.7f", t.picard1[i]),
+			fmt.Sprintf("%.7f", t.picard2[i]),
+			fmt.Sprintf("%.7f", t.picard3[i]),
+			fmt.Sprintf("%.7f", t.picard4[i]),
 		})
 	}
 
@@ -108,33 +90,31 @@ func (t *Table) Plot(name string) error {
 	}
 
 	if !math.IsNaN(t.analytic[0]) {
-		if err := p.AddPointGroup("Analytic", "lines", [][]float64{t.arguments, t.analytic}); err != nil {
+		if err := p.AddPointGroup("analytic", "lines", [][]float64{t.arguments, t.analytic}); err != nil {
 			return err
 		}
 	}
 
-	if err := p.AddPointGroup("Euler", "lines", [][]float64{t.arguments, t.euler}); err != nil {
+	if err := p.AddPointGroup("euler", "lines", [][]float64{t.arguments, t.euler}); err != nil {
 		return err
 	}
 
-	if err := p.AddPointGroup("Picard (1)", "lines", [][]float64{t.arguments, t.picard1}); err != nil {
+	if err := p.AddPointGroup("picard 1", "lines", [][]float64{t.arguments, t.picard1}); err != nil {
 		return err
 	}
 
-	if err := p.AddPointGroup("Picard (2)", "lines", [][]float64{t.arguments, t.picard2}); err != nil {
+	if err := p.AddPointGroup("picard 2", "lines", [][]float64{t.arguments, t.picard2}); err != nil {
+		return err
+	}
+	if err := p.AddPointGroup("picard 3", "lines", [][]float64{t.arguments, t.picard3}); err != nil {
 		return err
 	}
 
-	if err := p.AddPointGroup("Picard (3)", "lines", [][]float64{t.arguments, t.picard3}); err != nil {
-		return err
-	}
-
-	if err := p.AddPointGroup("Picard (4)", "lines", [][]float64{t.arguments, t.picard4}); err != nil {
+	if err := p.AddPointGroup("picard 4", "lines", [][]float64{t.arguments, t.picard4}); err != nil {
 		return err
 	}
 
 	p.SetFormat("png")
-
 	if err := p.SavePlot(name); err != nil {
 		return err
 	}
