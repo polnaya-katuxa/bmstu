@@ -1,0 +1,84 @@
+
+
+              GPSS World Simulation Report - model.7.1
+
+
+                   Monday, December 11, 2023 02:08:31  
+
+           START TIME           END TIME  BLOCKS  FACILITIES  STORAGES
+                0.000           3036.616    29        5          0
+
+
+              NAME                       VALUE  
+          COMPUTER1                   10006.000
+          COMPUTER2                   10004.000
+          IN                              2.000
+          LCOMPUTER1                     16.000
+          LCOMPUTER2                     22.000
+          LDROP                          15.000
+          LOPERATOR1                      3.000
+          LOPERATOR2                      7.000
+          LOPERATOR3                     11.000
+          OPERATOR1                   10000.000
+          OPERATOR2                   10001.000
+          OPERATOR3                   10002.000
+          OUT                            28.000
+          PROB_DROP                   10007.000
+          PROCESS_QUEUE1              10005.000
+          PROCESS_QUEUE2              10003.000
+
+
+ LABEL              LOC  BLOCK TYPE     ENTRY COUNT CURRENT COUNT RETRY
+                    1    GENERATE           303             0       0
+IN                  2    TRANSFER           303             0       0
+LOPERATOR1          3    SEIZE               55             0       0
+                    4    ADVANCE             55             1       0
+                    5    RELEASE             54             0       0
+                    6    TRANSFER            54             0       0
+LOPERATOR2          7    SEIZE               63             0       0
+                    8    ADVANCE             63             1       0
+                    9    RELEASE             62             0       0
+                   10    TRANSFER            62             0       0
+LOPERATOR3         11    SEIZE               62             0       0
+                   12    ADVANCE             62             1       0
+                   13    RELEASE             61             0       0
+                   14    TRANSFER            61             0       0
+LDROP              15    TERMINATE          123             0       0
+LCOMPUTER1         16    QUEUE              116             0       0
+                   17    SEIZE              116             0       0
+                   18    DEPART             116             0       0
+                   19    ADVANCE            116             0       0
+                   20    RELEASE            116             0       0
+                   21    TRANSFER           116             0       0
+LCOMPUTER2         22    QUEUE               61             0       0
+                   23    SEIZE               61             0       0
+                   24    DEPART              61             0       0
+                   25    ADVANCE             61             0       0
+                   26    RELEASE             61             0       0
+                   27    TRANSFER            61             0       0
+OUT                28    SAVEVALUE          177             0       0
+                   29    TERMINATE          177             0       0
+
+
+FACILITY         ENTRIES  UTIL.   AVE. TIME AVAIL. OWNER PEND INTER RETRY DELAY
+ OPERATOR1           55    0.909      50.194  1      299    0    0     0      0
+ OPERATOR2           63    0.826      39.835  1      300    0    0     0      0
+ OPERATOR3           62    0.785      38.432  1      301    0    0     0      0
+ COMPUTER2           61    0.603      30.000  1        0    0    0     0      0
+ COMPUTER1          116    0.573      15.000  1        0    0    0     0      0
+
+
+QUEUE              MAX CONT. ENTRY ENTRY(0) AVE.CONT. AVE.TIME   AVE.(-0) RETRY
+ PROCESS_QUEUE2      1    0     61     55     0.006      0.310      3.152   0
+ PROCESS_QUEUE1      1    0    116     76     0.126      3.309      9.596   0
+
+
+SAVEVALUE               RETRY       VALUE
+ PROB_DROP                0         40.397                            
+
+
+FEC XN   PRI         BDT      ASSEM  CURRENT  NEXT  PARAMETER    VALUE
+   301    0        3043.051    301     12     13
+   304    0        3045.239    304      0      1
+   299    0        3046.623    299      4      5
+   300    0        3051.143    300      8      9

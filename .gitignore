@@ -12,3 +12,8 @@ sem_05/alg_analysis/lab_04/cg-practice/.qtc_clangd/
 **/*.run.xml
 **/*.synctex.gz
 **/.DS_Store
+**/.texpadtmp
+**/cmake-build-debug
+**/fyne-cross
+**/*.exe
+**/*.zip

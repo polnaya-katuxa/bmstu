@@ -1,0 +1,84 @@
+\chapter{Технологический раздел}
+
+В данном разделе приведена реализация статического сервера.
+
+\section{Листинг алгоритма работы статического \\ сервера}
+
+В листинге \ref{lst:static_server} приведен программный код работы статического сервера.
+ 
+\begin{lstlisting}[language=C, label=lst:static_server, caption={Листинг алгоритма работы статического сервера}]
+void accept_connection() {
+    int fd = accept(sockfd, NULL, NULL);
+    if (fd < 0) {
+        log_error("accept failed");
+        return;
+    }
+
+    struct epoll_event e;
+    e.events = EPOLLIN | EPOLLET;
+    e.data.fd = fd;
+    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &e) < 0) {
+        log_fatal("epoll_ctl: failed to add socket");
+    }
+
+    log_info("got new connection");
+}
+
+void use_fd(int fd) {
+    char buf[BUF_SIZE] = {0};
+
+    ssize_t n = read(fd, buf, sizeof(buf));
+    if (n == 0) {
+        log_info("connection is closed");
+        return;
+    }
+
+    http_request_t req;
+    req.fd = fd;
+    int rc = http_parse_request(buf, &req);
+    if (rc != OK) {
+        log_error("cannot parse request: %s", error_messages[rc]);
+        if (rc == ERR_UNSUPPORTED_METHOD) {
+            http_write_error(&req, RESPONSE_CODE_METHOD_NOT_ALLOWED);
+        }
+        return;
+    }
+
+    rc = http_handle(&req);
+    if (rc != OK) {
+        log_error("cannot handle request: %s", error_messages[rc]);
+        return;
+    }
+
+    log_debug("%s \"%s\"", http_methods_map[req.method], req.uri);
+}
+
+void *handle_connections(void *data) {
+    int rc;
+
+    log_debug("starting processing");
+
+    struct epoll_event events[MAX_EVENTS];
+
+    while (running) {
+        int n = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+        if (n < 0) {
+            if (!running) {
+                break;
+            }
+            log_fatal("epoll failed");
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (events[i].data.fd == sockfd) {
+                accept_connection();
+                continue;
+            }
+
+            use_fd(events[i].data.fd);
+        }
+    }
+
+    pthread_exit((void *) 0);
+}
+\end{lstlisting}

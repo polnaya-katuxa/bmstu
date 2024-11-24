@@ -1,0 +1,92 @@
+{
+  "Step": 1e-4,
+  "Uniform": {
+    "Name": "uniform",
+    "Params": [
+      {
+        "A": 1,
+        "B": 7
+      },
+      {
+        "A": 2,
+        "B": 5
+      },
+      {
+        "A": 1.5,
+        "B": 3.5
+      }
+    ]
+  },
+  "Erlang": {
+    "Name": "erlang",
+    "Params": [
+      {
+        "K": 1,
+        "Lambda": 0.5
+      },
+      {
+        "K": 2,
+        "Lambda": 0.3
+      },
+      {
+        "K": 4,
+        "Lambda": 1
+      }
+    ]
+  },
+  "HyperExponential": {
+    "Name": "hyper_exponential",
+    "Params": [
+      {
+        "Lambdas": [
+          1,
+          2,
+          3
+        ],
+        "Probabilities": [
+          0.7,
+          0.2,
+          0.1
+        ]
+      },
+      {
+        "Lambdas": [
+          1,
+          4,
+          7,
+          9
+        ],
+        "Probabilities": [
+          0.1,
+          0.5,
+          0.1,
+          0.3
+        ]
+      },
+      {
+        "Lambdas": [
+          1
+        ],
+        "Probabilities": [
+          1
+        ]
+      },
+      {
+        "Lambdas": [
+          1,
+          4,
+          7,
+          10,
+          13
+        ],
+        "Probabilities": [
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2
+        ]
+      }
+    ]
+  }
+}

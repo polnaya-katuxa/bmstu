@@ -1,0 +1,74 @@
+\chapter{Теоретический раздел}
+
+\subsection{Равномерное распределение}
+    
+Говорят, что случайная величина X имеет равномерное распределение на отрезке $[a,b]$, если её функция плотности имеет вид:
+
+\begin{equation*}
+    f_X (x) =
+    \begin{cases}
+        \frac{1}{b-a}, x \in [a,b] \\
+        0, x \notin [a, b] \\
+    \end{cases}
+\end{equation*}
+
+Значения случайной величины с двух сторон ограничены и в границах интервала имеют одинаковую вероятность. В данном интервале плотность вероятности постоянна.
+
+Функция распределения:
+
+\begin{equation*}
+F_X (x) =
+    \begin{cases}
+        0, x < a \\
+        \frac{x - a}{b - a}, a \le x < b \\
+        1, x \geq b \\
+    \end{cases}
+\end{equation*}
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{inc/uni_f.png}
+    \caption{Функция плотности равномерного распределения}
+    \label{fig:}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{inc/uni_Fx.png}
+    \caption{Функция распределения равномерного распределения}
+    \label{fig:}
+    \end{center}
+\end{figure}
+
+\subsection{Распределение Эрланга}
+
+Распределение Эрланга является непрерывным распределением, ограниченным снизу. Оно представляет собой особый случай Гамма распределения, где параметр $k$ может принимать только положительные целые значения.
+
+Функция распределения:
+
+\begin{equation*}
+F_X(x) = 1 - \sum_{i=0}^{k-1}  \frac{1}{i!} e^{-\lambda x} (\lambda x)^n
+\end{equation*}
+    
+Плотность распределения:
+
+\begin{equation*}
+f_X(x) = \frac{\lambda^k x^{k-1} e^{-\lambda x} } {(k-1)!}
+\end{equation*}
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{inc/erlang_f.png}
+    \caption{Функция плотности распределения Эрланга}
+    \label{fig:}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{inc/erlang_Fx.png}
+    \caption{Функция распределения распределения Эрланга}
+    \label{fig:}
+    \end{center}
+\end{figure}

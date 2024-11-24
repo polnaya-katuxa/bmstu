@@ -1,0 +1,53 @@
+
+
+              GPSS World Simulation Report - model.47.1
+
+
+                   Monday, December 11, 2023 02:27:43  
+
+           START TIME           END TIME  BLOCKS  FACILITIES  STORAGES
+                0.000           5481.635    12        1          0
+
+
+              NAME                       VALUE  
+          IN                              2.000
+          NUM_PROCESSED               10003.000
+          NUM_RETURNED                10002.000
+          OUT                             9.000
+          PROCESS_DEVICE              10001.000
+          PROCESS_QUEUE               10000.000
+          QUEUE_LEN                   10004.000
+          REENTER                         8.000
+
+
+ LABEL              LOC  BLOCK TYPE     ENTRY COUNT CURRENT COUNT RETRY
+                    1    GENERATE          1000             0       0
+IN                  2    QUEUE             1000             0       0
+                    3    SEIZE             1000             0       0
+                    4    DEPART            1000             0       0
+                    5    ADVANCE           1000             0       0
+                    6    RELEASE           1000             0       0
+                    7    TRANSFER          1000             0       0
+REENTER             8    TRANSFER             0             0       0
+OUT                 9    SAVEVALUE         1000             0       0
+                   10    SAVEVALUE         1000             0       0
+                   11    SAVEVALUE         1000             0       0
+                   12    TERMINATE         1000             0       0
+
+
+FACILITY         ENTRIES  UTIL.   AVE. TIME AVAIL. OWNER PEND INTER RETRY DELAY
+ PROCESS_DEVICE    1000    0.484       2.654  1        0    0    0     0      0
+
+
+QUEUE              MAX CONT. ENTRY ENTRY(0) AVE.CONT. AVE.TIME   AVE.(-0) RETRY
+ PROCESS_QUEUE       2    0   1000    785     0.049      0.270      1.255   0
+
+
+SAVEVALUE               RETRY       VALUE
+ NUM_RETURNED             0              0                            
+ NUM_PROCESSED            0       1000.000                            
+ QUEUE_LEN                0          2.000                            
+
+
+FEC XN   PRI         BDT      ASSEM  CURRENT  NEXT  PARAMETER    VALUE
+  1001    0        5482.847   1001      0      1

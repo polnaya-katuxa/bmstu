@@ -1,0 +1,225 @@
+\chapter{Технологический раздел}
+
+\section{Выбор языка и среды программирования}
+
+Для реализации загружаемого модуля был выбран язык Си, так как необходимо написать загружаемый модуль ядра, и ядро Linux реализовано на языке C. Операционная система Linux позволяет писать загружаемые модули ядра на Rust и на Cи, но Rust обладает определёнными ограничениями в написании модулей ядра.
+
+В качестве среды разработки выбрана CLion: запуск программного комплекса осуществлялся на компьютере, к которому было выполнено подключение по ssh, и данная среда поддерживает передачу данных по ssh из графического интерфейса.
+
+\section{Реализация загружаемого модуля ядра~---~драйвера символьного дисплея}
+
+В листинге \ref{lst:mod} представлены реализации функции инициализации и завершения работы загружаемого модуля ядра~---~драйвера символьного дисплея.
+
+\begin{lstlisting}[label=lst:mod,caption=Реализация загружаемого модуля ядра~---~драйвера символьного дисплея]
+static const struct file_operations my_fops = {
+        .owner  = THIS_MODULE,
+        .read   = dev_read,
+        .write  = dev_write,
+};
+
+static struct miscdevice my_dev = {
+        MISC_DYNAMIC_MINOR,
+        "proclcd",
+        &my_fops
+};
+
+static int __init my_init(void)
+{
+    int ret;
+
+    rc = misc_register(&my_dev);
+    if (rc) {
+        printk(KERN_ERR "+ unable to register misc device\n");
+    }
+
+    start();
+
+    printk(KERN_DEBUG "+ module loaded");
+
+    return ret;
+}
+
+static void __exit my_exit(void)
+{
+    misc_deregister( &my_dev );
+    printk(KERN_DEBUG "+ module unloaded");
+}
+
+module_init(my_init);
+module_exit(my_exit);
+\end{lstlisting}
+
+В листинге \ref{lst:conf} представлена реализация функции установления связи с шиной I2C и настройки соединения с дисплеем.
+
+\begin{lstlisting}[label=lst:conf,caption=Реализация функции установления связи с шиной I2C и настройки соединения с дисплеем]
+int start(void) {
+    int length;
+    unsigned char buffer[60] = {0};
+
+    printk(KERN_DEBUG "+ opening");
+
+    char *filename = (char*)"/dev/i2c-5";
+    file_i2c = filp_open(filename, O_RDWR, 0);
+    if (!file_i2c) {
+        printk(KERN_DEBUG "+ failed to open the i2c bus");
+        return 1;
+    }
+
+    printk(KERN_DEBUG "+ configuring");
+
+    if ((configure()) != 0) {
+        printk(KERN_DEBUG "+ failed to configure");
+        return 1;
+    }
+
+    printk(KERN_DEBUG "+ setting cursor");
+
+    set_cursor(0, 0);
+
+    delay_microseconds(100000);
+
+    return 0;
+}
+\end{lstlisting}
+
+В листинге \ref{lst:write_bytes} представлена реализация функции вывода данных на дисплей.
+
+\begin{lstlisting}[label=lst:write_bytes,caption=Реализация функции вывода данных на дисплей]
+static ssize_t dev_write(struct file *file, const char *buf, size_t count, loff_t *ppos) {
+    char data[1024];
+    if (copy_from_user(data, buf, strlen(buf))) {
+        return -EINVAL;
+    }
+
+    str_pos = 0;
+    col_pos = 0;
+
+    for (int i = 0; i < count; i++) {
+        if ((col_pos==0) && (str_pos==0)) {
+            clear();
+        }
+
+        set_cursor(col_pos, str_pos);
+        delay_microseconds(10000);
+
+        printk(KERN_DEBUG "+ cursor col %d row %d cur sym %c", col_pos, str_pos, data[i]);
+
+        if (buf[i] != '\n') {
+            print_byte(data[i]);
+            col_pos++;
+            delay_microseconds(10000);
+        } else {
+            col_pos=16;
+        }
+
+        if (col_pos == 16) {
+            col_pos = 0;
+            str_pos++;
+            if (str_pos == 2) {
+                str_pos = 0;
+            }
+        }
+    }
+
+    return count;
+}
+\end{lstlisting}
+
+В листинге \ref{lst:write_byte} представлена реализация функции передачи байта данных с помощью интерфейса I2C.
+
+\begin{lstlisting}[label=lst:write_byte,caption=Реализация функции передачи байта данных с помощью интерфейса I2C]
+int write_byte_data(int reg, int data, const int addr) {
+    if (vfs_ioctl(file_i2c, I2C_SLAVE, addr) < 0)
+    {
+        printk(KERN_DEBUG "+ failed to acquire bus access and/or talk to slave");
+        return 1;
+    }
+
+    union i2c_smbus_data msg;
+    msg.byte = data;
+
+    struct i2c_smbus_ioctl_data req = {
+        .read_write = 0,
+        .command = reg,
+        .size = 2,
+        .data = &msg,
+    };
+
+    struct i2c_client *client = file_i2c->private_data;
+    int res = i2c_smbus_xfer(client->adapter, client->addr, client->flags,
+                         req.read_write, req.command, req.size, &msg);
+    if (res < 0) {
+        printk(KERN_DEBUG "+ failed to smbus_xfer %d", res);
+        return 1;
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+В листинге \ref{lst:make} представлен Makefile загружаемого модуля ядра.
+
+\begin{lstlisting}[label=lst:make,caption=Makefile загружаемого модуля ядра]
+ifneq ($(KERNELRELEASE),)
+	obj-m := my_driver.o
+else
+	CURRENT = $(shell uname -r)
+	KDIR = /lib/modules/$(CURRENT)/build
+	PWD = $(shell pwd)
+
+default:
+	$(MAKE) -C $(KDIR) M=$(PWD) modules
+
+clean:
+	rm -rf .tmp_versions
+	rm *.ko
+	rm *.o
+	rm *.mod.c
+	rm *.symvers
+	rm *.order
+
+endif
+\end{lstlisting}
+
+\section{Реализация клиентского приложения}
+
+В листинге \ref{lst:proc} представлена реализация функции-обработчика запроса пользователя для вывода из proc данных о потребляемой процессом виртуальной памяти.
+
+\begin{lstlisting}[label=lst:proc,caption=Реализация функции-обработчика запроса пользователя для вывода из proc данных о потребляемой процессом виртуальной памяти]
+void vm_handler() {
+    char path[PATH_MAX];
+    snprintf(path, PATH_MAX, "/proc/%d/statm", pid);
+
+    int dev = open(DEV_FILE, O_RDWR);
+
+    FILE *statm = fopen(path, "r");
+
+    char buf[BUF_SIZE + 1] = "\0";
+    int len, n;
+
+    while (stop == 0) {
+        fscanf(statm, "%d", &n);
+
+        char str[1024];
+        sprintf(str, "%d MB", n * sysconf(_SC_PAGE_SIZE) / 1024 / 1024);
+        write(dev, str, strlen(str));
+
+        fseek(statm, 0, SEEK_SET);
+        sleep(3);
+    }
+
+    stop = 0;
+
+    fclose(statm);
+    close(dev);
+}
+\end{lstlisting}
+
+\section*{Вывод}
+Был обоснован выбор языка и среды программирования и приведены листинги кода. Представлены листинги функций инициализации и завершения работы драйвера дисплея, функции установления связи с шиной I2C и настройки соединения с дисплеем. Также приведены листинги общей функции вывода данных на дисплей и передачи байта данных с помощью интерфейса I2C.
+
+
+
+
+
+

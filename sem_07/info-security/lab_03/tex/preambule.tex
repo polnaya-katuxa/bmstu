@@ -1,0 +1,129 @@
+\documentclass[a4paper,14pt]{extarticle}
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english,russian]{babel} % Языки: русский, английский
+
+\usepackage[14pt]{extsizes} % Задание 14-размера шрифта
+\usepackage[left=3cm,right=1cm,top=2cm,bottom=2cm]{geometry} % Задание геометрии листа
+
+\usepackage[unicode,pdftex]{hyperref} % Ссылки в pdf
+\hypersetup{hidelinks}
+
+\usepackage{setspace}
+\onehalfspacing % Полуторный интервал
+
+\frenchspacing
+\usepackage{indentfirst} % Красная строка
+
+% Настройка нумерации объектов
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+%\numberwithin{equation}{section}
+
+
+\usepackage{enumitem} % Настройка оформления списков
+\setlist{nosep} 
+\setlist[enumerate,1]{label={\arabic*)}}
+
+\renewcommand{\labelitemi}{---}
+\renewcommand{\labelitemii}{---}
+
+\usepackage{titlesec} % Оформление заголовков
+\titleformat{\section}[block]
+{\bfseries\large}
+{\thesection}
+{1em}
+{}
+
+\titleformat{name=\section,numberless}[block]
+{\bfseries\large\centering}
+{}
+{1em}
+{}
+
+\titleformat{\subsection}[hang]
+{\bfseries\normalsize}
+{\thesubsection}
+{1em}{}
+
+\titleformat{\subsubsection}[hang]
+{\bfseries\normalsize}
+{\thesubsubsection}
+{1em}{}
+
+% Математические пакеты
+\usepackage{amsmath} 
+\usepackage{amssymb}
+
+\usepackage{caption} % Подпись картинок и таблиц
+\captionsetup{labelsep=endash} % Разделитель между номером и текстом краткое тире и пробел
+\captionsetup[figure]{name={Рисунок}} % Изменяет имя для всех фигур на "Рисунок"
+%\captionsetup[figure]{justification=centering}
+%\usepackage[justification=centering]{caption} % Настройка подписей float объектов
+\captionsetup[table]{justification=raggedright, singlelinecheck=false}
+\captionsetup[lstlisting]{justification=raggedright, singlelinecheck=false}
+
+% дополнительно к таблицам
+\usepackage{makecell} % удобный перенос строки в таблице
+\usepackage{longtable} % многостраничные таблицы
+\usepackage{multirow} % объединение строк и столбцов
+
+
+% Вставка рисунков
+\usepackage{graphicx} 
+
+\newcommand{\img}[3] {
+	\begin{figure}[H]
+		\center{\includegraphics[height=#1]{img/#2}}
+		 \ifthenelse{ \equal{#3}{} }
+		{}
+		{\caption{#3}}
+		\label{img:#2}
+	\end{figure}
+}
+
+\usepackage{csvsimple} % генерация и фильтрация таблиц из csv файлов
+\usepackage{float} % настройка флоат-объектов
+
+%\usepackage[shortcuts]{extdash}
+
+
+% Оформление листингов
+\usepackage{listings}
+\usepackage{xcolor} % Добавление цветов 
+
+\lstdefinestyle{mystyle}{ % Опеределение стиля 
+%	language=C++,
+	backgroundcolor=\color{white},
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\color{blue},
+	stringstyle=\color{red},
+	commentstyle=\color{gray},
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	frame=single,
+	tabsize=4,
+	captionpos=t,
+	breaklines=true,
+	breakatwhitespace=true,
+	xleftmargin=10pt
+}
+\lstset{extendedchars=true, texcl=true}
+\lstset{style=mystyle}
+
+% Настройка списка литературы
+\addto\captionsrussian{\renewcommand{\refname}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}}
+
+\makeatletter
+\def\@biblabel#1{#1. }
+\makeatother
+
+% вставка многостраничных pdf-документов
+\usepackage{pdfpages}
+
+% настройка приложений
+\usepackage[titletoc, title]{appendix} %добавление приложений в оглавление

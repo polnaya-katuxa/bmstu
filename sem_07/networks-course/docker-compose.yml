@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  static-nginx:
+    image: nginx
+    container_name: static-nginx
+    volumes:
+      - ./static:/usr/share/nginx/html
+    ports:
+      - "3002:80"
+    restart:
+      always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  static-my:
+    build: .
+    container_name: static-my
+    volumes:
+      - ./static:/static
+    ports:
+      - "3001:80"
+    restart:
+      always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G

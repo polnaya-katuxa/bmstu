@@ -1,0 +1,35 @@
+\documentclass{bmstu}
+
+\bibliography{biblio}
+
+\lstset{
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,	stepnumber=1,
+	numbersep=5pt,
+	showspaces=false,
+	xleftmargin=10pt,
+	showstringspaces=false,	showtabs=false,
+	frame=single, 
+	tabsize=2,
+	captionpos=t, 
+	breaklines=true,
+	breakatwhitespace=false,
+	escapeinside={\#*}{*)}
+}
+
+\usepackage[scientific-notation=false]{siunitx}
+\usepackage{pdfpages}
+\newcommand{\specialcell}[2][c]{
+	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\begin{document}
+
+\makereporttitle{Информатика и системы управления}{Программное обеспечение ЭВМ и информационные технологии}{лабораторной работе №5}{Защита информации}{Сжатие данных}{1 (LZW)}{ИУ7-72Б}{Е.~О.~Карпова}{И.~С.~Чиж}
+
+\include{01-theoretical}
+\include{02-practical}
+
+\include{03-appendix}
+
+\end{document}

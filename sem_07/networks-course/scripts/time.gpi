@@ -1,0 +1,10 @@
+reset
+set terminal pdf
+set output "./plot.pdf"
+set size ratio 0.5625
+set xlabel "Количество потоков, шт"
+set ylabel "Количество запросов в секунду, шт/с"
+set grid
+
+plot "./my.txt" with lp title 'my-server' lw 2, \
+     "./nginx.txt" with lp title 'NGINX' lw 2, \
