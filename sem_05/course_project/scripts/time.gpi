@@ -1,0 +1,25 @@
+# gnuplot -persist time.gpi
+reset
+
+set terminal pdf # size 1920, 1080 font "Helvetica,24"
+
+set output "../images/time.pdf"
+
+set size ratio 0.5625
+
+set xlabel "Количество потоков, шт"
+
+set ylabel "Время, мс"
+
+#set logscale y 10
+
+set xrange [0:25]
+
+set grid
+
+# set key top left
+plot "../data/time0.txt" with lp title '128x128' lw 2, \
+     "../data/time1.txt" with lp title '256x256' lw 2, \
+     "../data/time2.txt" with lp title '384x384' lw 2, \
+     "../data/time3.txt" with lp title '512x512' lw 2, 
+     #"../data/time4.txt" with lp title '640x640' lw 2,

@@ -1,0 +1,8 @@
+\addcontentsline{toc}{chapter}{Список использованных источников}
+
+\renewcommand\bibname{Список использованных источников} % переименовать страницу списка литературы
+\bibliographystyle{utf8gost705u}  % стилевой файл для оформления по ГОСТу
+\makeatletter
+\renewcommand\@biblabel[1]{#1.}
+\makeatother
+\bibliography{lib}          % имя библиографической базы (bib-файла)

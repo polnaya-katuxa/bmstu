@@ -1,0 +1,88 @@
+\section{Ход выполнения работы}
+
+Все задания практикума выполнялись по варианту 11.
+
+Выполнить визуализацию неориентированного графа, представленного в формате tsv. Каждая строчка файла представляет собой описание ребра, сотоящее из трех чисел (Вершина,Вершина,Вес).
+
+
+В листинге~\ref{lst1} представлен код программы по индивидуальному варианту из файла $host\_main.cpp$.
+
+\begin{lstlisting}[caption={Код программы по индивидуальному варианту host\_main.cpp}, label=lst1, style=Go]
+#ifdef MY_GRAPH
+
+    __foreach_core(group, core)
+	{
+		lnh_inst.gpc[group][core]->start_async(__event__(delete_graph));
+	}
+
+
+	unsigned int* host2gpc_ext_buffer[LNH_GROUPS_COUNT][LNH_MAX_CORES_IN_GROUP];
+	unsigned int messages_count = 0;
+	unsigned int u, v, w;
+
+	__foreach_core(group, core)
+	{
+		host2gpc_ext_buffer[group][core] = (unsigned int*)lnh_inst.gpc[group][core]->external_memory_create_buffer(16 * 1048576 * sizeof(int));
+		offs = 0;
+
+		std::ifstream file(argv[3], std::ios::in);
+
+		if (!file.is_open())
+		{
+			std::cout << "Error opening file." << std::endl;
+			
+			return EXIT_FAILURE;
+		}
+
+		for (std::string line; std::getline(file, line); ) 
+		{
+			std::vector<std::string> tokens = split(line, '\t');
+
+			if (tokens.size() != 2)
+			{
+				std::cout << "Incorrect tokens count: expected 2, got " << tokens.size() << "." << std::endl;
+
+				return EXIT_FAILURE;
+			}
+
+			u = std::stoul(tokens[0]);
+			v = std::stoul(tokens[1]);
+			w = 1;
+			
+			EDGE(u, v, w);
+			EDGE(v, u, w);
+			messages_count += 2;
+		}
+
+		lnh_inst.gpc[group][core]->external_memory_sync_to_device(0, 3 * sizeof(unsigned int)*messages_count);
+	}
+	__foreach_core(group, core)
+	{
+		lnh_inst.gpc[group][core]->start_async(__event__(insert_edges));
+	}
+	__foreach_core(group, core) {
+		long long tmp = lnh_inst.gpc[group][core]->external_memory_address();
+		lnh_inst.gpc[group][core]->mq_send((unsigned int)tmp);
+	}
+	__foreach_core(group, core) {
+		lnh_inst.gpc[group][core]->mq_send(3 * sizeof(int)*messages_count);
+	}
+
+
+	__foreach_core(group, core)
+	{
+		lnh_inst.gpc[group][core]->finish();
+	}
+	printf("Data graph created!\n");
+
+#endif
+\end{lstlisting}
+\par В рисунке 2.1 представлена команда для сборки проекта.
+\img{0.05\textwidth}{2.png}{команда для сборки проекта}
+\par В рисунке 2.2 представлен результат запуска.
+\img{0.5\textwidth}{3.png}{результат запуска}
+\par В рисунке 2.3 представлена команда для запуска сервера bokeh.
+\img{0.15\textwidth}{4.png}{команда для запуска сервера bokeh}
+\par В рисунке 2.4 результат визуализации.
+\img{0.5\textwidth}{plot.jpeg}{результат визуализации}
+\newpage
