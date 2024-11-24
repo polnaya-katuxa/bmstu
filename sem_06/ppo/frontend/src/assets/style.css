@@ -1,0 +1,109 @@
+* {
+    font-family: 'Ubuntu', sans-serif !important;
+}
+
+.btn-pink {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #e32d7b;
+    --bs-btn-border-color: #e32d7b;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #c7286c;
+    --bs-btn-hover-border-color: #c7286c;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #e32d7b;
+    --bs-btn-active-border-color: #e32d7b;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #c2457c;
+    --bs-btn-disabled-border-color: #c2457c;
+}
+
+.btn-reaction {
+    --bs-btn-color: #000;
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: #d7c1f1;
+    --bs-btn-hover-color: #000;
+    --bs-btn-hover-bg: rgba(248, 244, 255, 0.99);
+    --bs-btn-hover-border-color: #d7c1f1;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #000;
+    --bs-btn-active-bg: rgba(242, 236, 253, 0.99);
+    --bs-btn-active-border-color: #d7c1f1;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: rgba(208, 205, 220, 0.99);
+    --bs-btn-disabled-border-color: rgba(208, 205, 220, 0.99);
+}
+
+.btn-my-reaction {
+    --bs-btn-color: #000;
+    --bs-btn-bg: rgba(241, 233, 253, 0.99);
+    --bs-btn-border-color: #d7c1f1;
+    --bs-btn-hover-color: #000;
+    --bs-btn-hover-bg: rgba(249, 243, 255, 0.99);
+    --bs-btn-hover-border-color: #d7c1f1;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #000;
+    --bs-btn-active-bg: rgba(242, 236, 253, 0.99);
+    --bs-btn-active-border-color: #d7c1f1;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: rgba(208, 205, 220, 0.99);
+    --bs-btn-disabled-border-color: rgba(208, 205, 220, 0.99);
+}
+
+.btn-pink-link {
+    --bs-btn-font-weight: 400;
+    --bs-btn-color: #e32d7b;
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: #c7286c;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-color: #a9399;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-disabled-color: #6c757d;
+    --bs-btn-disabled-border-color: transparent;
+    --bs-btn-box-shadow: none;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    text-decoration: underline;
+}
+
+.reaction-icon {
+    width: 22px !important;
+    height: 22px !important;
+}
+.nav-comment {
+    color: #8648c0;
+}
+.nav-comment:hover {
+    font-weight: bolder;
+}
+
+.card  {
+    border-color: #d7c1f1 !important;
+}
+.styled-scrollbars {
+    --scrollbar-foreground: #9a69d3;
+    --scrollbar-background: #d7c1f1;
+    --scrollbar-size: 0px;
+    /* плашка-бегунок, фон */
+    scrollbar-color: var(--scrollbar-foreground) var(--scrollbar-background);
+}
+.styled-scrollbars::-webkit-scrollbar {
+    width: var(--scrollbar-size); /* в основном для вертикальных полос прокрутки */
+    height: var(--scrollbar-size); /* в основном для горизонтальных полос прокрутки */
+}
+.styled-scrollbars::-webkit-scrollbar-thumb { /* плашка-бегунок */
+    background: var(--scrollbar-foreground); /* фон */
+}
+.styled-scrollbars::-webkit-scrollbar-track { /* фон */
+    background: var(--scrollbar-background);
+}
+
+.notification-block {
+    position: fixed;
+    width: 23vw;
+    bottom: 10px;
+    right: 17px;
+}

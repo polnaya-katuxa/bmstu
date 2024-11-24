@@ -1,0 +1,762 @@
+\setcounter{page}{3}
+
+\chapter{Практическая часть}
+\section{Задание}
+Используя хвостовую рекурсию, разработать программу, позволяющую найти
+
+\begin{enumerate}
+	\item $n!$;
+	\item $n$-ое число Фибонначи.
+\end{enumerate}
+
+Убедиться в правильности результатов. Для одного из вариантов ВОПРОСА и каждого задания составить таблицу, отражающую конкретный порядок работы системы. Так как резольвента хранится в виде стека, то состояние резольвенты требуется отображать в столбик: вершина~---~сверху! Новый шаг надо начинать с нового состояния резольвенты! Для одного из вариантов ВОПРОСА составить таблицу, отражающую конкретный порядок работы системы.
+
+  
+\begin{lstlisting}[label=div,caption=Реализация программы на языке Prolog]
+fact1(0, Acc, Acc) :- !.
+fact1(N, Acc, Res) :- N #> 0, Acc #=< Res, Res #> 0, Acc1 #= N * Acc, N1 #= N - 1, fact1(N1, Acc1, Res).
+
+fact(N, Res) :- fact1(N, 1, Res).
+
+fib1(0, AccA, _, AccA) :- !.
+fib1(1, _, AccB, AccB) :- !.
+fib1(N, AccA, AccB, Res) :- N #> 1, AccA #< Res, Res #> 0, AccB1 #= AccA + AccB, N1 #= N - 1, fib1(N1, AccB, AccB1, Res).
+
+fib(N, Res) :- fib1(N, 0, 1, Res).
+\end{lstlisting}
+
+\begin{lstlisting}[label=div,caption=Варианты вопроса]
+?- fact(5, N).
+N = 120.
+
+?- fact(N, 3628800).
+N = 10.
+
+?- fact(N, 121).
+false.
+
+?- fib(N, 55).
+N = 10.
+
+?- fib(8, N).
+N = 21.
+
+?- fib(N, 11).
+false.
+
+?- fib(0, N).
+N = 0.
+\end{lstlisting}
+
+
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+  
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+1   
+& \specialcell{fact(3, What)} 
+& \specialcell{fact(3, What) = fact1(0, Acc, Acc) \\ 
+\textbf{Нет} \\ 
+Подстановка пуста} 
+& \specialcell{Прямой ход} \\ \hline
+
+2
+& \specialcell{fact(3, What)} 
+& \specialcell{fact(3, What) = fact1(N, Acc, Res) \\ 
+\textbf{Нет} \\ 
+Подстановка пуста} 
+& \specialcell{Прямой ход} \\ \hline
+
+3
+& \specialcell{fact1(3, 1, Res)} 
+& \specialcell{fact(3, What) = fact(N, Res) \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Res, What~---~сцепленные}
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+4
+& \specialcell{fact1(3, 1, Res)} 
+& \specialcell{fact1(3, 1, Res) = fact1(0, Acc, Acc) \\ 
+\textbf{Нет} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+5
+& \specialcell{
+N \#> 0 \\
+Acc \#=< Res \\
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{fact1(3, 1, Res) = fact1(N, Acc, Res) \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+\textbf{Res, Res~---~сцепленные}
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+6
+& \specialcell{
+Acc \#=< Res \\
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{N \#> 0 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+7
+& \specialcell{
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Acc \#=< Res \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+8
+& \specialcell{
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Res \#> 0 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+\end{tabular}
+}
+\end{table}
+
+
+\newpage
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+9
+& \specialcell{
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Acc1 \#= N * Acc \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+\textbf{Acc1 = 3}
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+10
+& \specialcell{
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{N1 \#= N - 1 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+\textbf{N1 = 2} \\
+\textbf{Acc1 = 3}
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+11
+& \specialcell{
+fact1(2, 3, Res)
+} 
+& \specialcell{fact1(2, 3, Res) = fact1(0, Acc, Acc) \\ 
+\textbf{Нет} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+12
+& \specialcell{
+N \#> 0 \\
+Acc \#=< Res \\
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{fact1(2, 3, Res) = fact1(N, Acc, Res) \\ 
+\textbf{Успех} \\
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+
+13
+& \specialcell{
+Acc \#=< Res \\
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{N \#> 0 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+14
+& \specialcell{
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Acc \#=< Res \\ 
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+15
+& \specialcell{
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Res \#> 0 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+\end{tabular}
+}
+\end{table}
+
+
+\newpage
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+16
+& \specialcell{
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Acc1 \#= N * Acc \\ 
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\
+\textbf{Acc1 = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+
+17
+& \specialcell{
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{N1 \#= N - 1 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\
+\textbf{N1 = 1} \\ 
+\textbf{Acc1 = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+18
+& \specialcell{
+fact1(1, 6, Res)
+} 
+& \specialcell{fact1(1, 6, Res) = fact1(0, Acc, Acc) \\ 
+\textbf{Нет} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+19
+& \specialcell{
+N \#> 0 \\
+Acc \#=< Res \\
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{fact1(1, 6, Res) = fact1(N, Acc, Res) \\ 
+\textbf{Успех} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+20
+& \specialcell{
+Acc \#=< Res \\
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{N \#> 0 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+21
+& \specialcell{
+Res \#> 0 \\
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Acc \#=< Res \\ 
+\textbf{Успех} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+22
+& \specialcell{
+Acc1 \#= N * Acc \\
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Res \#> 0 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+\end{tabular}
+}
+\end{table}
+
+
+\newpage
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+23
+& \specialcell{
+N1 \#= N - 1 \\
+fact1(N1, Acc1, Res)
+} 
+& \specialcell{Acc1 \#= N * Acc \\ 
+\textbf{Успех} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+\textbf{Acc1 = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+24
+& \specialcell{
+fact1(0, 6, Res)
+} 
+& \specialcell{N1 \#= N - 1 \\ 
+\textbf{Успех} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+\textbf{N1 = 0} \\ 
+\textbf{Acc1 = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+25
+& \specialcell{
+fact1(0, 6, Res)
+} 
+& \specialcell{fact1(0, 6, Res) = fact1(0, Acc, Acc) \\ 
+\textbf{Успех} \\ 
+\textbf{Acc = 6} \\ 
+\textbf{Res = 6} \\ 
+} 
+& \specialcell{Откат к 19} \\ \hline
+
+26-31
+& \specialcell{
+fact1(1, 6, Res)
+} 
+& \specialcell{... \\ 
+\textbf{Нет} \\ 
+\textbf{N = 1} \\ 
+\textbf{Acc = 6} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+32
+& \specialcell{
+fact1(1, 6, Res)
+} 
+& \specialcell{
+\textbf{Конец базы знаний} \\ 
+} 
+& \specialcell{Откат к 12} \\ \hline
+
+23-38
+& \specialcell{
+fact1(2, 3, Res)
+} 
+& \specialcell{... \\ 
+\textbf{Нет} \\ 
+\textbf{N = 2} \\ 
+\textbf{Acc = 3} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+39
+& \specialcell{
+fact1(2, 3, Res)
+} 
+& \specialcell{
+\textbf{Конец базы знаний} \\ 
+} 
+& \specialcell{Откат к 5} \\ \hline
+
+40-45
+& \specialcell{
+fact1(3, 1, Res)
+} 
+& \specialcell{... \\ 
+\textbf{Нет} \\ 
+\textbf{N = 3} \\ 
+\textbf{Acc = 1} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+
+
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+46
+& \specialcell{
+fact1(3, 1, Res)
+} 
+& \specialcell{
+\textbf{Конец базы знаний} \\ 
+} 
+& \specialcell{Откат к 3} \\ \hline
+
+
+47-51
+& \specialcell{
+fact(3, What)
+} 
+& \specialcell{... \\ 
+\textbf{Нет} \\ 
+Подстановка пуста
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+52
+& \specialcell{
+fact(3, What)
+} 
+& \specialcell{
+\textbf{Конец базы знаний}
+} 
+& \specialcell{Конец базы знаний} \\ \hline
+
+53
+& \specialcell{
+Резольвента пуста
+} 
+& \specialcell{
+Подстановка пуста
+} 
+& \specialcell{Конец базы знаний} \\ \hline
+
+
+\end{tabular}
+}
+\end{table}
+
+\newpage
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+1
+& \specialcell{
+fib(2, What)
+} 
+& \specialcell{fib(2, What) = fact1(0, Acc, Acc) \\
+\textbf{Нет} \\ 
+Подстановка пуста
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+
+2-6
+& \specialcell{
+fib(2, What)
+} 
+& \specialcell{... \\
+\textbf{Нет} \\ 
+Подстановка пуста
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+
+7
+& \specialcell{
+fib1(2, 0, 1, Res)
+} 
+& \specialcell{fib(2, What) = fib(N, Res) \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{Res, What - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+8
+& \specialcell{
+fib1(2, 0, 1, Res)
+} 
+& \specialcell{fib1(2, 0, 1, Res) = fact1(0, Acc, Acc) \\
+\textbf{Нет} \\ 
+\textbf{N = 2} \\ 
+\textbf{Res, What - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+9-12
+& \specialcell{
+fib1(2, 0, 1, Res)
+} 
+& \specialcell{... \\
+\textbf{Нет} \\ 
+\textbf{N = 2} \\ 
+\textbf{Res, What - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+13
+& \specialcell{
+N \#> 1 \\
+AccA \#< Res \\
+Res \#> 0 \\
+AccB1 \#= AccA + AccB \\
+N1 \#= N - 1 \\
+fib1(N1, AccB, AccB1, Res) \\
+} 
+& \specialcell{fib1(2, 0, 1, Res) = fib1(N, AccA, AccB, Res) \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+14
+& \specialcell{
+AccA \#< Res \\
+Res \#> 0 \\
+AccB1 \#= AccA + AccB \\
+N1 \#= N - 1 \\
+fib1(N1, AccB, AccB1, Res) \\
+} 
+& \specialcell{N \#> 1 \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+15
+& \specialcell{
+Res \#> 0 \\
+AccB1 \#= AccA + AccB \\
+N1 \#= N - 1 \\
+fib1(N1, AccB, AccB1, Res) \\
+} 
+& \specialcell{AccA \#< Res \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+16
+& \specialcell{
+AccB1 \#= AccA + AccB \\
+N1 \#= N - 1 \\
+fib1(N1, AccB, AccB1, Res) \\
+} 
+& \specialcell{Res \#> 0 \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+17
+& \specialcell{
+N1 \#= N - 1 \\
+fib1(N1, AccB, AccB1, Res) \\
+} 
+& \specialcell{AccB1 \#= AccA + AccB \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{AccB1 = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+18
+& \specialcell{
+fib1(N1, AccB, AccB1, Res) \\
+} 
+& \specialcell{N1 \#= N - 1 \\
+\textbf{Успех} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{AccB1 = 1} \\ 
+\textbf{N1 = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+19
+& \specialcell{
+fib1(1, 1, 1, Res)
+} 
+& \specialcell{fib1(1, 1, 1, Res) = fact1(0, Acc, Acc) \\
+\textbf{Нет} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+20-22
+& \specialcell{
+fib1(1, 1, 1, Res)
+} 
+& \specialcell{... \\
+\textbf{Нет} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+23
+& \specialcell{
+fib1(2, 0, 1, Res)
+} 
+& \specialcell{fib1(1, 1, 1, Res) = fib1(1, \_, AccB, AccB) \\
+\textbf{Успех} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{Res = 1} \\ 
+} 
+& \specialcell{Откат к 13} \\ \hline
+
+24
+& \specialcell{
+fib1(2, 0, 1, Res)
+} 
+& \specialcell{fib1(2, 0, 1, Res) = fib(N, Res) \\
+\textbf{Нет} \\ 
+\textbf{N = 2} \\ 
+\textbf{AccA = 0} \\ 
+\textbf{AccB = 1} \\ 
+\textbf{Res, Res - сцепленные} \\ 
+} 
+& \specialcell{Прямой ход} \\ \hline
+
+25
+& \specialcell{
+fib(2, What)
+} 
+& \specialcell{\textbf{Конец базы знаний} \\
+} 
+& \specialcell{Откат к 7} \\ \hline
+
+26
+& \specialcell{
+fib(2, What)
+} 
+& \specialcell{\textbf{Конец базы знаний} \\
+} 
+& \specialcell{Конец базы знаний} \\ \hline
+
+27
+& \specialcell{
+Резольвента пуста
+} 
+& \specialcell{Подстановка пуста \\
+} 
+& \specialcell{Конец базы знаний} \\ \hline
+
+
+
+\end{tabular}
+}
+\end{table}

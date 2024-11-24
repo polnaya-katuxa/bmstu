@@ -1,0 +1,1247 @@
+openapi: 3.0.0
+info:
+  title: API for ppo project
+  version: 1.0.0
+
+tags:
+  - name: user
+  - name: post
+  - name: reaction
+  - name: comment
+  - name: subscriber
+
+servers:
+  - url: http://localhost:8089
+  - url: http://localhost:3000/api/v2
+
+paths:
+  /auth:
+    post:
+      tags:
+        - user
+      summary: login
+      operationId: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: login user
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: USER_TOKEN=token; Path=/; HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        "412":
+          description: incorrect login or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - user
+      summary: get current user
+      operationId: GetCurrentUser
+      security:
+        - cookieAuth: [ ]
+      responses:
+        "200":
+          description: user info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - user
+      summary: logout
+      operationId: Logout
+      security:
+        - cookieAuth: [ ]
+      responses:
+        "200":
+          description: logout
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{login}:
+    get:
+      tags:
+        - user
+      summary: get user by login
+      operationId: GetUser
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: view profile user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - user
+      summary: delete user by login
+      operationId: DeleteUser
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: delete user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteUserResponse'
+        "400":
+          description: auto delete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: not an admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts:
+    get:
+      tags:
+        - post
+      summary: get posts (feed or profile)
+      operationId: GetPosts
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: user
+          in: query
+          schema:
+            type: string
+        - name: feed_for
+          in: query
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Num'
+      responses:
+        "200":
+          description: get posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostsResponse'
+        "400":
+          description: invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - post
+      summary: publish post
+      operationId: PublishPost
+      security:
+        - cookieAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishRequest'
+      responses:
+        "201":
+          description: publish post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users:
+    get:
+      tags:
+        - user
+      summary: get all users
+      operationId: GetUsers
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Num'
+      responses:
+        "200":
+          description: view users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersResponse'
+        "400":
+          description: invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: not an admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - user
+      summary: register
+      operationId: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        "201":
+          description: register user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        "409":
+          description: user already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "412":
+          description: invalid login, password or email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}/subscribers:
+    post:
+      tags:
+        - subscriber
+      summary: subscribe by id
+      operationId: Subscribe
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: subscribe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribeResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: insufficient balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}/subscribers/{subscriber_id}:
+    delete:
+      tags:
+        - subscriber
+      summary: unsubscribe by id
+      operationId: Unsubscribe
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: subscriber_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: unsubscribe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribeResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/reactions:
+    post:
+      tags:
+        - reaction
+      summary: react to post by id
+      operationId: React
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReactRequest'
+      responses:
+        "200":
+          description: react to post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: cannot react to authored post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/reactions/{type_id}:
+    delete:
+      tags:
+        - reaction
+      summary: unreact post by id
+      operationId: Unreact
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: unreact post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: cannot unreact authored post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/comments:
+    post:
+      tags:
+        - comment
+      summary: comment post by id
+      operationId: Comment
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        "201":
+          description: comment post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - comment
+      summary: get comments for post by id
+      operationId: GetComments
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Num'
+      responses:
+        "200":
+          description: view post comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommentsResponse'
+        "400":
+          description: invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/comments/{comment_id}:
+    delete:
+      tags:
+        - comment
+      summary: uncomment post by id
+      operationId: Uncomment
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: comment_id
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: uncomment post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UncommentResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: only your posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}:
+    get:
+      tags:
+        - post
+      summary: get post by id
+      operationId: GetPost
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: get post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "402":
+          description: only after subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - post
+      summary: delete post by id
+      operationId: DeletePost
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: delete post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletePostResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: only for authored posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/perms:
+    patch:
+      tags:
+        - post
+      summary: change perms for post by id
+      operationId: ChangePostPerms
+      security:
+        - cookieAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: change post perms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePermsResponse'
+        "401":
+          description: authorization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: only for authored posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Number of page
+      schema:
+        type: integer
+    Num:
+      name: num
+      in: query
+      description: Num records on page
+      schema:
+        type: integer
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: user-token
+
+  schemas:
+    RegisterRequest:
+      type: object
+      title: RegisterRequest
+      required:
+        - login
+        - password
+        - picture
+        - description
+        - mail
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        picture:
+          type: string
+        description:
+          type: string
+        mail:
+          type: string
+
+    LoginRequest:
+      type: object
+      title: LoginRequest
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+
+    GetPostResponse:
+      type: object
+      title: GetPostResponse
+      required:
+        - post
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+
+    ChangePermsResponse:
+      type: object
+      title: ChangePermsResponse
+      required:
+        - changed
+      properties:
+        changed:
+          type: string
+
+    DeletePostResponse:
+      type: object
+      title: DeletePostResponse
+      required:
+        - deleted
+      properties:
+        deleted:
+          type: boolean
+
+    DeleteUserResponse:
+      type: object
+      title: DeleteUserResponse
+      required:
+        - deleted
+      properties:
+        deleted:
+          type: boolean
+
+    PublishRequest:
+      type: object
+      title: PublishRequest
+      required:
+        - content
+      properties:
+        content:
+          type: string
+        perms:
+          type: boolean
+
+    ReactRequest:
+      type: object
+      title: ReactRequest
+      required:
+        - typeID
+      properties:
+        typeID:
+          type: string
+
+    CommentRequest:
+      type: object
+      title: CommentRequest
+      required:
+        - content
+      properties:
+        content:
+          type: string
+
+    UncommentResponse:
+      type: object
+      title: UncommentResponse
+      required:
+        - uncommented
+      properties:
+        uncommented:
+          type: boolean
+
+    UserInfoResponse:
+      type: object
+      title: UserInfoResponse
+      required:
+        - user
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+
+    AuthResponse:
+      type: object
+      title: AuthResponse
+      required:
+        - token
+      properties:
+        token:
+          type: string
+
+    User:
+      type: object
+      title: User
+      required:
+        - id
+        - login
+        - picture
+        - description
+        - balance
+        - mail
+        - isAdmin
+      properties:
+        id:
+          type: string
+        login:
+          type: string
+        picture:
+          type: string
+        description:
+          type: string
+        balance:
+          type: integer
+        mail:
+          type: string
+        isAdmin:
+          type: boolean
+
+    Reaction:
+      type: object
+      title: Reaction
+      required:
+        - icon
+        - num
+        - typeID
+        - yours
+      properties:
+        icon:
+          type: string
+        num:
+          type: integer
+        typeID:
+          type: string
+        yours:
+          type: boolean
+
+    Post:
+      type: object
+      title: Post
+      required:
+        - id
+        - content
+        - pubTime
+        - author
+        - reactions
+        - commentsNum
+        - perms
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        pubTime:
+          type: string
+        author:
+          $ref: '#/components/schemas/User'
+        commentsNum:
+          type: integer
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reaction'
+        perms:
+          type: boolean
+
+    Comment:
+      type: object
+      title: Comment
+      required:
+        - id
+        - content
+        - pubTime
+        - commentator
+        - postID
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        pubTime:
+          type: string
+        commentator:
+          $ref: '#/components/schemas/User'
+        postID:
+          type: string
+
+    GetUsersResponse:
+      type: object
+      title: ViewUsersResponse
+      required:
+        - users
+        - total
+      properties:
+        total:
+          type: integer
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    GetUserResponse:
+      type: object
+      title: ViewProfileUserResponse
+      required:
+        - user
+        - subscribed
+        - self
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        subscribed:
+          type: boolean
+        self:
+          type: boolean
+
+    GetPostsResponse:
+      type: object
+      title: GetPostsResponse
+      required:
+        - posts
+        - total
+      properties:
+        total:
+          type: integer
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+
+    SubscribeResponse:
+      type: object
+      title: SubscribeResponse
+      required:
+        - subscribed
+      properties:
+        subscribed:
+          type: boolean
+
+    PublishResponse:
+      type: object
+      title: PublishResponse
+      required:
+        - post
+        - published
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+        published:
+          type: boolean
+
+    ReactResponse:
+      type: object
+      title: ReactResponse
+      required:
+        - reacted
+      properties:
+        reacted:
+          type: boolean
+
+    CommentResponse:
+      type: object
+      title: CommentResponse
+      required:
+        - comment
+      properties:
+        comment:
+          $ref: '#/components/schemas/Comment'
+
+    GetCommentsResponse:
+      type: object
+      title: ViewCommentsResponse
+      required:
+        - comments
+        - total
+      properties:
+        total:
+          type: integer
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    ErrorResponse:
+      type: object
+      title: ErrorResponse
+      required:
+        - message
+        - systemMessage
+      properties:
+        message:
+          type: string
+          example: "Cannot login."
+        systemMessage:
+          type: string

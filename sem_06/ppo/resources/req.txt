@@ -1,0 +1,36 @@
+запрос на gzip
+
+curl -X GET "http://localhost:3000/api/v2/posts?user=muhomorfus&page=1&num=1" -H  "accept: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI" -H "Accept-Encoding: gzip, deflate, br" -v --output -
+
+запросы на зеркало
+
+curl -X GET "http://localhost:3000/mirror1/api/v2/posts?user=muhomorfus&page=1&num=1" -H  "accept: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI"
+
+curl -X POST "http://localhost:3000/mirror1/api/v2/posts" -H  "accept: application/json" -H  "Content-Type: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI" -d "{\"content\":\"hahaha\",\"perms\":false}"
+
+запрос на нагрузочное
+
+ab -n 10000 -c 200 -H  "accept: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI" -H "Accept-Encoding: gzip, deflate, br" -g /Users/polnaya_katuxa/Study/Sem_06/ppo/resources/ab_res.txt "http://localhost:3000/api/v2/posts?user=muhomorfus&page=1&num=1"
+
+ab -n 10000 -c 200 -H  "accept: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI" -H "Accept-Encoding: gzip, deflate, br" -g /Users/polnaya_katuxa/Study/Sem_06/ppo/resources/ab_res.txt "http://localhost:8081/posts?user=muhomorfus&page=1&num=1"
+
+запросы на реплики
+
+curl -X GET "http://localhost:8082/posts?user=muhomorfus&page=1&num=1" -H  "accept: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI"
+
+curl -X POST "http://localhost:8083/posts" -v -H  "accept: application/json" -H  "Content-Type: application/json" -H  "Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI" -d "{\"content\":\"hahaha\",\"perms\":false}"
+
+
+
+
+
+
+
+curl --location 'localhost:8085/api/employee_id_by_card?card=369&employee_id=369' --header 'Authorization: Basic YWRtaW46dGVzdA==' --header 'Cookie: user-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTgwMDUyMjUsImlhdCI6MTY5Nzc0NjAyNSwianRpIjoiMzgyYjY5MzItYTU4YS00NDE0LTk5MjMtYjc2NjYzNjczNGQ4In0.D1m5oNaFm4kHVB745ybLWx6HTHI2oLyNLx5-tVh7kBU'
+
+
+
+какой-то ручки на гет кардс из вакф не хватает!!!!
+
+
+curl --location 'localhost:8085/api/turnstile_kv/get?terminal_id=369' --header 'Authorization: Basic YWRtaW46dGVzdA=='

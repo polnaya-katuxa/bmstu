@@ -1,0 +1,20 @@
+apiVersion: "k8s.kotishos.ru/v1alpha1"
+kind: "Microservice"
+metadata:
+  name: "api"
+  namespace: "api"
+spec:
+  name: "api"
+  image: "registry.in.kotishos.ru/api:latest"
+  replicas: 9
+  replicasCanary: 3
+  canary: false
+  needsIngress: true
+  route: "Host(`kotishos.ru`) && PathPrefix(`/api`)"
+  config: |
+    logLevel: "debug"
+    port: "80"
+    services:
+      user: "user.user.svc.cluster.local:80"
+      feedback: "feedback.feedback.svc.cluster.local:80"
+      advert: "advert.advert.svc.cluster.local:80"

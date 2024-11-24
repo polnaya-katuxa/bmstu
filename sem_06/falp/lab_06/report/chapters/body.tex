@@ -1,0 +1,151 @@
+\setcounter{page}{3}
+
+\chapter{Практическая часть}
+\section{Задание №1}
+Написать хвостовую рекурсивную функцию my-reverse, которая развернет верхний уровень своего списка-аргумента lst.
+  
+\begin{code}
+\caption{Задание №1}
+\label{code:bf2}
+\begin{minted}{lisp}
+(defun get_reversed (l r) 
+	(cond
+		((null l) r)
+		(t (get_reversed (cdr l) (cons (car l) r)))  
+	)
+)
+
+(defun my_reverse (l)
+	(get_reversed l nil)
+)
+
+; ИЛИ
+
+(defun my_reverse (l &optional (r nil)) 
+	(cond
+		((null l) r)
+		(t (get_reversed (cdr l) (cons (car l) r)))  
+	)
+)
+\end{minted}
+\end{code}
+
+\section{Задание №2}
+Написать функцию, которая возвращает первый элемент списка - аргумента, который сам является непустым списком.
+
+\begin{code}
+\caption{Задание №2}
+\label{code:bf2}
+\begin{minted}{lisp}
+(defun get_inside (l)
+	(
+		cond ((null l) nil)
+		((atom (car l)) (car l))
+		(t (get_inside (car l)))
+	)
+)
+
+(defun get_first_atom (l)
+	(
+		cond ((null l) nil)
+		((atom (car l)) (get_first_atom (cdr l)))
+		(t (get_inside (car l))
+	)
+))
+\end{minted}
+\end{code}
+
+\section{Задание №3}
+Напишите рекурсивную функцию, которая умножает на заданное число-аргумент все числа из заданного списка-аргумента, когда:
+\begin{itemize}
+	\item все элементы списка~---~числа;
+	\item элементы списка~---~любые объекты.
+\end{itemize}
+
+\begin{code}
+\caption{Задание №3}
+\label{code:bf2}
+\begin{minted}{lisp}
+(defun mul_numbers1 (l num acc)
+(	cond ((null l) acc)
+	(t  (mul_numbers1 (cdr l) num (cons (* (car l) num) acc)))
+))
+
+(defun my_mul1 (l num)
+	(mul_numbers1 l num nil))
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Задание №3}
+\label{code:bf2}
+\begin{minted}{lisp}
+(defun mul_numbers2 (l num acc)
+(	cond ((null l) acc)
+	((numberp (car l)) (mul_numbers2 (cdr l) num 
+		(cons (* (car l) num) acc)))
+	((atom (car l)) (mul_numbers2 (cdr l) num (cons (car l) acc)))
+	(t (mul_numbers2 (cdr l) num (cons (mul_numbers2 (car l) num nil) 
+		acc)))
+))
+
+(defun my_mul2 (l num)
+	(mul_numbers2 l num nil)
+)
+\end{minted}
+\end{code}
+
+\section{Задание №4}
+Напишите функцию, select-between, которая из списка-аргумента, содержащего только числа, выбирает только те, которые расположены между двумя указанными границами- аргументами и возвращает их в виде списка.
+
+\begin{code}
+\caption{Задание №4}
+\label{code:bf3}
+\begin{minted}{lisp}
+(defun select_between1 (lst l r acc)
+	(cond ((null lst) acc)
+	((or (< l (car lst) r) (< r (car lst) l)) 
+		(select_between1 (cdr lst) l r (cons (car lst) acc)))
+	(t (select_between1 (cdr lst) l r acc))
+))
+
+(defun select_between (lst l r)
+	(select_between1 lst l r nil))
+\end{minted}
+\end{code}
+
+\section{Задание №5}
+Написать рекурсивную версию (с именем rec-add) вычисления суммы чисел заданного списка:
+\begin{itemize}
+	\item одноуровнего смешанного;
+	\item структурированного.
+\end{itemize}
+
+\begin{code}
+\caption{Задание №5}
+\label{code:bf5}
+\begin{minted}{lisp}
+(defun add (lst acc)
+(	cond ((null lst) acc)
+	((numberp (car lst)) (add (cdr lst) (+ (car lst) acc)))
+	(t (add (cdr lst) acc))
+))
+
+(defun rec_add (lst) (add lst 0))
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Задание №5}
+\label{code:bf5}
+\begin{minted}{lisp}
+(defun rec_add (lst)
+(	cond ((null lst) 0)
+	((numberp (car lst)) (+ (car lst) (rec_add (cdr lst))))
+	((atom (car lst)) (rec_add (cdr lst)))
+	(t (+ (rec_add (car lst)) (rec_add (cdr lst))))
+))
+\end{minted}
+\end{code}

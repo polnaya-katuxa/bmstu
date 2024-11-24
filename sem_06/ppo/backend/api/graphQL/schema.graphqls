@@ -1,0 +1,98 @@
+input RegisterData {
+    login: String!
+    password: String!
+    picture: String!
+    description: String!
+    mail: String!
+}
+
+type UserData {
+    user: User!
+    subscribed: Boolean!
+    self: Boolean!
+}
+
+type PublishData {
+    post: Post!
+    published: Boolean!
+}
+
+type PostsList {
+    items: [Post!]!
+    total: Int!
+}
+
+type User {
+    id: String!
+    login: String!
+    picture: String!
+    description: String!
+    balance: Int!
+    mail: String!
+    isAdmin: Boolean!
+    posts(paginator: Paginator!): PostsList!
+}
+
+type Reaction {
+    icon: String!
+    num: Int!
+    typeID: String!
+    yours: Boolean!
+}
+
+type CommentsList {
+    items: [Comment!]!
+    total: Int!
+}
+
+type Post {
+    id: String!
+    content: String!
+    pubTime: String!
+    author: User!
+    reactions: [Reaction!]!
+    commentsNum: Int!
+    comments(paginator: Paginator!): CommentsList!
+    perms: Boolean!
+}
+
+type Comment {
+    id: String!
+    content: String!
+    pubTime: String!
+    commentator: User!
+    postID: String!
+}
+
+type UsersList {
+    items: [User!]!
+    total: Int!
+}
+
+input Paginator {
+    page: Int!
+    num: Int!
+}
+
+type Query {
+    login(login: String!, password: String!): String!
+    currentUser: User!
+    user(login: String!): UserData!
+    feed(paginator: Paginator!): PostsList!
+    users(paginator: Paginator!): UsersList!
+    post(id: String!): Post!
+}
+
+type Mutation {
+    deleteUser(login: String!): Boolean!
+    publishPost(content: String!, perms: Boolean!): PublishData!
+    subscribe(userID: String!): Boolean!
+    unsubscribe(userID: String!): Boolean!
+    react(postID: String!, typeID: String!): Boolean!
+    unreact(postID: String!, typeID: String!): Boolean!
+    comment(postID: String!, content: String!): Comment!
+    uncomment(postID: String!, id: String!): Boolean!
+    deletePost(id: String!): Boolean!
+    changePostPerms(id: String!): String!
+    register(data: RegisterData!): String!
+}

@@ -1,0 +1,41 @@
+PG:
+  Host: 94.241.138.4
+  Port: 5432
+  User: gen_user
+  Password: "!7|>\\_:1fi!Z9I"
+  DBName: default_db
+
+MONGO:
+  Host: localhost
+  Port: 27017
+  User: postby
+  Password: password
+  DBName: postby
+
+HTTPPortV1: 8088
+HTTPPortV2: 8089
+
+AllowedOrigins:
+  - http://localhost:8080
+  - http://localhost:3000
+  - http://localhost:8095
+
+#AllowedOrigins:
+#  - "*"
+
+AdminLogin: admin
+AdminPassword: password
+AdminEmail: admin@admin.ru
+
+DB: postgres
+
+Cost: 10
+DailyBonus: 5
+TokenExp: 72h
+SecretKey: dvM4+HW7Xy/rKHhrLss+U4A5QU4bzmAQMWZHvy+B2ykBcMI0hXli6S9SUemTDhNF
+Span: 72000h
+
+Logger:
+  Encoding: console
+  Level: debug
+  File: stdout

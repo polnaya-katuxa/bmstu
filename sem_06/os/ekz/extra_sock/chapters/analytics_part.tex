@@ -1,0 +1,344 @@
+\chapter{Билет №???}
+
+\section*{Socket программы}
+
+\section{Socketpair}
+
+\begin{lstlisting}
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+
+#define BUF_SIZE 50
+#define CHILD_NUM 3
+
+int main(int argc, char ** argv)
+{
+    int fd[2];
+    char buf[BUF_SIZE];
+    pid_t child_pid[CHILD_NUM];
+
+    if (socketpair(AF_UNIX, SOCK_DGRAM, 0, fd) < 0) 
+    {
+        perror("socketpair() failed");
+        exit(1);
+    }
+
+    for (size_t i = 0; i < CHILD_NUM; i++) 
+    {
+        if ((child_pid[i] = fork()) == -1)
+        {
+            perror("Can't fork\n");
+            exit(1);
+        }
+        if (child_pid[i] == 0)
+        {
+            //close(fd[1]);
+            sprintf(buf, "%d", getpid());
+            write(fd[0], buf, sizeof(buf));
+            printf("Child wrote %s\n", buf);
+            //sleep(1);
+            read(fd[0], buf, sizeof(buf));
+            printf("Child %d read %s\n", getpid(), buf);
+           // close(fd[0]);
+
+            return EXIT_SUCCESS;
+        }
+        else 
+        {
+            //close(fd[0]);
+            read(fd[1], buf, sizeof(buf));
+            printf("Parent read %s\n", buf);
+            sprintf(buf, "%s %d", buf, getpid());
+            write(fd[1], buf, sizeof(buf));
+            printf("Parent wrote %s\n", buf);
+        }
+    }
+
+    //close(fd[0]);
+    //close(fd[1]);
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\section{AF\_UNIX + \\ SOCK\_DGRAM + без bind у клиента}
+
+\section*{client}
+
+\begin{lstlisting}
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/un.h>
+
+#define BUF_SIZE 50
+
+int main(int argc, char ** argv)
+{
+    char buf[BUF_SIZE];
+
+    if (argc != 2)
+    {
+        perror("args not enough\n");
+        return EXIT_FAILURE;
+    }
+    sprintf(buf, "%d %s", getpid(), argv[1]);
+
+    int sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+    if (sockfd == -1)
+    {
+        perror("socket() failed\n");
+        return EXIT_FAILURE;
+    }
+
+    struct sockaddr sa;
+    sa.sa_family = AF_UNIX;
+    strcpy(sa.sa_data, "socket.soc");
+
+    if (sendto(sockfd, buf, sizeof(buf), 0, &sa, sizeof(sa)) == -1)
+    {
+        perror("sendto() failed\n");
+        close(sockfd);
+        return EXIT_FAILURE;
+    }
+
+    close(sockfd);
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\section*{server}
+
+\begin{lstlisting}
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+
+#define BUF_SIZE 50
+
+int sockfd;
+
+void signal_handler(int signal)
+{
+    printf("\nCaught signal = %d\n", signal);
+    unlink("socket.soc");
+    close(sockfd);
+    printf("\nServer exiting.\n");
+    exit(0);
+}
+
+int main() 
+{
+	if ((signal(SIGINT, signal_handler) == SIG_ERR)) {
+        perror("Can't attach handler\n");
+        return EXIT_FAILURE;
+    }
+
+	char buf[BUF_SIZE];
+
+	sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+	if (sockfd == -1) 
+	{
+		perror("socket() failed");
+        return EXIT_FAILURE;
+	}
+
+	struct sockaddr sa;
+	sa.sa_family = AF_UNIX;
+	strcpy(sa.sa_data, "socket.soc");
+
+	if (bind(sockfd, &sa, sizeof(sa)) < 0) 
+	{
+		perror("bind() failed");
+		unlink("socket.soc");
+		close(sockfd);
+		return EXIT_FAILURE;
+	}
+
+	int bytes;
+	while (1)
+	{
+		bytes = recvfrom(sockfd, buf, sizeof(buf), 0, NULL, NULL);
+		if (bytes == -1)
+		{
+			perror("recvfrom() failed");
+			unlink("socket.soc");
+			close(sockfd);
+			return EXIT_FAILURE;
+		}
+
+		printf("\nreceived: %s\n", buf);
+	}
+
+	return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\section{AF\_UNIX + \\ SOCK\_DGRAM + bind у клиента}
+
+\section*{client}
+
+\begin{lstlisting}
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/un.h>
+
+#define BUF_SIZE 50
+
+int main(int argc, char **argv)
+{
+    char buf[BUF_SIZE];
+
+    if (argc != 2)
+    {
+        perror("args not enough\n");
+        return EXIT_FAILURE;
+    }
+    sprintf(buf, "%d %s", getpid(), argv[1]);
+
+    int sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+    if (sockfd == -1)
+    {
+        perror("socket() failed\n");
+        return EXIT_FAILURE;
+    }
+
+    struct sockaddr sa;
+    sa.sa_family = AF_UNIX;
+    strcpy(sa.sa_data, "socket.soc");
+    socklen_t len = sizeof(sa);
+
+    char name[20];
+    sprintf(name, "%d.soc", getpid());
+
+    struct sockaddr ca;
+    ca.sa_family = AF_UNIX;
+    strcpy(ca.sa_data, name);
+    if (bind(sockfd, &ca, sizeof(ca)) == -1) 
+    {
+        perror("bind() failed\n");
+        close(sockfd);
+        return EXIT_FAILURE;
+    }
+
+    if (sendto(sockfd, buf, sizeof(buf), 0, &sa, len) == -1)
+    {
+        perror("sendto() failed\n");
+        unlink(name);
+        close(sockfd);
+        return EXIT_FAILURE;
+    }
+    if (recvfrom(sockfd, buf, sizeof(buf), 0, NULL, NULL) == -1) //&sa, &len
+    {
+        perror("recvfrom() failed\n");
+        unlink(name);
+        close(sockfd);
+        return EXIT_FAILURE;
+    }
+    printf("\nreceived: %s\n", buf);
+    unlink(name);
+    close(sockfd);
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\section*{server}
+
+\begin{lstlisting}
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+
+#define BUF_SIZE 50
+
+int sockfd;
+
+void signal_handler(int signal)
+{
+    printf("\nCaught signal = %d\n", signal);
+    unlink("socket.soc");
+    close(sockfd);
+    printf("\nServer exiting.\n");
+    exit(0);
+}
+
+int main(int argc, char **argv)
+{
+    if ((signal(SIGINT, signal_handler) == SIG_ERR)) 
+    {
+        perror("Can't attach handler\n");
+        return EXIT_FAILURE;
+    }
+    char buf[BUF_SIZE];
+    sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+
+    if (sockfd == -1)
+    {
+        perror("socket() failed");
+        return EXIT_FAILURE;
+    }
+
+    struct sockaddr sa;
+    sa.sa_family = AF_UNIX;
+    strcpy(sa.sa_data, "socket.soc");
+
+    if (bind(sockfd, &sa, sizeof(sa)) == -1) 
+    {
+        perror("bind() failed");
+        unlink("socket.soc");
+        close(sockfd);
+        return EXIT_FAILURE;
+    }
+
+    int bytes;
+    while (1) 
+    {
+        struct sockaddr ca;
+        socklen_t len = sizeof(ca);
+
+        bytes = recvfrom(sockfd, buf, sizeof(buf), 0, &ca, &len);
+        if (bytes == -1) 
+        {
+            perror("recvfrom() failed");
+            unlink("socket.soc");
+            close(sockfd);
+            return EXIT_FAILURE;
+        }
+        printf("\nreceived: %s\n", buf);
+        sprintf(buf, "%s %d", buf, getpid());
+        
+        if (sendto(sockfd, buf, sizeof(buf), 0, &ca, len) == -1)
+        {
+            perror("sendto() failed");
+            unlink("socket.soc");
+            close(sockfd);
+            return EXIT_FAILURE;
+        }
+        printf("sent: %s\n", buf);
+    }
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+

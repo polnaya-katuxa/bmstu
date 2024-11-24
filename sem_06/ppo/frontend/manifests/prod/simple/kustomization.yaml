@@ -1,0 +1,8 @@
+# https://habr.com/ru/companies/flant/articles/469179/
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+resources:
+  - "../../base"
+namespace: "api"
+commonLabels:
+  environment: "prod"

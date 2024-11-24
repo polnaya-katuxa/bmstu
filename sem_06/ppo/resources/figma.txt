@@ -1,0 +1,16 @@
+розовое в фоне FBC2EB 
+фиолетовое в фоне A6C1EE
+
+corner-radius 25
+размер шрифта 16пикс
+бордер-радиус 6пикс
+
+шрифты  <link rel="preconnect" href="https://fonts.googleapis.com">
+    	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    	<link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+
+ходим с вмсапи в термэмпапи
+вмсапи_терминалэмп
+добавьте плейсхолдер там еще куда-то
+
+в репе сопсов перечислены все контура где это есть - тогда у коров просить

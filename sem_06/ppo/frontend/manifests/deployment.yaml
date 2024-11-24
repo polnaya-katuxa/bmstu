@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postby-frontend
+  labels:
+    app: postby-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postby-frontend
+  template:
+    metadata:
+      name: postby-frontend
+      labels:
+        app: postby-frontend
+    spec:
+      containers:
+        - name: postby-frontend
+          image: polnayakatuxa/postby-frontend:latest
+          imagePullPolicy: Always
+      restartPolicy: Always
+      

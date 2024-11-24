@@ -1,0 +1,2592 @@
+{
+  "uuid": "248f240f-eb80-4353-9a11-ddc4f6bcc31d",
+  "lastMigration": 32,
+  "name": "API for ppo project",
+  "endpointPrefix": "api/v2",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "ab7b14dd-9d84-41cf-a1c2-6be2d81e3b75",
+      "type": "http",
+      "documentation": "login",
+      "method": "post",
+      "endpoint": "auth",
+      "responses": [
+        {
+          "uuid": "c17470cd-4386-44a8-a30e-572434524edc",
+          "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "login user",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": ""
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "de3244cc-9758-4443-9540-6bee19fb67ae",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "c664b436-3622-4a05-bc25-be9ccbbf4c50",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 412,
+          "label": "incorrect login or password",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "01978b02-41a7-40ec-9356-373bd2724295",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "d3667a19-fa23-4203-97f5-0ab5c66df534",
+      "type": "http",
+      "documentation": "get current user",
+      "method": "get",
+      "endpoint": "auth",
+      "responses": [
+        {
+          "uuid": "d15aa33b-6b28-4f26-82ce-e3e3f5f31fb7",
+          "body": "{\n  \"user\": {\n    \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n    \"login\": \"muhomorfus\",\n    \"picture\": \"string\",\n    \"description\": \"string\",\n    \"balance\": 0,\n    \"mail\": \"string\",\n    \"isAdmin\": false\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "user info",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3644ce5b-7784-4997-9a35-2e999df2d034",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b692c3c7-7e96-410a-9f3d-b6e020f637d8",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "39aadabe-2bab-4038-aa81-8659c650728b",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "b39e9506-b65a-424c-ba6a-66cfb3367831",
+      "type": "http",
+      "documentation": "logout",
+      "method": "delete",
+      "endpoint": "auth",
+      "responses": [
+        {
+          "uuid": "4b5f19c6-7f7d-4ed1-8377-ea91c2a0afc2",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "logout",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "450b46cf-47bc-4320-a2c3-5f700e511c2a",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "76623961-2871-4ef3-9612-c644883573b9",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "bdb7c230-4406-42b2-b829-965f59a1af7f",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "a8dd8c69-64f4-44a0-a928-fe392ad04b0b",
+      "type": "http",
+      "documentation": "get user by login",
+      "method": "get",
+      "endpoint": "users/:login",
+      "responses": [
+        {
+          "uuid": "2a2fab6e-ea38-4e5e-98ff-2a3dbd066021",
+          "body": "{\n  \"user\": {\n    \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n    \"login\": \"muhomorfus\",\n    \"picture\": \"string\",\n    \"description\": \"string\",\n    \"balance\": 0,\n    \"mail\": \"string\",\n    \"isAdmin\": false\n  },\n  \"subscribed\": false,\n  \"self\": false\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "view profile user",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "7e2934bd-3f7d-418d-b798-8469edfb367d",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "dc696d58-38b9-4a31-ade9-c130e654481a",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0bb7ef8d-723e-4dc0-86fe-c960f4abe8c5",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "e2f80b15-a561-4b72-ba29-64dc02440a6a",
+      "type": "http",
+      "documentation": "delete user by login",
+      "method": "delete",
+      "endpoint": "users/:login",
+      "responses": [
+        {
+          "uuid": "d54857f7-1343-4ea6-8e91-79cfc6336a9c",
+          "body": "{\n  \"deleted\": true\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "delete user",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0d836a1b-ff4f-4fb3-80f2-3876f8a5594e",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "auto delete",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "91c83bac-5c16-4034-b80e-1245eb3a3dc3",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "501e31f9-b0a3-40cf-8706-ed6e09505e38",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "not an admin",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "9702214a-3881-4b99-8081-bdc14626236b",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "d6a665ca-6cee-4160-8a23-10a226921f64",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "e84edf47-901b-44c4-b89d-baee6a3aca27",
+      "type": "http",
+      "documentation": "get posts (feed or profile)",
+      "method": "get",
+      "endpoint": "posts",
+      "responses": [
+        {
+          "uuid": "844780eb-2d39-42a5-9d75-a7310222b0c7",
+          "body": "{\n  \"total\": 1,\n  \"posts\": [\n    {\n      \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n      \"content\": \"aaaaa\",\n      \"pubTime\": \"2023-12-12 12:30:00\",\n      \"author\": {\n        \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n        \"login\": \"muhomorfus\",\n        \"picture\": \"string\",\n        \"description\": \"string\",\n        \"balance\": 0,\n        \"mail\": \"string\",\n        \"isAdmin\": false\n      },\n      \"commentsNum\": 0,\n      \"reactions\": [\n        {\n          \"icon\": \"string\",\n          \"num\": 1,\n          \"typeID\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n          \"yours\": false\n        }\n      ],\n      \"perms\": false\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "get posts",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "04c9a4ef-b54f-47b6-92fc-d955361ff083",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "invalid parameters",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "265bf4b0-e24f-4a92-bb21-d1121ea9a284",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "db3f594d-a271-41ba-a691-67b0a36abd4c",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "843914bd-3ffe-4758-a2ba-3bf86f85a553",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3ee6ce2c-a3be-4651-9cfe-5a46eccb63af",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "dd127ca2-8ebd-48eb-98b7-932ae7977771",
+      "type": "http",
+      "documentation": "publish post",
+      "method": "post",
+      "endpoint": "posts",
+      "responses": [
+        {
+          "uuid": "221319b0-e2a0-496a-90d1-0ba616cedcc8",
+          "body": "{\n  \"post\": {\n    \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n    \"content\": \"aaaaa\",\n    \"pubTime\": \"2023-12-12 12:30:00\",\n    \"author\": {\n      \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n      \"login\": \"muhomorfus\",\n      \"picture\": \"string\",\n      \"description\": \"string\",\n      \"balance\": 0,\n      \"mail\": \"string\",\n      \"isAdmin\": false\n    },\n    \"commentsNum\": 0,\n    \"reactions\": [\n      {\n        \"icon\": \"string\",\n        \"num\": 1,\n        \"typeID\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n        \"yours\": false\n      }\n    ],\n    \"perms\": false\n  },\n  \"published\": true\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "publish post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "bf99984a-91a7-4074-a8d9-21ae1d450dee",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "8060078b-6c8e-4e4a-9b0e-a3fabc5f6dbf",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "ef4dbfc4-1849-4540-9010-56664c5ebd69",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "c299ab4b-b570-4d95-8a49-55ff144d96eb",
+      "type": "http",
+      "documentation": "get all users",
+      "method": "get",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "f8417f54-7301-40a2-b934-1952fe17df80",
+          "body": "{\n  \"total\": 1,\n  \"users\": [\n    {\n      \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n      \"login\": \"muhomorfus\",\n      \"picture\": \"string\",\n      \"description\": \"string\",\n      \"balance\": 0,\n      \"mail\": \"string\",\n      \"isAdmin\": false\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "view users",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3b5d2567-3ee7-41ef-891c-31cda933cd8b",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "invalid parameters",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "99095553-317d-46a8-ab9c-2cd04a921437",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "c6d694d3-bd05-49a0-b011-fcb945199f1f",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "not an admin",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "04d77506-0324-42c2-b328-8fb1ec13d2f8",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "1a8c67a9-f050-4725-973c-877dde9f074f",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ce994342-d2ec-4559-b061-1efa46eaf024",
+      "type": "http",
+      "documentation": "register",
+      "method": "post",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "1f090eca-3cfb-4915-86b6-91dd69bf01ce",
+          "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk1NjY3NDcsImlhdCI6MTY5OTMwNzU0NywianRpIjoiMjY4NGU5YzEtMTJhYi00YmVjLTkyMDktMDZkMjJjYTYwNzZjIn0.SdRtuN7eGrkYlF2jtReQ0vDJDLdFFq64kKjyUKc_IpI\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "register user",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0b10baeb-6224-40b0-8541-ebfee127b6d4",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 409,
+          "label": "user already exists",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "2aabff59-d816-4bf9-aa7b-baf9e61999d1",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 412,
+          "label": "invalid login, password or email",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3a9cda88-a6b0-477b-870e-86a62a408c53",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "08784c40-d8e4-45f6-8075-4e52898da19b",
+      "type": "http",
+      "documentation": "subscribe by id",
+      "method": "post",
+      "endpoint": "users/:id/subscribers",
+      "responses": [
+        {
+          "uuid": "a62f0ad8-3d3f-4f18-b316-ca38aa393d73",
+          "body": "{\n  \"subscribed\": true\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "subscribe",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "e5c0fecd-09cf-4dd6-8ca2-6a0b62912eec",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3d6d1704-dfe0-489b-a2f3-64867f40dd7e",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "insufficient balance",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a6e3ec5a-c1ad-4daa-990c-487cd58c4f3c",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "07d8abb1-f0a3-4283-aa79-0eeb36654ff3",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "f1cd98b9-3ab3-48cf-87c3-647605168583",
+      "type": "http",
+      "documentation": "unsubscribe by id",
+      "method": "delete",
+      "endpoint": "users/:id/subscribers/:subscriber_id",
+      "responses": [
+        {
+          "uuid": "e4e3fb2f-dbb9-4056-a508-857d7506471f",
+          "body": "{\n  \"subscribed\": false\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "unsubscribe",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a522dc1b-e04e-481c-afa8-bc611b500700",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "2bcb0a22-c944-4f5a-a778-a72f809fc60a",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "user not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "5d4cc735-6b85-437e-a39e-ac9a9a83c89f",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "1ae5eab5-248b-47c3-8222-a8ab5dd060d4",
+      "type": "http",
+      "documentation": "react to post by id",
+      "method": "post",
+      "endpoint": "posts/:id/reactions",
+      "responses": [
+        {
+          "uuid": "7ff0eeb8-91c7-4ad5-bcc7-e5c116b498cd",
+          "body": "{\n  \"reacted\": true\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "react to post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "1b8c2e7e-c302-4383-8ee3-f6a8101eba3c",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "ea35d13d-e40a-4f55-bc29-f8738ca360b2",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b2e3e51e-ea58-4a09-bb7f-51d255ec52da",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "cannot react to authored post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "53a9b4e4-34e4-4450-a1fa-27e732e85b1d",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b1d14411-65c6-42d2-8cc6-7fee6baa90d3",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "8eccccfa-0fd9-4b25-b6fd-12794961ae87",
+      "type": "http",
+      "documentation": "unreact post by id",
+      "method": "delete",
+      "endpoint": "posts/:id/reactions/:type_id",
+      "responses": [
+        {
+          "uuid": "793086c2-7b60-4503-8500-db14853a0c73",
+          "body": "{\n  \"reacted\": false\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "unreact post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "184d6ad0-24b7-4426-885a-00685b0b729f",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "fa8bd895-80d8-492d-84b1-b4a19c112eae",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "11d7feff-54ab-4fef-a934-533796b2f689",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "cannot unreact authored post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "49e85740-2774-4f77-a16f-beda4da4efa1",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "69d76115-7a93-4327-a6f9-8688947d4a63",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "28af7170-0b3b-46c6-860a-4832c4c7bb61",
+      "type": "http",
+      "documentation": "comment post by id",
+      "method": "post",
+      "endpoint": "posts/:id/comments",
+      "responses": [
+        {
+          "uuid": "6bd33de0-8cd5-47eb-ae31-7f462bd15701",
+          "body": "{\n  \"comment\": {\n    \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n    \"content\": \"aaaaa\",\n    \"pubTime\": \"2023-12-12 12:30:00\",\n    \"commentator\": {\n      \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n      \"login\": \"muhomorfus\",\n      \"picture\": \"string\",\n      \"description\": \"string\",\n      \"balance\": 0,\n      \"mail\": \"string\",\n      \"isAdmin\": false\n    },\n    \"postID\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\"\n  }\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "comment post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a6f9c434-ce29-4463-82b2-c05c97aec828",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "dd0548ab-d079-4c8d-bc3f-a3466bc17ebf",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "6f01652d-e3f5-4000-9338-991ebe892c53",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "1d7d808a-5cb8-4ed2-ae88-2b56087289d7",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "865a8e9a-7051-4e42-a83e-c28f7fb853c4",
+      "type": "http",
+      "documentation": "get comments for post by id",
+      "method": "get",
+      "endpoint": "posts/:id/comments",
+      "responses": [
+        {
+          "uuid": "50a884c9-52ef-497c-826f-f1b1ac074ebd",
+          "body": "{\n  \"total\": 1,\n  \"comments\": [\n    {\n      \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n      \"content\": \"aaaaa\",\n      \"pubTime\": \"2023-12-12 12:30:00\",\n      \"commentator\": {\n        \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n        \"login\": \"muhomorfus\",\n        \"picture\": \"string\",\n        \"description\": \"string\",\n        \"balance\": 0,\n        \"mail\": \"string\",\n        \"isAdmin\": false\n      },\n      \"postID\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\"\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "view post comments",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "1de074e1-e566-40ef-9691-64df0e382056",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "invalid parameters",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "77f27a46-4d87-45f7-98be-9a73614e2426",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "34b7c96d-25a9-40c0-a564-796a20d850d8",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "4a4cd504-af65-47d7-b926-c8ae0c43def3",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "cf2c8e16-2e97-4935-bbe5-209e9370dde4",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "6220ea93-0608-46d1-8cc6-93e4063a00a2",
+      "type": "http",
+      "documentation": "uncomment post by id",
+      "method": "delete",
+      "endpoint": "posts/:id/comments/:comment_id",
+      "responses": [
+        {
+          "uuid": "8f9152b8-15bf-4a1b-978e-8bbf5c9ba66d",
+          "body": "{\n  \"uncommented\": true\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "uncomment post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "4a2afb1c-d6a9-4660-bc8e-3420febe5979",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "747c1c23-acbc-48e1-a98f-944cde577af1",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "458ec1b8-644b-444a-9d48-83d2758b0f03",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "only your posts",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "9f7680c2-d49d-40bc-839d-575f2a48b052",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "38ffbe80-9fb1-433a-965f-e4afb3c6fb0d",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "060ac5a4-5d87-405b-81db-091fda343d7a",
+      "type": "http",
+      "documentation": "get post by id",
+      "method": "get",
+      "endpoint": "posts/:id",
+      "responses": [
+        {
+          "uuid": "3c8e4966-9f76-4fc6-b616-3bab2635e926",
+          "body": "{\n  \"post\": {\n    \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n    \"content\": \"aaaaa\",\n    \"pubTime\": \"2023-12-12 12:30:00\",\n    \"author\": {\n      \"id\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n      \"login\": \"muhomorfus\",\n      \"picture\": \"string\",\n      \"description\": \"string\",\n      \"balance\": 0,\n      \"mail\": \"string\",\n      \"isAdmin\": false\n    },\n    \"commentsNum\": 0,\n    \"reactions\": [\n      {\n        \"icon\": \"string\",\n        \"num\": 1,\n        \"typeID\": \"e95ab7b2-636e-447f-9f87-04072e4b3b9d\",\n        \"yours\": false\n      }\n    ],\n    \"perms\": false\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "get post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "c4af7ea7-dede-4574-9300-81491659d4b3",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "600ac36e-e75f-4c45-be23-2ace94941ebf",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "only after subscription",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "1e194d7a-d5ee-4eb9-8bc0-d2a13fc9ae71",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b73c1c6d-2fd0-44bc-8c43-4d4f7f65807c",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "4bfd68b7-9f5c-4352-b4d8-592f62e49cab",
+      "type": "http",
+      "documentation": "delete post by id",
+      "method": "delete",
+      "endpoint": "posts/:id",
+      "responses": [
+        {
+          "uuid": "a6484437-06f0-4eb8-8273-7726f84ea582",
+          "body": "{\n  \"deleted\": true\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "delete post",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "5ef21be6-fba1-4bcb-9db3-840673278def",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "7e32d4e3-7354-4e4f-927c-d37264be3fd2",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "only for authored posts",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "227febc1-0ad6-4b9b-90f4-acf17a5962bd",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b5352d28-b41a-4a84-9ed5-ade34cc82af7",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ffa49815-fe45-45ac-8c34-85102d3f9171",
+      "type": "http",
+      "documentation": "change perms for post by id",
+      "method": "patch",
+      "endpoint": "posts/:id/perms",
+      "responses": [
+        {
+          "uuid": "a6795292-38a3-4c0a-9060-f6ce462f06c6",
+          "body": "{\n  \"changed\": \"true\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "change post perms",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0ffbe3b5-63af-43af-a70f-c8016b7c519e",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "authorization failed",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "c9cab51b-e43e-4abb-9c13-e85795d1c987",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "only for authored posts",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "dbbc055a-7fee-4390-b162-231e229d214c",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "post not found",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b75251d7-7975-47c3-8586-5729fc77e83a",
+          "body": "{\n  \"message\": \"Cannot login.\",\n  \"systemMessage\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "ab7b14dd-9d84-41cf-a1c2-6be2d81e3b75"
+    },
+    {
+      "type": "route",
+      "uuid": "d3667a19-fa23-4203-97f5-0ab5c66df534"
+    },
+    {
+      "type": "route",
+      "uuid": "b39e9506-b65a-424c-ba6a-66cfb3367831"
+    },
+    {
+      "type": "route",
+      "uuid": "a8dd8c69-64f4-44a0-a928-fe392ad04b0b"
+    },
+    {
+      "type": "route",
+      "uuid": "e2f80b15-a561-4b72-ba29-64dc02440a6a"
+    },
+    {
+      "type": "route",
+      "uuid": "e84edf47-901b-44c4-b89d-baee6a3aca27"
+    },
+    {
+      "type": "route",
+      "uuid": "dd127ca2-8ebd-48eb-98b7-932ae7977771"
+    },
+    {
+      "type": "route",
+      "uuid": "c299ab4b-b570-4d95-8a49-55ff144d96eb"
+    },
+    {
+      "type": "route",
+      "uuid": "ce994342-d2ec-4559-b061-1efa46eaf024"
+    },
+    {
+      "type": "route",
+      "uuid": "08784c40-d8e4-45f6-8075-4e52898da19b"
+    },
+    {
+      "type": "route",
+      "uuid": "f1cd98b9-3ab3-48cf-87c3-647605168583"
+    },
+    {
+      "type": "route",
+      "uuid": "1ae5eab5-248b-47c3-8222-a8ab5dd060d4"
+    },
+    {
+      "type": "route",
+      "uuid": "8eccccfa-0fd9-4b25-b6fd-12794961ae87"
+    },
+    {
+      "type": "route",
+      "uuid": "28af7170-0b3b-46c6-860a-4832c4c7bb61"
+    },
+    {
+      "type": "route",
+      "uuid": "865a8e9a-7051-4e42-a83e-c28f7fb853c4"
+    },
+    {
+      "type": "route",
+      "uuid": "6220ea93-0608-46d1-8cc6-93e4063a00a2"
+    },
+    {
+      "type": "route",
+      "uuid": "060ac5a4-5d87-405b-81db-091fda343d7a"
+    },
+    {
+      "type": "route",
+      "uuid": "4bfd68b7-9f5c-4352-b4d8-592f62e49cab"
+    },
+    {
+      "type": "route",
+      "uuid": "ffa49815-fe45-45ac-8c34-85102d3f9171"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}

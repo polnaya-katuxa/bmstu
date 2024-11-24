@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postby-backend
+  labels:
+    app: postby-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: postby-backend
+  template:
+    metadata:
+      name: postby-backend
+      labels:
+        app: postby-backend
+    spec:
+      containers:
+        - name: postby-backend
+          image: polnayakatuxa/postby-backend:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/postby
+      volumes:
+        - name: config-volume
+          configMap:
+            name: postby-backend-config
+      restartPolicy: Always

@@ -1,0 +1,372 @@
+\setcounter{page}{3}
+\chapter{Теоретическая часть}
+\section{Базис языка Lisp.}
+Базис~---~это минимальный набор правил/конструкций языка, к которым могут быть сведены все остальные. Базис языка Lisp представлен атомами, структурами, базовыми функциями, базовыми функционалами. Некоторые базисные функции: $car$, $cdr$, $cons$, $quote$, $eq$, $eval$, $apply$, $funcall$.
+
+\section{Классификация функций языка Lisp.}
+Среди функций в языке Lisp выделяют бызисные, пользовательские и функции ядра. Также, по реализации функции можно разделить на:
+\begin{itemize}
+	\item чистые (не создающие побочных эффектов, принимающие фиксированное число аргументов, не получающие данные неявно, результат работы которых не зависит от внешних переменных);
+	\item особые, или формы;
+	\item функции более высоких порядков, или функционалы (функции, результатом и/или аргументом которых является функция).
+\end{itemize}
+
+\section{Способы создания функций в языке Lisp.}
+Функцию можно определить двумя способами: неименованную с помощью $lambda$ и именованную с помощью $defun$.
+
+\begin{equation}
+	\nonumber (lambda \quad (x_1 \quad x_2 \quad ... \quad x_n) \quad f),
+\end{equation}
+где $f$~---~тело функции, $x_i, i = \overline{1, n}$~---~формальные параметры.
+
+\begin{equation}
+	\nonumber (defun \quad <\text{имя}> \quad [lambda] \quad (x_1 \quad x_2 \quad ... \quad x_n) \quad f),
+\end{equation}
+где $f$~---~тело функции, $x_i, i = \overline{1, n}$~---~формальные параметры. Тогда имя будет ссылкой на описание функции.
+
+\section{Функции $cond$, $if$, $and$, $or$.}
+Функции $cond$, $if$, $and$, $or$ являются основными условными функциями в $Lisp$.
+
+\subsection{\texttt{cond}}
+Форма $cond$ содержит некоторое (возможно нулевое) количество подвыражений, которые является списками форм. Каждое подвыражение содержит форму условия и ноль и более форм для выполнения. Например:
+
+\begin{code}
+\begin{minted}{lisp}
+(cond (condition-1 expression-1-1 expression-1-2 ...) 
+      (condition-2)
+      (condition-3 expression-3-1 ...)
+      ... )
+\end{minted}
+\end{code}
+
+$cond$ обрабатывает свои подвыражения слева направо. Для каждого подвыражения, вычисляется форма условия. Если результат $nil$, $cond$ переходит к следующему подвыражению. Если результат $t$, $cdr$ подвыражения обрабатывается, как список форм. После выполнения списка форм, $cond$ возвращает управление без обработки оставшихся подвыражений. Оператор $cond$ возвращает результат выполнения последней формы из списка. Если этот список пустой, тогда возвращается значение формы условия. Если $cond$ вернула управление без вычисления какой-либо ветки (все условные формы вычислялись в $nil$), возвращается значение $nil$.
+
+\subsection{$if$}
+Оператор $if$ обозначает то же, что и конструкция $if-then-else$ в большинстве других языков программирования. Сначала выполняется форма $condition$. Если результат не равен $nil$, тогда выбирается форма $then$. Иначе выбирается форма $else$. Выбранная ранее форма выполняется, и $if$ возвращает то, что вернула это форма.
+
+\begin{code}
+\begin{minted}{lisp}
+(if condition then else)
+\end{minted}
+\end{code}
+
+\subsection{$and$}
+$and$ последовательно слева направо вычисляет формы. Если какая-либо форма $expressionN$ вычислилась в $nil$, тогда немедленно возвращается значение $nil$ без выполнения оставшихся форм. Если все формы кроме последней вычисляются в не-$nil$ значение, and возвращает то, что вернула последняя форма. Таким образом, and может использоваться, как для логических операций, где $nil$ обозначает ложь, и не-$nil$~---~истину, так и для условных выражений.
+
+\begin{code}
+\begin{minted}{lisp}
+(and expression1 expression2 ... )
+\end{minted}
+\end{code}
+
+\subsection{$or$}
+$or$ последовательно выполняет каждую форму слева направо. Если какая-либо непоследняя форма выполняется в что-либо отличное от $nil$, or немедленно возвращает это не-$nil$ значение без выполнения оставшихся форм. Если все формы кроме последней, вычисляются в $nil$, $or$ возвращает то, что вернула последняя форма. Таким образом $or$ может быть использована как для логических операций, в который $nil$ обозначает ложь, и не-$nil$~---~истину, так и для условного выполнения форм.
+
+\begin{code}
+\begin{minted}{lisp}
+(or expression1 expression2 ... )
+\end{minted}
+\end{code}
+
+\newpage
+
+\chapter{Практическая часть}
+\section{Задание №1}
+Написать функцию, которая принимает целое число и возвращает первое четное число, не меньшее аргумента.
+
+\begin{code}
+\caption{Задание №1}
+\label{code:bf2}
+\begin{minted}{lisp}
+[2]> (defun close_big_even (x) (if (evenp x) x (+ x 1)))
+; или (defun close_big_even (x) (+ x (mod x 2)))
+CLOSE_BIG_EVEN
+[3]> (close_big_even 5)
+6
+[4]> (close_big_even 4)
+4
+\end{minted}
+\end{code}
+
+\section{Задание №2}
+Написать функцию, которая принимает число и возвращает число того же знака, но с модулем на 1 больше модуля аргумента.
+
+\begin{code}
+\caption{Задание №2}
+\label{code:bf2}
+\begin{minted}{lisp}
+[6]> (defun bigger_abs (x) (if (< x 0) (- x 1) (+ x 1)))
+BIGGER_ABS
+[7]> (bigger_abs 3)
+4
+[8]> (bigger_abs -3)
+-4
+\end{minted}
+\end{code}
+
+\section{Задание №3}
+Написать функцию, которая принимает два числа и возвращает список из этих чисел, расположенный по возрастанию.
+
+\begin{code}
+\caption{Задание №3}
+\label{code:bf3}
+\begin{minted}{lisp}
+[12]> (defun asc_list (x y) (if (< x y) (list x y) (list y x)))
+ASC_LIST
+[13]> (asc_list 2 3)
+(2 3)
+[14]> (asc_list 3 2)
+(2 3)
+[15]> (asc_list 0 -1)
+(-1 0)
+[16]> (asc_list 0 0)
+(0 0)
+\end{minted}
+\end{code}
+
+\section{Задание №4}
+Написать функцию, которая принимает три числа и возвращает $T$ только тогда, когда первое число расположено между вторым и третьим.
+
+\begin{code}
+\caption{Задание №4}
+\label{code:bf4}
+\begin{minted}{lisp}
+[8]> (defun first_between (x y z) (if (or (and (< z x) (< x y))
+(and (< y x) (< x z))) t nil))
+FIRST_BETWEEN
+[9]> (first_between 1 2 3)
+NIL
+[10]> (first_between 2 1 3)
+T
+[11]> (first_between 2 3 1)
+T
+[12]> (first_between 0 -1 1)
+T
+[13]> (first_between 0 0 0)
+NIL
+\end{minted}
+\end{code}
+
+\section{Задание №5}
+Каков результат вычисления следующих выражений?
+
+\begin{enumerate}
+	\item $(and \quad 'fee \quad 'fie \quad 'foe)$;
+	\item $(or \quad nil \quad 'fie \quad 'foe)$;
+	\item $(and \quad (equal \quad 'abc \quad 'abc) \quad 'yes)$;
+	\item $(or \quad 'fee \quad 'fie \quad 'foe)$;
+	\item $(and \quad nil \quad 'fie \quad 'foe)$;
+	\item $(or \quad (equal \quad 'abc \quad 'abc) \quad 'yes)$.
+\end{enumerate}
+
+\begin{code}
+\caption{Задание №5}
+\label{code:bf5}
+\begin{minted}{lisp}
+[7]> (and 'fee 'fie 'foe)
+FOE ; если все выражения не-nil, возвращает результат последнего
+
+[8]> (or nil 'fie 'foe)
+FIE ; вернёт первый не-nil результат
+
+[9]> (and (equal 'abc 'abc) 'yes)
+YES ; если все выражения не-nil, возвращает результат последнего
+
+[10]> (or 'fee 'fie 'foe)
+FEE ; возвращает первый не-nil результат
+
+[11]> (and nil 'fie 'foe)
+NIL ; если встречает nil результат, сразу его возвращает
+
+[12]> (or (equal 'abc 'abc) 'yes)
+T ; возвращает первый не-nil результат
+\end{minted}
+\end{code}
+
+\section{Задание №6}
+Написать предикат, который принимает два числа-аргумента и возвращает $T$, если первое число не меньше второго.
+
+\begin{code}
+\caption{Задание №6}
+\label{code:bf4}
+\begin{minted}{lisp}
+[15]> (defun second_less (x y) (>= x y))
+SECOND_LESS
+[16]> (second_less 1 1)
+T
+[17]> (second_less 1 2)
+NIL
+[18]> (second_less 3 2)
+T
+\end{minted}
+\end{code}
+
+\section{Задание №7}
+Какой из следующих двух вариантов предиката ошибочен и почему? 
+
+\begin{enumerate}
+	\item $(defun \quad pred1 \quad (x) \quad (and \quad (numberp \quad x) \quad (plusp \quad x)))$;
+	\item $(defun \quad pred2 \quad (x) \quad (and \quad (plusp \quad x) \quad (numberp \quad x)))$.
+\end{enumerate}
+
+\begin{code}
+\caption{Задание №7}
+\label{code:bf4}
+\begin{minted}{lisp}
+[1]> (defun pred1 (x) (and (numberp x) (plusp x)))
+PRED1
+[2]> (pred1 2)
+T
+[3]> (pred1 -2)
+NIL
+[4]> (pred1 't)
+NIL
+
+[5]> (defun pred2 (x) (and (plusp x) (numberp x)))
+PRED2
+[6]> (pred2 2)
+T
+[7]> (pred2 -2)
+NIL
+[8]> (pred2 't)
+*** - PLUSP: T is not a real number
+\end{minted}
+\end{code}
+
+Второй предикат ошибочен. Это связано с тем, что в $and$ переданные выражения обрабатываются в порядке передачи, то есть проверка $plusp$ на положительность аргумента будет выполнена раньше, чем проверка на то, что аргумент является числом. Если аргумент~---~не число, то такой порядок проверок приведёт к ошибке.
+
+\section{Задание №8}
+Решить задачу 4, используя для ее решения конструкции: только $if$, только $cond$, только $and/or$.
+
+Задание №4: написать функцию, которая принимает три числа и возвращает $Т$ только тогда, когда первое число расположено между вторым и третьим.
+
+\begin{code}
+\caption{Задание №8}
+\label{code:bf4}
+\begin{minted}{lisp}
+; только if
+[2]> (defun first_between (x y z) (if (< y x) (< x z) 
+(if (< z x) (< x y) nil)))
+FIRST_BETWEEN
+[3]> (first_between 1 2 3)
+NIL
+[4]> (first_between 2 1 3)
+T
+[5]> (first_between 2 3 1)
+T
+[6]> (first_between 0 -1 1)
+T
+[7]> (first_between 0 0 0)
+NIL
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Задание №8}
+\label{code:bf4}
+\begin{minted}{lisp}
+; только cond
+[14]> (defun first_between (x y z) (
+cond ((< y x) (< x z))
+((< z x) (< x y))
+))
+FIRST_BETWEEN
+[15]> (first_between 1 2 3)
+NIL
+[16]> (first_between 2 1 3)
+T
+[17]> (first_between 2 3 1)
+T
+[18]> (first_between 0 -1 1)
+T
+[19]> (first_between 0 0 0)
+NIL
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Задание №8}
+\label{code:bf4}
+\begin{minted}{lisp}
+; только and/or
+[20]> (defun first_between (x y z) (or (and (< z x) (< x y)) 
+(and (< y x) (< x z))))
+FIRST_BETWEEN
+[21]> (first_between 1 2 3)
+NIL
+[22]> (first_between 2 1 3)
+T
+[23]> (first_between 2 3 1)
+T
+[24]> (first_between 0 -1 1)
+T
+[25]> (first_between 0 0 0)
+NIL
+\end{minted}
+\end{code}
+
+\newpage
+
+\section{Задание №9}
+Переписать функцию $how-alike$, приведенную в лекции и использующую $cond$, используя только конструкции $if$, $and/or$.
+
+Вариант с $cond$ из лекций:
+
+\begin{code}
+\caption{Задание №9}
+\label{code:bf4}
+\begin{minted}{lisp}
+[8]> (defun how_alike (x y)
+(cond
+((or (= x y) (equal x y)) 'the_same)
+((and (oddp x) (oddp y)) 'both_odd)
+((and (evenp x) (evenp y)) 'both_even)
+(t 'difference)
+))
+HOW_ALIKE
+[9]> (how_alike 3 0)
+DIFFERENCE
+[10]> (how_alike 2 2)
+THE_SAME
+[11]> (how_alike 2 2.0)
+THE_SAME
+[12]> (how_alike 2 4)
+BOTH_EVEN
+[13]> (how_alike 3 3)
+THE_SAME
+[14]> (how_alike 3 1)
+BOTH_ODD
+\end{minted}
+\end{code}
+
+\newpage
+
+Вариант с $if$, $and/or$:
+
+\begin{code}
+\caption{Задание №9}
+\label{code:bf4}
+\begin{minted}{lisp}
+[15]> (defun how_alike (x y)
+(if (or (= x y) (equal x y)) 'the_same
+(if (and (oddp x) (oddp y)) 'both_odd
+(if (and (evenp x) (evenp y)) 'both_even
+'difference))
+))
+HOW_ALIKE
+[16]> (how_alike 3 0)
+DIFFERENCE
+[17]> (how_alike 2 2)
+THE_SAME
+[18]> (how_alike 2 2.0)
+THE_SAME
+[19]> (how_alike 2 4)
+BOTH_EVEN
+[20]> (how_alike 3 3)
+THE_SAME
+[21]> (how_alike 3 1)
+BOTH_ODD
+\end{minted}
+\end{code}

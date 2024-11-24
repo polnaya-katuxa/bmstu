@@ -1,0 +1,36 @@
+name: "Workflow канареечной выкатки сервиса"
+on:
+  push:
+    branches:
+      - canary
+
+jobs:
+  Deploy:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Clone repository"
+        uses: "actions/checkout@v3.0.2"
+      - name: "List project files"
+        run: |
+          ls ${{ gitea.workspace }}
+      - name: "Build docker image"
+        uses: "docker://gcr.io/kaniko-project/executor:latest"
+        with:
+          args: "--dockerfile=deployments/build/Dockerfile --destination=registry.in.kotishos.ru/api:${{ gitea.sha }} --context=dir://${{ gitea.workspace }}"
+      - name: "Show image tag"
+        run: |
+          echo "Pushed docker image to registry.in.kotishos.ru/api:${{ gitea.sha }}"
+      - name: "Edit image in Kustomization"
+        uses: "docker://line/kubectl-kustomize:latest"
+        with:
+          entrypoint: "/bin/sh"
+          args: |
+            -c "cd ${{ gitea.workspace }}/deployments/manifests/prod/canary && kustomize edit add patch --kind Microservice --patch '[{\"op\": \"replace\", \"path\": \"/spec/image\", \"value\": \"registry.in.kotishos.ru/api:${{ gitea.sha }}\"}]'"
+      - name: "Deploy to prod via simple strategy"
+        uses: "docker://line/kubectl-kustomize:latest"
+        with:
+          entrypoint: "/bin/sh"
+          args:
+            "-c 'echo \"${{ secrets.KUBE_CONFIG }}\" > ${{ gitea.workspace }}/kubeconfig.yaml && \
+            export KUBECONFIG=${{ gitea.workspace }}/kubeconfig.yaml && \
+            kubectl apply -k ${{ gitea.workspace }}/deployments/manifests/prod/canary'"

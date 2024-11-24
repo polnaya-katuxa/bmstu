@@ -1,0 +1,168 @@
+\begin{appendices}
+\label{appendix:graph}
+	\chapter{SQL-скрипты}
+	
+	В листингах \ref{createPG}~--~\ref{filterPG} приведены листинги SQL-скриптов для создания таблиц, функций, ролей и реализованные запросы для СУБД Postgres и ClickHouse.
+	
+	\begin{lstlisting}[label=createPG,caption=SQL-скрипт создания таблиц в СУБД Postgres]
+create extension "uuid-ossp";
+
+create table users (
+    uuid uuid default uuid_generate_v4() primary key,
+    login text unique not null,
+    password text not null,
+    is_admin bool default false
+);
+
+create type gender as enum (
+    'female',
+    'male'
+    );
+
+create table clients (
+    uuid uuid default uuid_generate_v4() primary key,
+    name text not null,
+    surname text not null,
+    patronymic text,
+    gender gender not null,
+    birth_date timestamp not null check (birth_date < current_timestamp::timestamp and birth_date > '01.01.1900 00:00:00'::timestamp),
+    registration_date timestamp not null check (registration_date < current_timestamp::timestamp and registration_date > clients.birth_date),
+    email text unique not null check ( email like '%@%.%' ),
+    data json
+);
+
+create table event_types (
+    uuid uuid default uuid_generate_v4() primary key,
+    name text not null,
+    alias text unique not null check ( length(alias) > 5 )
+);
+
+create table schedules (
+    uuid uuid default uuid_generate_v4() primary key,
+    next_time timestamp not null,
+    finished boolean default false not null,
+    periodic boolean default false not null,
+    span text not null
+);
+
+create table ads (
+    uuid uuid default uuid_generate_v4() primary key,
+    content text not null,
+    filters json,
+    user_id uuid references users (uuid) on delete set null,
+    schedule_id uuid unique references schedules (uuid) on delete cascade,
+    creation_time timestamp not null check (creation_time < current_timestamp::timestamp)
+);
+
+create table events (
+     uuid uuid default uuid_generate_v4() primary key,
+     time timestamp not null,
+     client_id uuid references clients (uuid) on delete set null,
+     alias text references event_types (alias) not null check (length(alias) > 5)
+);
+	\end{lstlisting}
+	
+	\begin{lstlisting}[label=createRolePG,caption=SQL-скрипт создания ролей в системе управления базами данных Postgres]
+create role admin login password 'password1';
+create role targetologist login password 'password2';
+create role client login password 'password3';
+
+grant insert on clients to client;
+grant insert on events to client;
+
+grant insert, select on users to targetologist;
+grant insert, select on ads to targetologist;
+grant insert, select on event_types to targetologist;
+grant select on events to targetologist;
+grant insert, select, update on schedules to targetologist;
+grant select on clients to targetologist;
+
+grant insert, select, delete, update on users to admin;
+grant select, delete on clients to admin;
+	\end{lstlisting}
+	
+	\begin{lstlisting}[label=createCH,caption=SQL-скрипт создания таблицы events в СУБД ClickHouse]
+CREATE TABLE coursework.events_queue (
+    id UUID,
+    client_id UUID,
+    alias String,
+    time DateTime('UTC')
+) ENGINE = Kafka('127.0.0.1:9092', 'blurby-events', 'clickhouse-blurby-events', 'JSONEachRow');
+		
+CREATE TABLE coursework.events
+(
+    id UUID,
+    client_id UUID,
+    alias String,
+    time DateTime('UTC')
+) ENGINE = MergeTree ORDER BY (time);
+		
+CREATE MATERIALIZED VIEW coursework.events_mv TO coursework.events AS
+		SELECT *
+		FROM coursework.events_queue;
+	\end{lstlisting}
+	
+	\begin{lstlisting}[label=createRoleCH,caption=SQL-скрипт создания ролей в СУБД ClickHouse]
+CREATE USER targetologist IDENTIFIED WITH sha256_password BY 'password1';
+
+CREATE ROLE targetologist_role;
+GRANT SELECT ON coursework.events TO targetologist_role;
+GRANT SELECT ON coursework.ad_send_times TO targetologist_role;
+
+GRANT targetologist_role TO targetologist;
+	\end{lstlisting}
+	
+	\begin{lstlisting}[label=createFuncPG,caption=SQL-скрипт табличной функции в СУБД Postgres]
+create or replace function get_ads_by_span(finish timestamp) returns table(
+   uuid uuid,
+   content text,
+   filters json,
+   user_id uuid,
+   schedule_id uuid,
+   creation_time timestamp,
+   next_time timestamp,
+   span text,
+   finished boolean,
+   periodic boolean
+)
+as $$
+begin
+    return query (
+        select a.uuid as uuid, a.content, a.filters, a.user_id, a.schedule_id, a.creation_time, s.next_time, s.span, s.finished, s.periodic
+        from ads a join schedules s on s.uuid = a.schedule_id
+        where s.next_time <= finish and s.finished = false
+    );
+end;
+$$
+    language plpgsql;
+	\end{lstlisting}
+	
+	\begin{lstlisting}[label=filterCH,caption=SQL-скрипт запроса на фильтрацию пользователей в СУБД ClickHouse]
+select distinct client_id
+				from (
+					 select
+						 client_id,
+						 alias,
+						 count(*) as num
+					 from coursework.events
+					 where time between now() - interval 5 hour and now()
+					 group by client_id, alias
+					 order by num desc
+					 limit 5 by client_id
+				) where alias = 'alias'
+	\end{lstlisting}
+	
+	\begin{lstlisting}[label=filterPG,caption=SQL-скрипт запроса на фильтрацию пользователей в СУБД Postgres]
+select distinct cast sub1.client_id
+			from (
+			select distinct sub.client_id, sub.alias, sub.c,
+			       row_number() over (partition by sub.client_id order by sub.c desc) as r
+				from (
+				select client_id, alias, count(*) as c from events
+				    where time between current_timestamp - '5 hours'::interval and current_timestamp
+					group by events.client_id, alias) as sub
+				) as sub1
+					where alias = 'alias' and r <= 5
+	\end{lstlisting}
+	
+\end{appendices}

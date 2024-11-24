@@ -1,0 +1,26 @@
+PG:
+  Host: localhost
+  Port: 5435
+  User: postby
+  Password: password
+  DBName: postby
+
+MONGO:
+  Host: localhost
+  Port: 27017
+  User: postby
+  Password: password
+  DBName: postby
+
+DB: postgres
+
+Cost: 10
+DailyBonus: 5
+TokenExp: 72h
+SecretKey: secretkey
+Span: 24h
+
+Logger:
+  Encoding: console
+  Level: info
+  File: tech.log

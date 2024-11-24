@@ -1,0 +1,508 @@
+\chapter{Билет №4}
+
+\section*{Файловая подсистема /proc – назначение, особенности, файлы, поддиректории, ссылка self, информация об окружении, состоянии процесса, прерываниях. Структура \\ proc\_dir\_entry: функции для работы с элементами /proc. Структура, перечисляющая функции, определенные на файлах. Использование структуры \\ file\_operations для регистрации собственных функций работы с файлами. Передача данных их пространства пользователя в пространство ядра и из ядра в пространство пользователя. Обоснование необходимости этих функций. \\ Функция printk() – назначение и особенности. Пример программы «Фортунки» из лаб. работы.}
+
+\section{Файловая подсистема}
+Файл --- важнейшее понятие в файловой подсистеме. Файл --- информация, хранимая во вторичной памяти или во вспомогательном ЗУ с целью ее сохранения после завершения отдельного задания или преодоления ограничений, связанных в объемом основного ЗУ.
+
+Файл --- поименованная совокупность данных, хранимая во вторичной памяти (возможно даже целая). Файл --- каждая индивидуально идентифицированная единица информации.
+
+Существует 2 ипостаси файла:
+\begin{enumerate}
+	\item файл, который лежит на диске;
+	\item открытый файл (с которым работает процесс).
+\end{enumerate}
+
+Открытый файл --- файл, который открывает процесс.
+
+Файл != место на диске. В мире современной вычислительной техники файлы имеют настолько большие размеры, что не могут храниться в непрерывном физическом адресном пространстве, они хранятся вразброс (несвязанное распределение).
+
+Файл может занимать разные блоки/сектора/дорожки на диске аналогично тому, как память поделена на страницы. В любой фрейм может быть загружена новая страница, как и файл. 
+
+Также, важно понимать адресацию. 
+
+Соответственно, система должна обеспечить адресацию каждого такого участка.
+
+\begin{quote}
+	ОС является загружаемой программой, её не называют файлом, но когда компьютер включается, ОС находится во вторичной памяти. Затем с помощью нескольких команд, которые находятся в ПЗУ, ОС (программа) загружается в ОЗУ. При этом выполняется огромное количество действий, связанных с управлением памятью, и без ФС это сделать невозможно. Любая ОС без ФС не может быть полноценной.
+\end{quote}
+
+Задача ФС --- обеспечивать сохранение данных и доступ к сохраненным данным (обеспечивать работу с файлами).
+
+Чтобы обеспечить хранение файла и последующий доступ к нему, файл должен быть изолирован, то есть занимать некоторое адресное пространство, и это адресное пространство должно быть защищено. Доступ обеспечивается по тому, как файл идентифицируется в системе (доступ осуществляется по его имени).
+
+ФС --- порядок, определяющий способ организации хранения, именования и доступа к данным на вторичных носителях информации.
+
+\begin{quote}
+	File management (управление файлами) --- программные процессы, связанные с общим управлением файлами, то есть с размещением во вторичной памяти, контролем доступа к файлам, записью резервных копий, ведением справочников (directory).
+	
+	Основные функции управления файлами обычно возлагаются на ОС, а дополнительные --- на системы управления файлами.
+	
+	Доступ к файлам: open, read, write, rename, delete, remove.
+	
+	Разработка UNIX началась с ФС. Без ФС невозможно создание приложений, работающих в режиме пользователя (сложно разделить user mode и kernel mode).
+	
+	Файловая подсистема взаимодействует практически со всеми модулями ОС, предоставляя пользователю возможность долговременного хранения данных, а также ОС возможность работать с объектами ядра.
+\end{quote}
+
+\section{Файловая подсистема /proc -- назначение, особенности}
+
+Виртуальная файловая система proc не является монтируемой файловой системой поэтому и называется виртуальной. Ее корневым каталогом является каталог \textbf{/proc}, ее поддиректории и файлы создаются при обращении, чтобы предоставить информацию из структур ядра. 
+
+Proc нужна для того, чтобы в режиме пользователя была возможность получить информацию о системе и ее ресурсах (например прерываниях). 
+
+Основная задача файловой системы proc -- предоставление информации процессам о занимаемых ими ресурсах. 
+
+\begin{quote}
+Для того чтобы ФС была доступна, она должна быть подмонтирована, в результате должна быть доступна информация из суперблока, который является основной структурой, описывающей файловую систему. Когда происходит обращение к ФС proc, информация к которой идет обращение создается на лету, то есть файловая система виртуальная.
+
+Файловая система монтируется при загрузке системы. Но ее также можно смонтировать вручную:
+
+mount -t proc proc/proc
+
+Это сделано для общности - система работает единообразно со всеми файловыми системами.
+\end{quote}
+
+\section{Файлы, поддиректории, ссылка self, информация об окружении, состоянии процесса, прерываниях}
+
+Каждый процесс в фс proc имеет поддиректорию: /proc/<PID>. Для данной поддиректории для каждого процесса существует символическая ссылка /proc/self для того, чтобы не вызывать функцию getpid() --- when a process accesses this magic symbolic link, it resolves to the process's own /proc/[pid] directory. 
+
+\begin{table}[H]
+\resizebox{\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+№  & Элемент  & Тип                                                                                              & Описание                                                                                                                                                                                                                                                                   \\ \hline
+1  & cmdline  & файл                                                                                             & \begin{tabular}[c]{@{}l@{}}Командная строка запуска \\ процесса\end{tabular}                                                                                                                                                                                                \\ \hline
+2  & cwd      & \begin{tabular}[c]{@{}l@{}}символическая\\ ссылка\end{tabular}                                   & Рабочая директория процесса                                                                                                                                                                                                                                                \\ \hline
+
+3  & environ  & файл                                                                                             & \begin{tabular}[c]{@{}l@{}}Содержит список окружения \\ процесса\end{tabular}                                                                                                                                                                                               \\ \hline
+4  & exe      & \begin{tabular}[c]{@{}l@{}}символическая\\ ссылка\end{tabular}                                   & Указывает на образ процесса                                                                                                                                                                                                                                                \\ \hline
+5  & fd       & директория                                                                                       & \begin{tabular}[c]{@{}l@{}}Содержит ссылки на файлы,\\ открытые процессом\end{tabular}                                                                                                                                                                                     \\ \hline
+6  & maps     & \begin{tabular}[c]{@{}l@{}}файл (регионы\\ виртуального\\ адресного\\ пространства)\end{tabular} & \begin{tabular}[c]{@{}l@{}}Содержит список регионов\\ (выделенных процессу\\ участков памяти) виртуального\\ адресного пространства процесса\\ (У процессов только виртуал. \\ адресное пространство, а физ. \\ память выделяется по \\ прерыванию pagefauilt)\end{tabular} \\ \hline
+7  & page map & файл                                                                                             & \begin{tabular}[c]{@{}l@{}}Отображение каждой виртуальный\\ страницы адресного пространства\\ на физический фрейм или область\\ свопинга\end{tabular}                                                                                                                      \\ \hline
+8  & tasks    & директория                                                                                       & Содержит поддиректории потоков                                                                                                                                                                                                                                             \\ \hline
+9  & root     & \begin{tabular}[c]{@{}l@{}}символическая\\ ссылка\end{tabular}                                   & Указывает на корень фс процесса                                                                                                                                                                                                                                            \\ \hline
+10 & stat     & файл                                                                                             & \begin{tabular}[c]{@{}l@{}}Информация о состоянии процесса\\(pid, comm, state, ppid, pgrp,\\session, tty\_nr, tpgid, flags и др.)\end{tabular}                                                                                                                                                                                                                                                      \\ \hline
+11 & status     & файл                                                                                             & \begin{tabular}[c]{@{}l@{}}Большая часть инфы из stat и \\ statm в норм формате\end{tabular}                                                                                                                                                                                                                                                      \\ \hline
+12 & statm    & файл                                                                                             & \begin{tabular}[c]{@{}l@{}}Информация о памяти\end{tabular}                                                                                                                                                                                                                                                      \\ \hline
+\end{tabular}}
+\end{table}
+
+Про maps:
+\begin{enumerate}
+	\item address --- начальный и конечный адреса региона виртуальной памяти
+	\item perms --- права доступа к региону
+	\item offset --- если процесс отображен из файла, то это смещение (региона) в этом файле
+	\item dev --- если процесс отображен из файла, то это старшний и младший номера устройства, на котором находится этот файл
+	\item inode --- № inode для файла, если процесс отображен из файла
+	\item pathname --- если процесс отображен из файла, то это путь к файлу
+\end{enumerate}
+
+Про pagemap (информация о страницах виртуальной памяти процесса):
+\begin{enumerate}
+	\item addr --- начальный адрес страницы
+	\item pfn --- № фрейма (физическая страница), на котором находится страница
+\end{enumerate}
+
+Флаги pagemap:
+\begin{enumerate}
+	\item soft-dirty --- была ли страница изменена в оперативной памяти: если она была изменена, то нужно перезаписать точную копию страницы с диска
+	\item file/shared --- является ли страница разделяемой
+	\item swapped --- находится ли страница в файле подкачки (области своппинга)
+	\item present --- загружена ли страница в оперативную память
+\end{enumerate}
+
+Файл /proc/interrupts предоставляет таблицу о прерываниях на каждом из процессоров в следующем виде:
+\begin{itemize}
+\item Первая колонка: линия IRQ, по которой приходит сигнал от данного прерывания
+\item Колонки CPUx: счётчики прерываний на каждом из процессоров
+\item Следующая колонка: вид прерывания:
+\begin{itemize}
+     \item IO-APIC-edge — прерывание по фронту (срабатывает каждый раз до выполнения) на контроллер I/O APIC
+    \item IO-APIC-fasteoi — прерывание по уровню (срабатывает 1 раз по фактц появления) на контроллер I/O APIC
+    \item PCI-MSI-edge — MSI прерывание
+    \item XT-PIC-XT-PIC — прерывание на PIC контроллер
+\end{itemize}
+\item Последняя колонка: названия обработчиков данного прерывания
+\end{itemize}
+
+\begin{quote}
+Код для чтения /proc/self/environ:
+\begin{lstlisting}[language=C, label=lst:1, caption=код для чтения /proc/self/environ]
+#include <stdio.h>
+#define BUF_SIZE 0x100
+int main(int args, char * argv[])
+{
+  char buf[BUF_SIZE];
+  int len;
+  FILE *f;
+  f = open("/proc/self/environ", "r");
+  while((len = fread(buf, 1, BUF_SIZE, f) > 0)
+  {
+  // Строки в файле разделены не \n, а \0 (\n = 10 = 0x0A)
+    for (i = 0; i < len; i++)
+      if (buf[i] == 0)
+        buf[i] = 10; // for 0x0A
+      buf[len] = 0;
+      printf("%s", buf);
+  }
+  fclose(f);
+  return 0;
+}
+\end{lstlisting}
+\end{quote}
+
+\section{Структура \\ proc\_dir\_entry: функции для работы с элементами /proc}
+Чтобы работать с proc в ядре, надо создать в ней файл.
+В ядре определена структура
+\begin{lstlisting}[language=C, label=lst:1, caption= Структура proc\_dir\_entry]
+<linux/proc_fs.h>
+struct proc_dir_entry {
+ atomic_t in_use;
+ refcount_t refcnt;
+ struct list_head pde_openers; 
+ spinlock_t pde_unload_lock; // Собственное средство взаимоисключения
+ ...
+ const struct inode_operations *proc_iops; // Операции определенные на inode фс proc
+ union {
+  const struct proc_ops *proc_ops;
+  const struct file_operations *proc_dir_ops;
+ };
+ const struct dentry_operations *proc_dops; // Используетя для регистрации своих операций над файлом в proc
+ union {
+  const struct seq_operations *seq_ops;
+  int (*single_show)(struct seq_file *, void *);
+ };
+ proc_write_t write;
+ void *data;
+ unsigned int state_size;
+ unsigned int low_ino;
+ nlink_t nlink;
+        ...
+ loff_t size;
+ struct proc_dir_entry *parent;
+ ...
+ char *name;
+ u8 flags;
+        ...
+} 
+\end{lstlisting}
+Структура proc\_ops позволяет определять операции для работы с файлами в драйверах. Флаги определяют особенности работы со структурами.
+\begin{lstlisting}[language=C, label=lst:1, caption= Структура proc\_ops]
+struct proc_ops {
+ unsigned int proc_flags;
+ int (*proc_open)(struct inode *, struct file *);
+        // в таблице открытых файлов об одном файле находится столько записей, сколько раз он был открыт
+ ssize_t (*proc_read)(struct file *, char __user *, size_t, loff_t *);
+ ...
+ ssize_t (*proc_write)(struct file *, const char __user *, size_t, loff_t *);
+ loff_t (*proc_lseek)(struct file *, loff_t, int);
+ int (*proc_release)(struct inode *, struct file *);
+ ...
+ long (*proc_ioctl)(struct file *, unsigned int, unsigned long);
+}
+\end{lstlisting}
+
+\section{Функции для работы с элементами /proc}
+
+На proc определена функция \\ proc\_create\_data:
+\begin{lstlisting}[language=C, label=lst:1, caption= Функция proc\_create\_data]
+extern struct proc_dir_entry *proc_create_data(const char *, umode_t,
+  struct proc_dir_entry *,
+  const struct proc_ops *, void *);
+\end{lstlisting}
+Есть более популярная обертка -- proc\_create:
+\begin{lstlisting}[language=C, label=lst:1, caption= Функция proc\_create]
+static inline struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+       struct proc_dir_entry *parent,
+       const struct proc_ops *proc_ops)
+{
+ return proc_create_data(name, mode, parent, proc_ops, NULL);
+}
+\end{lstlisting}
+
+Создавать каталоги в файловой системе /proc можно используя proc\_mkdir(), а также символические ссылки с \\ proc\_symlink(). Для простых элементов /proc, для которых требуется только функция чтения, используется \\ create\_proc\_read\_entry(), которая создает запись /proc и инициализирует функцию read\_proc в одном вызове.
+
+\begin{lstlisting}[language=C, label=lst:1, caption= Хз чо это]
+#include <linux/types.h>
+#include <linux/fs.h>
+
+extern struct proc_dir_entry *proc_symlink(const char *, struct proc_dir_entry *, const char *);
+extern struct proc_dir_entry *proc_mkdir(const char *, struct proc_dir_entry *);
+struct proc_dir_entry *create_proc_read_entry( const char *name, mode_t mode, struct proc_dir_entry *base, read_proc_t *read_proc, void *data );
+}
+\end{lstlisting}
+
+\section{Структура, перечисляющая функции, определенные на файлах. Использование структуры file\_operations для регистрации собственных функций работы с файлами}
+
+\textbf{Связь между struct file и struct file operations}
+
+Файл должен быть открыт. Соответственно для открытого файла должен быть создан дескриптор. В этом дескрипторе имеется указатель на struct file\_operations. Это либо стандартные (установленные по умолчанию) операции на файлах для конкретной файловой системы, либо зарегистрированные разработчиком (собственные функции работы с файлами собственной файловой системы).
+
+\begin{lstlisting}
+	struct file_operations {
+	struct module *owner;
+	loff_t (*llseek) (struct file *, loff_t, int);
+	ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);
+	ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
+	...
+	int (*open) (struct inode *, struct file *);
+	...
+	int (*release) (struct inode *, struct file *);
+	...
+} __randomize_layout;
+\end{lstlisting}
+
+Разработчики драйверов должны регистрировать свои функции read/write. В UNIX/Linux все файл как раз для того, чтобы свести се действия к однотипным операциям read/write и не размножать их, а свести к большому набору операций.
+
+Для регистрации своих функций \\ используется(-лась) struct file\_operations. С некоторой версии ядра 5.16+ (примерно) появилась struct proc\_ops. В загружаемых модулях ядра можно использовать условную компиляцию:
+
+\begin{lstlisting}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0)
+#define HAVE_PROC_OPS
+#endif
+
+#ifdef HAVE_PROC_OPS
+static struct proc_ops fops = {
+    .proc_read = fortune_read,
+    .proc_write = fortune_write,
+    .proc_open = fortune_open,
+    .proc_release = fortune_release,
+};
+#else
+static struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .read = fortune_read,
+    .write = fortune_write,
+    .open = fortune_open,
+    .release = fortune_release,
+};
+#endif
+\end{lstlisting}
+
+proc\_open и open имеют одни и те же формальные параметры (указатели на struct inode, struct file). С другими функциями аналогично.
+
+Зачем так сделано? --- proc\_ops сделана для того, чтобы не вешаться на \\ file\_operations, которые используются драйверами. Функции file\_operations настолько важны для системы, что их решили освободить от работы с ФС proc.
+
+\section{Передача данных их пространства пользователя в пространство ядра и из ядра в пространство пользователя. Обоснование необходимости этих функций}
+
+Чтобы передать данные из адресного пространства пользователя в адресное пространство ядра и обратно используются функции copy\_from\_user() и  \\ copy\_to\_user():
+
+\begin{lstlisting}
+unsigned long __copy_to_user(void __user *to, const void *from, unsigned long n);
+unsigned long __copy_from_user(void *to, const void __user *from, unsigned long n);
+\end{lstlisting}
+
+Если некоторые данные не могут быть скопированы, эта функция добавит нулевые байты к скопированным данным до требуемого размера.
+
+Обе функции возвращают количество байт, которые не могут быть скопированы. В случае выполнения будет возвращен 0.
+
+\textbf{Обоснование необходимости этих функций}
+
+Ядро работает с физическими адресами (адреса оперативной памяти), а у процессов адресное пространство виртуальное (это абстракция системы, создаваемая с помощью таблиц страниц).
+
+\sout{Фреймы (физические страницы) \\ выделяются по прерываниям.}
+
+Может оказаться, что буфер пространства пользователя, в который ядро пытается записать данные, выгружен.
+
+И наоборот, когда приложение пытается передать данные в ядро, может произойти аналогичная ситуация.
+
+Поэтому нужны специальные функции ядра, которые выполняют необходимые проверки.
+
+\begin{quote}
+Что можно передать из user в kernel?
+
+Например, с помощью передачи из user mode выбрать режим работы загружаемого модуля ядра (какую информацию хотим получить из загружаемого модуля ядра в данный момент).
+
+Такое "меню" надо писать в user mode и передавать соответствующие запросы модулям ядра.
+\end{quote}
+
+\section{Функция printk() – назначение и особенности}
+Функция printk() определена в ядре Linux и доступна модулям. Функция аналогична библиотечной функции printf(). Загружаемый модуль ядра не может вызывать обычные библиотечные функции, поэтому ядро предоставляет модулю функцию printk(). Функция пишет сообщения в системный лог, который можно посмотреть, используя sudo dmesg.
+
+\section*{Пример из лабораторной «Фортунки»:}
+
+\begin{lstlisting}
+#include <linux/module.h> 
+#include <linux/kernel.h> 
+#include <linux/init.h>  
+#include <linux/vmalloc.h>
+#include <linux/proc_fs.h> 
+#include <linux/uaccess.h>
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Karpova Ekaterina");
+
+#define BUF_SIZE PAGE_SIZE
+
+#define DIRNAME "fortunes"
+#define FILENAME "fortune"
+#define SYMLINK "fortune_link"
+#define FILEPATH DIRNAME "/" FILENAME
+
+static struct proc_dir_entry *fortune_dir = NULL;
+static struct proc_dir_entry *fortune_file = NULL;
+static struct proc_dir_entry *fortune_link = NULL;
+
+static char *cookie_buffer;
+static int write_index;
+static int read_index;
+
+static char tmp[BUF_SIZE];
+
+ssize_t fortune_read(struct file *filp, char __user *buf, size_t count, loff_t *offp) 
+{
+	int len;
+	printk(KERN_INFO "+ fortune: read called");
+	if (*offp > 0 || !write_index) 
+	{
+		printk(KERN_INFO "+ fortune: empty");
+		return 0;
+	}
+	if (read_index >= write_index)
+		read_index = 0;
+	len = snprintf(tmp, BUF_SIZE, "%s\n", &cookie_buffer[read_index]);
+	if (copy_to_user(buf, tmp, len)) 
+	{
+		printk(KERN_ERR "+ fortune: copy_to_user error");
+		return -EFAULT;
+	}
+	read_index += len;
+	*offp += len;
+	return len;
+}
+
+ssize_t fortune_write(struct file *filp, const char __user *buf, size_t len, loff_t *offp) 
+{
+	printk(KERN_INFO "+ fortune: write called");
+	if (len > BUF_SIZE - write_index + 1) 
+	{
+		printk(KERN_ERR "+ fortune: cookie_buffer overflow");
+		return -ENOSPC;
+	}
+	if (copy_from_user(&cookie_buffer[write_index], buf, len)) 
+	{
+		printk(KERN_ERR "+ fortune: copy_to_user error");
+		return -EFAULT;
+	}
+	write_index += len;
+	cookie_buffer[write_index - 1] = '\0';
+	return len;
+}
+
+int fortune_open(struct inode *inode, struct file *file) 
+{
+	printk(KERN_INFO "+ fortune: called open");
+	return 0;
+}
+
+int fortune_release(struct inode *inode, struct file *file) 
+{
+	printk(KERN_INFO "+ fortune: called release");
+	return 0;
+}
+
+static const struct proc_ops fops = {
+	proc_read: fortune_read, 
+	proc_write: fortune_write, 
+	proc_open: fortune_open, 
+	proc_release: fortune_release
+};
+
+static void freemem(void) 
+{
+	if (fortune_link)
+		remove_proc_entry(SYMLINK, NULL);
+	if (fortune_file)
+		remove_proc_entry(FILENAME, fortune_dir);
+	if (fortune_dir)
+		remove_proc_entry(DIRNAME, NULL);
+	if (cookie_buffer)
+		vfree(cookie_buffer);
+}
+
+static int __init fortune_init(void) 
+{
+	if (!(cookie_buffer = vmalloc(BUF_SIZE))) 
+	{
+		freemem();
+		printk(KERN_ERR "+ fortune: error during vmalloc");
+		return -ENOMEM;
+	}
+	memset(cookie_buffer, 0, BUF_SIZE);
+	if (!(fortune_dir = proc_mkdir(DIRNAME, NULL))) 
+	{
+		freemem();
+		printk(KERN_ERR "+ fortune: error during directory creation");
+		return -ENOMEM;
+	} 
+	else if (!(fortune_file = proc_create(FILENAME, 0666, fortune_dir, &fops))) 
+	{
+		freemem();
+		printk(KERN_ERR "+ fortune: error during file creation");
+		return -ENOMEM;
+	} 
+	else if (!(fortune_link = proc_symlink(SYMLINK, NULL, FILEPATH))) 
+	{
+		freemem();
+		printk(KERN_ERR "+ fortune: error during symlink creation");
+		return -ENOMEM;
+	}
+	write_index = 0;
+	read_index = 0;
+	printk(KERN_INFO "+ fortune: module loaded");
+	return 0;
+}
+
+static void __exit fortune_exit(void) 
+{
+	freemem();
+	printk(KERN_INFO "+ fortune: module unloaded");
+}
+
+module_init(fortune_init) 
+module_exit(fortune_exit)
+\end{lstlisting}
+
+\section*{Загадки}
+
+Зачем модуль ядра? --- чтобы передать информацию из kernel в user и наоборот (в ядре много важной инфы; из юзера --- например, для управления режимом работы модуля)
+
+Какой буфер? --- кольцевой
+
+Чей буфер? --- Путина (пользователя)
+
+Точки входа? --- 6 штук: инит, ехит, рид, райт, опен, релиз
+
+Когда вызывается какая точка? --- инит на загрузке, ехит при выгрузке, рид когда вызывает кат, райт когда эхо, опен при открытии (во время чтении/записи), релиз при закрытии (во время чтении/записи)
+
+Какие функции ядра вызываем? (Какие основные для передачи данных) --- copy\_from\_user и copy\_to\_user
+
+Когда вызываем copy\_from\_user и \\ copy\_to\_user? --- copy\_from\_user на записи (при вызове функции write),\\ copy\_to\_user на записи (при вызове функции read)
+
+\textbf{Обоснование необходимости функций copy from/to}
+
+Ядро работает с физическими адресами (адреса оперативной памяти), а у процессов адресное пространство виртуальное (это абстракция системы, создаваемая с помощью таблиц страниц).
+
+\sout{Фреймы (физические страницы) \\ выделяются по прерываниям.}
+
+Может оказаться, что буфер пространства пользователя, в который ядро пытается записать данные, выгружен.
+
+И наоборот, когда приложение пытается передать данные в ядро, может произойти аналогичная ситуация.
+
+Поэтому нужны специальные функции ядра, которые выполняют необходимые проверки.
+
+\begin{quote}
+Что можно передать из user в kernel?
+
+Например, с помощью передачи из user mode выбрать режим работы загружаемого модуля ядра (какую информацию хотим получить из загружаемого модуля ядра в данный момент).
+
+Такое "меню" надо писать в user mode и передавать соответствующие запросы модулям ядра.
+\end{quote}
+
+
+
+
+
+
+
+

@@ -1,0 +1,153 @@
+stages:
+  - lint
+  - test
+  - build
+  - docker
+  - migrate
+  - deploy
+
+Lint backend:
+  stage: lint
+  image: golangci/golangci-lint:v1.52.2
+  before_script: 
+    - apt install make
+  script:
+    - cd backend
+    - go mod tidy
+    - make run-lint
+
+Lint frontend:
+  stage: lint
+  image: node:lts
+  script:
+    - cd frontend
+    - npm install
+    - npm run lint
+
+Test backend:
+  stage: test
+  needs:
+    - Lint backend
+  image: docker:24.0.2-dind-alpine3.18
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  before_script: 
+    - apk add make
+    - apk add go
+  script:
+    - cd backend
+    - go mod tidy
+    - make run-test
+
+Test frontend:
+  stage: test
+  needs:
+    - Lint frontend
+  image: node:lts
+  script:
+    - cd frontend
+    - npm install
+    - npm install -g @mockoon/cli
+    - mockoon-cli start --data test/mock.json &
+    - npm run test
+
+Build frontend:
+  stage: build
+  needs:
+    - Test frontend
+  image: node:lts
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - ./frontend/dist/
+    expire_in: 30 days
+
+Push docker image backend:
+  stage: docker
+  needs:
+    - Test backend
+  image: docker:24.0.2-dind-alpine3.18
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  before_script: 
+    - docker login -u polnayakatuxa -p $DOCKER_TOKEN
+  script:
+    - cd backend
+    - TAG=$(date +%Y%m%d%H%M%S)
+    - docker build --tag polnayakatuxa/postby-backend:$TAG .
+    - docker push polnayakatuxa/postby-backend:$TAG
+    - docker tag polnayakatuxa/postby-backend:$TAG polnayakatuxa/postby-backend:latest
+    - docker push polnayakatuxa/postby-backend:latest
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "lab9")
+
+Push docker image frontend:
+  stage: docker
+  needs:
+    - Build frontend
+  image: docker:24.0.2-dind-alpine3.18
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  before_script: 
+    - docker login -u polnayakatuxa -p $DOCKER_TOKEN
+  script:
+    - cd frontend
+    - TAG=$(date +%Y%m%d%H%M%S)
+    - docker build --tag polnayakatuxa/postby-frontend:$TAG .
+    - docker push polnayakatuxa/postby-frontend:$TAG
+    - docker tag polnayakatuxa/postby-frontend:$TAG polnayakatuxa/postby-frontend:latest
+    - docker push polnayakatuxa/postby-frontend:latest
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "lab9")
+
+Migrate postgres:
+  stage: migrate
+  needs:
+    - Push docker image backend
+  image: gomicro/goose
+  script:
+    - cd backend
+    - goose --dir=deployments/migrations/migrations_postgres postgres "$PG_DSN" up
+
+Deploy backend:
+  stage: deploy
+  needs:
+    - Migrate postgres
+  image: dysnix/kubectl
+  script:
+    - cd backend/manifests
+    - kubectl apply -f config_map.yaml
+    - kubectl apply -f deployment.yaml
+    - kubectl apply -f service.yaml
+    - kubectl apply -f ingress.yaml
+    - kubectl rollout restart deploy postby-backend
+  when: manual
+
+Deploy frontend:
+  stage: deploy
+  needs:
+    - Push docker image frontend
+  image: dysnix/kubectl
+  script:
+    - cd frontend/manifests
+    - kubectl apply -f deployment.yaml
+    - kubectl apply -f service.yaml
+    - kubectl apply -f ingress.yaml
+    - kubectl rollout restart deploy postby-frontend
+  when: manual
+

@@ -1,0 +1,20 @@
+# output as png image
+set terminal png
+
+# save file to "benchmark.png"
+set output "ab.png"
+
+# graph title
+set title "http://localhost:3000/api/v2/posts?user=muhomorfus&page=1&num=1"
+
+# y-axis grid
+set grid y
+
+#x-axis label
+set xlabel "request"
+
+#y-axis label
+set ylabel "response time (ms)"
+
+#plot data from "out.data" using column 9 with smooth sbezier lines
+plot "ab.data" using 9 smooth sbezier with lines title "rt(req)"

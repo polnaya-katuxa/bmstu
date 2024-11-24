@@ -1,0 +1,450 @@
+\chapter{Системный вызов open()} 
+
+%везде написать на блоках "возврат чего-то там" конкретный тип возвращаемого значения
+
+Системный вызов open() открывает файл, определённый $pathname$. Если указанный файл не существует и в $flags$ указан флаг O\_CREAT, то open() может (необязательно) создать указанный файл с правами доступа, определёнными $mode$. Если флаг O\_CREAT не указан, параметр $mode$ игнорируется.
+
+\begin{lstlisting}
+	int open(const char *pathname, int flags, mode_t mode);
+\end{lstlisting}
+
+\section{Возвращаемое значение}
+
+open() возвращает файловый дескриптор~---~небольшое неотрицательное целое число, которое является ссылкой на запись в системной таблице открытых файлов и индексом записи в таблице дескрипторов открытых файлов процесса. Этот дескриптор используется далее в системных вызовах read(), write(), lseek(), fcntl() и т.д. для ссылки на открытый файл. В случае успешного вызова будет возвращён наименьший файловый дескриптор, не связанный с открытым процессом файлом.
+
+В случае ошибки возвращается -1 и устанавливается значение errno.
+
+\section{Параметры}
+
+$pathname$~---~имя файла в файловой системе. $flags$~---~режим открытия файла~---~один или несколько флагов открытия, объединенных оператором побитового ИЛИ. 
+
+Флаги:
+
+\begin{enumerate}
+	\item O\_RDONLY~---~открыть только для чтения;
+	\item O\_WRONLY~---~открыть только для записи;
+	\item O\_RDWR~---~открыть для чтения и записи.
+	\item O\_EXEC~---~открыть только для выполнения (результат не определен при открытии директории);
+	\item O\_SEARCH~---~открыть директорию только для поиска (результат не определен при использовании с файлами, не являющимися директорией);
+	\item O\_APPEND~---~открыть в режиме добавления, перед каждой операцией записи файловый указатель будет устанавливаться в конец файла;
+	\item O\_CLOEXEC~---~устанавливает флаг close-on-exec для нового файлового дескриптора (при вызове exec файл не будет оставаться открытым);
+	\item O\_CREAT~---~если файл не существует, то он будет создан с правами доступа, определёнными $mode$;
+	\item O\_DIRECTORY~---~вернуть ошибку, если файл не является каталогом;
+	\item O\_DSYNC~---~файл открывается в режиме синхронного ввода-вывода (все операции записи для соответствующего дескриптора файла блокируют вызывающий процесс до тех пор, пока данные не будут физически записаны);
+	\item O\_EXCL~---~при использовании совместно с O\_CREAT вернуть ошибку, если файл уже существует;
+	\item O\_NOATIME~---~не обновлять время последнего доступа к файлу;
+	\item O\_NOCTTY~---~если файл указывает на терминальное устройство, то оно не станет терминалом управления процесса, даже при его отсутствии;
+	\item O\_NOFOLLOW~---~вернуть ошибку, если часть пути является символической ссылкой;
+	\item O\_NONBLOCK~---~файл открывается, по возможности, в режиме non-blocking, то есть никакие последующие операции над дескриптором файла не заставляют вызывающий процесс ждать;
+	\item O\_RSYNC~---~операции записи должны выполняться на том же уровне, что и O\_SYNC;
+	\item O\_SYNC~---~файл открывается в режиме синхронного ввода-вывода (все операции записи для соответствующего дескриптора файла блокируют вызывающий процесс до тех пор, пока данные не будут физически записаны);
+	\item O\_TRUNC~---~если файл уже существует, он является обычным файлом и заданный режим позволяет записывать в этот файл, то его длина будет урезана до нуля;
+	\item O\_LARGEFILE~---~позволяет открывать файлы, размер которых не может быть представлен типом off\_t (long). Для установки должен быть указан макрос \_LARGEFILE64\_SOURCE;
+	\item O\_TMPFILE~---~создать неименованный временный файл;
+	\item O\_PATH~---~получить файловый дескриптор, который можно использовать для двух целей: для указания положения в дереве файловой системы и для выполнения операций, работающих исключительно на уровне файловых дескрипторов. Если O\_PATH указан, то биты флагов, отличные от O\_CLOEXEC, O\_DIRECTORY и O\_NOFOLLOW, игнорируются.
+\end{enumerate}
+
+Если указан флаг O\_CREAT, вызов open() создает новый файл с правами из  $mode$:
+
+\begin{enumerate}
+	\item S\_IRWXU~---~права на чтение, запись, выполнение для пользователя;
+	\item S\_IRUSR~---~права на чтение для пользователя;
+	\item S\_IWUSR~---~права на запись для пользователя;
+	\item S\_IXUSR~---~права на выполнение для пользователя;
+	\item S\_IRWXG~---~права на чтение, запись, выполнение для группы;
+	\item S\_IRGRP~---~права на чтение для группы;
+	\item S\_IWGRP~---~права на запись для группы;
+	\item S\_IXGRP~---~права на выполнение для группы;
+	\item S\_IRWXO~---~права на чтение, запись, выполнение для остальных;
+	\item S\_IROTH~---~права на чтение для остальных;
+	\item S\_IWOTH~---~права на запись для остальных;
+	\item S\_IXOTH~---~права на выполнение для остальных;
+	\item S\_ISUID~---~бит set-user-ID;
+	\item S\_ISGID~---~бит set-group-ID;
+	\item S\_ISVTX~---~«липкий» бит.
+\end{enumerate}
+
+\chapter{Схема выполнения open()}
+
+\textbf{Версия ядра:} 6.3.5
+
+\section{open()}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=1\linewidth]{./images/open.pdf}
+    \captionof{figure}{open()}
+    \label{img:er}
+  \end{tabular}
+\end{table} 
+
+\section{do\_sys\_open()}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.7\linewidth]{./images/do\_sys\_open.pdf}
+    \captionof{figure}{do\_sys\_open()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{build\_open\_how()}
+
+\begin{lstlisting}
+	struct open_how {
+	__u64 flags;
+	__u64 mode;
+	__u64 resolve; };
+\end{lstlisting}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.6\linewidth]{./images/build\_open\_how.pdf}
+    \captionof{figure}{build\_open\_how()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\begin{lstlisting}
+	#define S_IRWXUGO	(S_IRWXU|S_IRWXG|S_IRWXO)
+	#define S_IALLUGO	(S_ISUID|S_ISGID|S_ISVTX|S_IRWXUGO)
+
+	#define VALID_OPEN_FLAGS \
+	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
+	 O_APPEND | O_NDELAY | O_NONBLOCK | __O_SYNC | O_DSYNC | \
+	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
+	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
+\end{lstlisting}
+
+\section{do\_sys\_openat2()}
+
+\begin{lstlisting}
+	struct open_flags {
+	int open_flag;
+	umode_t mode;
+	int acc_mode;
+	int intent;
+	int lookup_flags;
+};
+
+struct filename {
+	const char		*name;	/* pointer to actual string */
+	const __user char	*uptr;	/* original userland pointer */
+	int			refcnt;
+	struct audit_names	*aname;
+	const char		iname[];
+};
+
+struct file {
+	union {
+		struct llist_node	f_llist;
+		struct rcu_head 	f_rcuhead;
+		unsigned int 		f_iocb_flags;
+	};
+	struct path		f_path;
+	struct inode		*f_inode;	/* cached value */
+	const struct file_operations	*f_op;
+
+	/*
+	 * Protects f_ep, f_flags.
+	 * Must not be taken from IRQ context.
+	 */
+	spinlock_t		f_lock;
+	atomic_long_t		f_count;
+	unsigned int 		f_flags;
+	fmode_t			f_mode;
+	struct mutex		f_pos_lock;
+	loff_t			f_pos;
+	struct fown_struct	f_owner;
+	const struct cred	*f_cred;
+	struct file_ra_state	f_ra;
+
+	u64			f_version;
+#ifdef CONFIG_SECURITY
+	void			*f_security;
+#endif
+	/* needed for tty driver, and maybe others */
+	void			*private_data;
+
+#ifdef CONFIG_EPOLL
+	/* Used by fs/eventpoll.c to link all the hooks to this file */
+	struct hlist_head	*f_ep;
+#endif /* #ifdef CONFIG_EPOLL */
+	struct address_space	*f_mapping;
+	errseq_t		f_wb_err;
+	errseq_t		f_sb_err; /* for syncfs */
+} __randomize_layout
+  __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
+\end{lstlisting}
+
+\newpage
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.6\linewidth]{./images/do\_sys\_openat2.pdf}
+    \captionof{figure}{do\_sys\_openat2()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{build\_open\_flags()}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.8\linewidth]{./images/build\_open\_flags.pdf}
+    \captionof{figure}{build\_open\_flags()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\newpage
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.3\linewidth]{./images/build\_open\_flags2.pdf}
+    \captionof{figure}{build\_open\_flags()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{getname\_flags()}
+
+\newpage
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.7\linewidth]{./images/getname\_flags.pdf}
+    \captionof{figure}{getname\_flags()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{\_\_alloc\_fd()}
+
+\begin{lstlisting}
+	/*
+ * Open file table structure
+ */
+struct files_struct {
+  /*
+   * read mostly part
+   */
+	atomic_t count;
+	bool resize_in_progress;
+	wait_queue_head_t resize_wait;
+
+	struct fdtable __rcu *fdt;
+	struct fdtable fdtab;
+  /*
+   * written part on a separate cache line in SMP
+   */
+	spinlock_t file_lock ____cacheline_aligned_in_smp;
+	unsigned int next_fd;
+	unsigned long close_on_exec_init[1];
+	unsigned long open_fds_init[1];
+	unsigned long full_fds_bits_init[1];
+	struct file __rcu * fd_array[NR_OPEN_DEFAULT];
+};
+
+struct fdtable {
+	unsigned int max_fds;
+	struct file __rcu **fd;      /* current fd array */
+	unsigned long *close_on_exec;
+	unsigned long *open_fds;
+	unsigned long *full_fds_bits;
+	struct rcu_head rcu;
+};
+\end{lstlisting}
+
+\newpage
+
+% тут поменять цикл на то, что она нарисовала
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.53\linewidth]{./images/alloc\_fd.pdf}
+    \captionof{figure}{\_\_alloc\_fd()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{do\_filp\_open()}
+
+\begin{lstlisting}
+	#define EMBEDDED_LEVELS 2
+struct nameidata {
+	struct path	path;
+	struct qstr	last;
+	struct path	root;
+	struct inode	*inode; /* path.dentry.d_inode */
+	unsigned int	flags, state;
+	unsigned	seq, next_seq, m_seq, r_seq;
+	int		last_type;
+	unsigned	depth;
+	int		total_link_count;
+	struct saved {
+		struct path link;
+		struct delayed_call done;
+		const char *name;
+		unsigned seq;
+	} *stack, internal[EMBEDDED_LEVELS];
+	struct filename	*name;
+	struct nameidata *saved;
+	unsigned	root_seq;
+	int		dfd;
+	vfsuid_t	dir_vfsuid;
+	umode_t		dir_mode;
+} __randomize_layout;
+
+#define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
+#define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+\end{lstlisting}
+
+LOOKUP\_RCU~---~флаг используется в системе VFS для указания, что операция поиска должна выполняться с использованием RCU (Read-Copy-Update).
+ 
+LOOKUP\_REVAL~---~флаг для работы с NFS, указывает, что необходимо 
+выполнить повторную проверку.
+
+\newpage
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.75\linewidth]{./images/do\_filp\_open.pdf}
+    \captionof{figure}{do\_filp\_open()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{set\_nameidata() и restore\_nameidata()}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=1\linewidth]{./images/nameidata.pdf}
+    \captionof{figure}{set\_nameidata() и restore\_nameidata()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{path\_openat()}
+
+\begin{lstlisting}
+	struct dentry {
+	/* RCU lookup touched fields */
+	unsigned int d_flags;		/* protected by d_lock */
+	seqcount_spinlock_t d_seq;	/* per dentry seqlock */
+	struct hlist_bl_node d_hash;	/* lookup hash list */
+	struct dentry *d_parent;	/* parent directory */
+	struct qstr d_name;
+	struct inode *d_inode;		/* Where the name belongs to - NULL is
+					 * negative */
+	unsigned char d_iname[DNAME_INLINE_LEN];	/* small names */
+
+	/* Ref lookup also touches following */
+	struct lockref d_lockref;	/* per-dentry lock and refcount */
+	const struct dentry_operations *d_op;
+	struct super_block *d_sb;	/* The root of the dentry tree */
+	unsigned long d_time;		/* used by d_revalidate */
+	void *d_fsdata;			/* fs-specific data */
+
+	union {
+		struct list_head d_lru;		/* LRU list */
+		wait_queue_head_t *d_wait;	/* in-lookup ones only */
+	};
+	struct list_head d_child;	/* child of parent list */
+	struct list_head d_subdirs;	/* our children */
+	/*
+	 * d_alias and d_rcu can share memory
+	 */
+	union {
+		struct hlist_node d_alias;	/* inode alias list */
+		struct hlist_bl_node d_in_lookup_hash;	/* only for in-lookup ones */
+	 	struct rcu_head d_rcu;
+	} d_u;
+} __randomize_layout;
+\end{lstlisting}
+
+\newpage
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.95\linewidth]{./images/path\_openat.pdf}
+    \captionof{figure}{path\_openat()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{open\_last\_lookups()}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.7\linewidth]{./images/open\_last\_lookups.pdf}
+    \captionof{figure}{open\_last\_lookups()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{lookup\_open()}
+
+% тут создание айнод поподробнее расписать
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.7\linewidth]{./images/lookup\_open.pdf}
+    \captionof{figure}{lookup\_open()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\section{do\_open()}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.7\linewidth]{./images/do_open.pdf}
+    \captionof{figure}{do\_open()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{p{1\linewidth}}
+    \centering
+    \includegraphics[width=0.6\linewidth]{./images/do\_open2.pdf}
+    \captionof{figure}{do\_open()}
+    \label{img:er}
+  \end{tabular}
+\end{table}
+
+
+
+
+
+

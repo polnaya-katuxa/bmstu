@@ -1,0 +1,1 @@
+cmd_/media/psf/Home/Study/Sem_06/os/lab_05/seqfile.ko := ld -r -EL  -maarch64elf -z noexecstack --build-id=sha1  -T scripts/module.lds -o /media/psf/Home/Study/Sem_06/os/lab_05/seqfile.ko /media/psf/Home/Study/Sem_06/os/lab_05/seqfile.o /media/psf/Home/Study/Sem_06/os/lab_05/seqfile.mod.o;  true

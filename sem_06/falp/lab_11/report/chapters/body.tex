@@ -1,0 +1,281 @@
+\setcounter{page}{3}
+
+\chapter{Практическая часть}
+\section{Задание}
+Используя хвостовую рекурсию, разработать (комментируя назначение
+аргументов) эффективную программу , позволяющую:
+\begin{enumerate}
+	\item Найти длину списка (по верхнему уровню);
+	\item Найти сумму элементов числового списка;
+	\item Найти сумму элементов числового списка, стоящих на нечетных позициях исходного списка (нумерация от 0);
+	\item Сформировать список из элементов числового списка, больших заданного значения;
+	\item Удалить заданный элемент из списка (один или все вхождения);
+	\item Объединить два списка.
+\end{enumerate}
+
+Убедиться в правильности результатов.
+Для одного из вариантов ВОПРОСА уметь составить таблицу, отражающую конкретный порядок работы системы
+  
+\begin{code}
+\caption{Задания №1-6}
+\label{code:bf1}
+\begin{minted}{lisp}
+domains 
+ list = integer*.
+
+predicates
+ nondeterm length1(list, integer, integer).
+ nondeterm length(list, integer).
+ 
+ nondeterm sum1(list, integer, integer).
+ nondeterm sum(list, integer).
+ 
+ nondeterm sum_odd_pos1(list, integer, integer, integer).
+ nondeterm sum_odd_pos(list, integer).
+ nondeterm sum_odd_pos2(list, integer, integer).
+ nondeterm sum_odd_pos_new(list, integer).
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Задание №1-2}
+\label{code:bf2}
+\begin{minted}{lisp}		
+ nondeterm list_of_bigger(list, integer, list).
+ 
+ nondeterm del_all(list, integer, list).
+ nondeterm del_single(list, integer, list).
+ 
+ nondeterm union(list, list, list).
+ 
+clauses
+ length1([_ | T], Acc, Res) :- !, Acc1 = Acc + 1, length1(T, Acc1, Res).
+ length1([], Acc, Acc) :- !.
+ length(L, Res) :- !, length1(L, 0, Res).
+ 
+ sum1([], Acc, Acc) :- !.
+ sum1([H | T], Acc, Res) :- !, Acc1 = Acc + H, sum1(T, Acc1, Res).
+ sum(L, Res) :- !, sum1(L, 0, Res).
+ 
+ sum_odd_pos1([], _, Acc, Acc) :- !.
+ sum_odd_pos1([_ | T], Pos, Acc, Res) :- Pos mod 2 = 0, !, Pos1 = Pos + 1,
+  sum_odd_pos1(T, Pos1, Acc, Res).
+ sum_odd_pos1([H | T], Pos, Acc, Res) :- !, Pos1 = Pos + 1,
+  Acc1 = Acc + H, sum_odd_pos1(T, Pos1, Acc1, Res).
+ sum_odd_pos(L, Res) :- !, sum_odd_pos1(L, 0, 0, Res).
+ 
+ sum_odd_pos2([], Acc, Res) :- Res = Acc, !.
+ sum_odd_pos2([_ | [H | T]], Acc, Res) :- !, Acc1 = Acc + H,
+  sum_odd_pos2(T, Acc1, Res).
+ sum_odd_pos_new(L, Res) :- !, sum_odd_pos2(L, 0, Res).
+ 
+ list_of_bigger([], _, []) :- !.
+ list_of_bigger([H | T], N, [H | ResT]) :- H > N, !,
+  list_of_bigger(T, N, ResT).
+ list_of_bigger([_ | T], N, Res) :- !, list_of_bigger(T, N, Res).
+\end{minted}
+\end{code}
+
+\newpage
+
+\begin{code}
+\caption{Задание №1-2}
+\label{code:bf3}
+\begin{minted}{lisp}
+ del_all([], _, []) :- !.
+ del_all([H | T], N, Res) :- H = N, !, del_all(T, N, Res).
+ del_all([H | T], N, [H | ResT]) :- !, del_all(T, N, ResT).
+ 
+ del_single([], _, []) :- !.
+ del_single([H | T], N, T) :- H = N, !.
+ del_single([H | T], N, [H | ResT]) :- !, del_single(T, N, ResT).
+ 
+ union([], [], []) :- !.
+ union([H1 | T1], [], [H1 | ResT]) :- !, union(T1, [], ResT).
+ union([], [H2 | T2], [H2 | ResT]) :- !, union([], T2, ResT).
+ union([H1 | T1], [H2 | T2], [H1, H2 | ResT]) :- !, union(T1, T2, ResT).
+ 
+ union_new([], L, L) :- !.
+ union_new([H | T], L, [H | ResT]) :- !, union(T, L, ResT).
+
+goal
+ %length([1, 2, 3], Is).
+ %sum([1, 2, 3], Is).
+ %sum_odd_pos([1, 0, 2, 0, 5, 3], Is).
+ %sum_odd_pos_new([1, 0, 2, 0, 5, 3], Is).
+ %list_of_bigger([1, 0, 2, 0, 5, 3], 2, Is).
+ %del_single([1, 0, 2, 0, 5, 2, 6], 2, Is).
+ %del_all([1, 0, 2, 0, 5, 2, 6], 2, Is).
+ %union([1, 2, 3], [1, 0, 2, 0, 5, 2, 6], Is).
+ union_new([1, 2, 3], [1, 0, 2, 0, 5, 2, 6], Is).
+\end{minted}
+\end{code}
+
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+  
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+1   
+& \specialcell{length([1, 2], Is)} 
+& \specialcell{length([1, 2], Is) = \\ length1([\_ | T], Acc, Res) \\ 
+\textbf{Нет} \\ 
+Подстановка пуста} 
+& \specialcell{Прямой ход} \\ \hline
+
+2   
+& \specialcell{...} 
+&  
+&  \\ \hline
+
+3   
+& \specialcell{! \\ length1([1, 2], 0, Res)} 
+& \specialcell{length([1, 2], Is) = \\ length(L, Res) \\ 
+\textbf{Успех} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is и Res - сцепленные}} 
+& \specialcell{Прямой ход} \\ \hline
+
+4   
+& \specialcell{!\\Acc1 = 0 + 1\\length1([2], Acc1, Res)} 
+& \specialcell{length1([1, 2], 0, Res) = \\ length1([\_ | T], Acc, Res) \\ 
+\textbf{Успех} \\ 
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res и Res - сцепленные}}
+& \specialcell{Прямой ход} \\ \hline
+
+5  
+& \specialcell{length1([2], 1, Res)} 
+& \specialcell{Acc1 = 0 + 1 \\ 
+\textbf{Успех} \\ 
+\textbf{Acc1 = 1} \\
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res и Res - сцепленные}}
+& \specialcell{Прямой ход} \\ \hline
+
+6  
+& \specialcell{!\\Acc1 = 1 + 1\\length1([], Acc1, Res)} 
+& \specialcell{length1([2], Acc1, Res) = \\ length1([\_ | T], Acc, Res) \\ 
+\textbf{Успех} \\ 
+\textbf{Acc = 1} \\
+\textbf{T = []} \\ 
+\textbf{Acc1 = 1} \\
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res, Res и Res - сцепленные}}
+& \specialcell{Прямой ход} \\ \hline
+
+\end{tabular}
+}
+\end{table}
+
+\newpage
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+7  
+& \specialcell{length1([], 2, Res)} 
+& \specialcell{Acc1 = 1 + 1 \\ 
+\textbf{Успех} \\ 
+\textbf{Acc1 = 2} \\
+\textbf{Acc = 1} \\
+\textbf{T = []} \\ 
+\textbf{Acc1 = 1} \\
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res, Res и Res - сцепленные}}
+& \specialcell{Прямой ход} \\ \hline
+
+8  
+& \specialcell{length1([], 2, Res)} 
+& \specialcell{length1([], 2, Res) = \\ length1([\_ | T], Acc, Res) \\ 
+\textbf{Нет} \\ 
+\textbf{Acc1 = 2} \\
+\textbf{Acc = 1} \\
+\textbf{T = []} \\ 
+\textbf{Acc1 = 1} \\
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res, Res и Res - сцепленные}}
+& \specialcell{Прямой ход} \\ \hline
+
+9  
+& \specialcell{!} 
+& \specialcell{length1([], 2, Res) = \\ length1([], Acc, Acc) \\ 
+\textbf{Успех} \\ 
+\textbf{Res = Acc = 2} \\
+\textbf{Acc = 2} \\
+\textbf{Acc1 = 2} \\
+\textbf{Acc = 1} \\
+\textbf{T = []} \\ 
+\textbf{Acc1 = 1} \\
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res, Res и Res - сцепленные}}
+& \specialcell{Откат к пункту 6} \\ \hline
+
+\end{tabular}
+}
+\end{table}
+
+\newpage
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Резольвента} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+10  
+& \specialcell{Acc1 = 1 + 1\\length1([], Acc1, Res)} 
+& \specialcell{! (\textbf{ложь}) \\ 
+\textbf{Нет} \\  
+\textbf{Acc1 = 1} \\
+\textbf{Acc = 0} \\
+\textbf{T = [2]} \\ 
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res, Res и Res - сцепленные}}
+& \specialcell{Откат к пункту 4} \\ \hline
+
+11 
+& \specialcell{Acc1 = 0 + 1\\length1([2], Acc1, Res)} 
+& \specialcell{! (\textbf{ложь}) \\ 
+\textbf{Нет} \\  
+\textbf{L = [1, 2]} \\ 
+\textbf{Is, Res и Res - сцепленные}}
+& \specialcell{Откат к пункту 3} \\ \hline
+
+12 
+& \specialcell{length1([1, 2], 0, Res)} 
+& \specialcell{! (\textbf{ложь}) \\ 
+\textbf{Нет}\\
+Подстановка пуста} 
+& \specialcell{Завершение работы} \\ \hline
+
+13   
+& \specialcell{Пусто} 
+& \specialcell{Подстановка пуста} 
+& \specialcell{Завершение работы} \\ \hline
+
+\end{tabular}
+}
+\end{table}

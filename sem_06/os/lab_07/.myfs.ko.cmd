@@ -1,0 +1,1 @@
+cmd_/home/muhomorfus/OS/lab_06/myfs.ko := ld -r -EL  -maarch64elf -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/muhomorfus/OS/lab_06/myfs.ko /home/muhomorfus/OS/lab_06/myfs.o /home/muhomorfus/OS/lab_06/myfs.mod.o;  true

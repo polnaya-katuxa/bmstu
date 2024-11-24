@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postby-backend-config
+data:
+  config.yml: |
+    PG:
+      Host: 94.241.138.4
+      Port: 5432
+      User: gen_user
+      Password: "!7|>\\_:1fi!Z9I"
+      DBName: default_db
+    
+    HTTPPortV1: 8080
+    HTTPPortV2: 8081
+    
+    AllowedOrigins:
+      - http://postby.space
+    
+    AdminLogin: admin
+    AdminPassword: password
+    AdminEmail: admin@admin.ru
+    
+    DB: postgres
+    
+    Cost: 10
+    DailyBonus: 5
+    TokenExp: 72h
+    SecretKey: dvM4+HW7Xy/rKHhrLss+U4A5QU4bzmAQMWZHvy+B2ykBcMI0hXli6S9SUemTDhNF
+    Span: 72000h
+    
+    Logger:
+      Encoding: json
+      Level: debug
+      File: stdout
+  

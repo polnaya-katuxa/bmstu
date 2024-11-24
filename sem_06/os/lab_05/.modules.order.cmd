@@ -1,0 +1,1 @@
+cmd_/media/psf/Home/Study/Sem_06/os/lab_05/modules.order := {   echo /media/psf/Home/Study/Sem_06/os/lab_05/fortune.ko;   echo /media/psf/Home/Study/Sem_06/os/lab_05/seqfile.ko; :; } | awk '!x[$$0]++' - > /media/psf/Home/Study/Sem_06/os/lab_05/modules.order

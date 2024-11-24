@@ -1,0 +1,199 @@
+\setcounter{page}{3}
+
+\chapter{Практическая часть}
+\section{Задание №1}
+Создать базу знаний «Собственники», дополнив (и минимально изменив) базу
+знаний, хранящую знания:
+\begin{itemize}
+	\item «Телефонный справочник»: Фамилия, Noтел, Адрес – структура (Город, Улица, Noдома, Noкв),
+	\item «Автомобили»: Фамилия владельца, Марка, Цвет, Стоимость, и др.,
+	\item «Вкладчики банков»: Фамилия, Банк, счет, сумма, др.
+\end{itemize}
+знаниями о дополнительной собственности владельца. Преобразовать знания об автомобиле к форме знаний о собственности.
+Вид собственности (кроме автомобиля): строение, стоимость и другие его характеристики; участок, стоимость и другие его характеристики; водный транспорт, стоимость и другие его характеристики.
+Описать и использовать вариантный домен: собственность. Владелец может иметь, но только один объект каждого вида собственности (это касается и автомобиля), или не иметь некоторых видов собственности.
+Используя конъюнктивное правило и разные формы задания одного вопроса (пояснять для какого задания – какой вопрос), обеспечить возможность поиска:
+\begin{itemize}
+	\item Названий всех объектов собственности заданного субъекта,
+	\item Названий и стоимости всех объектов собственности заданного субъекта,
+	\item Разработать правило, позволяющее найти суммарную стоимость всех объектов собственности заданного субъекта.
+\end{itemize}
+
+Для 2-го пункт и одной фамилии составить таблицу, отражающую конкретный порядок работы системы, с объяснениями порядка работы и особенностей использования доменов (указать конкретные Т1 и Т2 и полную подстановку на каждом шаге)
+  
+\begin{code}
+\caption{Задание №1-3}
+\label{code:bf2}
+\begin{minted}{lisp}
+domains
+ surname, name, phone, city, street, bank, account = symbol.
+ building, flat, size, floors = integer.
+ model, color, number = symbol.
+ price, sum = integer.
+ 
+ address = address(city, street, building, flat).
+ 
+ property = car(name, color, number, price);
+ 	    building(name, floors, price);
+ 	    land(name, size, price);
+ 	    water_vehicle(name, color, number, price).
+
+predicates
+ nondeterm phone_note(surname, phone, address).
+ nondeterm ownership(surname, property).
+ nondeterm bank_note(surname, bank, account, sum).
+ 
+ nondeterm all_properties(surname, name).
+ nondeterm all_properties_prices(surname, name, price).
+ 
+ nondeterm car_price(surname, price).
+ nondeterm building_price(surname, price).
+ nondeterm land_price(surname, price).
+ nondeterm water_vehicle_price(surname, price).
+ nondeterm sum_properties_price(surname, price).
+
+clauses
+ phone_note("Eliza", "111111", address("New-York", "One", 1, 2)).
+ phone_note("Dabby", "222222", address("London", "Two", 3, 4)).
+ phone_note("Eliza", "333333", address("Paris", "Three", 5, 6)).
+ phone_note("Donnie", "444444", address("Oslo", "Four", 7, 8)).
+ phone_note("Darwin", "555555", address("Minsk", "Five", 7, 8)).
+ 
+ bank_note("Eliza", "Sber", "usual", 1000).
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Задание №1-3}
+\label{code:bf2}
+\begin{minted}{lisp}
+ bank_note("Donnie", "Tinkoff", "credit", 1500).
+ bank_note("Donnie", "VTB", "credit", 2000).
+ bank_note("Darwin", "Sber", "usual", 1000).
+ bank_note("Dabby", "VTB", "credit", 2000).
+ 
+ ownership("Eliza", car("BMW", "black", "AAA111", 1000)).
+ ownership("Donnie", car("Ford", "yellow", "BBB222", 1500)).
+ ownership("Donnie", water_vehicle("Yacht", "pink", "CCC333", 2000)).
+ ownership("Darwin", building("Empire State", 57, 1000)).
+ ownership("Dabby", land("Dacha", 500, 2000)).
+ ownership("Dabby", building("Green Palace", 4, 5000)).
+ ownership("Dabby", car("Ford", "pink", "GGG777", 1500)).
+ 
+ all_properties(Surname, Name) :- ownership(Surname, 
+ car(Name, _, _, _)); 
+ 		ownership(Surname, building(Name, _, _)); 
+ 		ownership(Surname, land(Name, _, _)); 
+ 		ownership(Surname, water_vehicle(Name, _, _, _)).
+ 
+ all_properties_prices(Surname, Name, Price) :- ownership(Surname, 
+ car(Name, _, _, Price)); 
+ 		ownership(Surname, building(Name, _, Price)); 
+ 		ownership(Surname, land(Name, _, Price));
+ 		ownership(Surname, water_vehicle(Name, _, _, Price)).
+ 				  
+ car_price(Surname, Price) :- ownership(Surname, car(_, _, _, Price)),
+ !; Price = 0.
+ building_price(Surname, Price) :- ownership(Surname, building(_, _, 
+ Price)), !; Price = 0.
+ land_price(Surname, Price) :- ownership(Surname, land(_, _, Price)), 
+ !; Price = 0.
+ water_vehicle_price(Surname, Price) :- ownership(Surname, 
+ water_vehicle(_, _, _, Price)), !; Price = 0.
+\end{minted}
+\end{code}
+
+\begin{code}
+\caption{Задание №1-3}
+\label{code:bf2}
+\begin{minted}{lisp}				  
+ sum_properties_price(Surname, S) :- car_price(Surname, P1),
+ 		building_price(Surname, P2),
+ 		land_price(Surname, P3),
+ 		water_vehicle_price(Surname, P4),
+ 		S = P1 + P2 + P3 + P4.
+ 
+ goal
+  %all_properties("Dabby", Name).
+  %sum_properties_price("Donnie", SumPrice).
+  sum_properties_price("Donnie", S).
+\end{minted}
+\end{code}
+
+%\begin{table}[]
+%\begin{tabular}{|l|l|l|}
+%\hline
+%№ шага & \begin{tabular}[c]{@{}l@{}}Сравниваемые термы; \\ результат; подстановки\end{tabular}                                                                                                                                                                                                                                                                                                                                                                                                                      & \begin{tabular}[c]{@{}l@{}}Дальнейшие \\ действия\end{tabular}           \\ \hline
+%1      & \begin{tabular}[c]{@{}l@{}}all\_properties\_prices("Donnie", Name, Price)=\\ phone\_note("Eliza", "111111", address("New-York", "One", 1, 2))\\ не унифицируется, тк разные функторы\end{tabular}                                                                                                                                                                                                                                                                                                          & \begin{tabular}[c]{@{}l@{}}переход на \\ след. терм\end{tabular}         \\ \hline
+%2      & аналогичные действия до совпадения функтора                                                                                                                                                                                                                                                                                                                                                                                                                                                                &          \\ \hline
+%3      & \begin{tabular}[c]{@{}l@{}}all\_properties\_prices("Donnie", Name, Price)=\\ all\_properties\_prices(Surname, Name, Price)\\ Константа "Donnie" унифицируется с \\ несвязанной переменной Surname, Surname \\ принимает значение "Donnie"; остальные \\ несвязанные переменные становятся сцепленными\end{tabular}                                                                                                                                                                                         & \begin{tabular}[c]{@{}l@{}}переход к \\ проверке \\ условий\end{tabular} \\ \hline
+%4      & \begin{tabular}[c]{@{}l@{}}ownership(Surname, car(Name, \_, \_, Price))=\\ phone\_note("Eliza", "111111", address("New-York", "One", 1, 2))\\ не унифицируется, тк разные функторы\end{tabular}                                                                                                                                                                                                                                                                                                            & \begin{tabular}[c]{@{}l@{}}переход на \\ след. терм\end{tabular}         \\ \hline
+%5      & аналогичные действия до совпадения функтора                                                                                                                                                                                                                                                                                                                                                                                                                                                                &          \\ \hline
+%6      & \begin{tabular}[c]{@{}l@{}}ownership(Surname, car(Name, \_, \_, Price))=\\ ownership("Eliza", car("BMW", "black", "AAA111", 1000))\\ не унифицируется, так как не совпадает константа \\ "Eliza" и значение связанной переменной Surname\end{tabular}                                                                                                                                                                                                                                                      & \begin{tabular}[c]{@{}l@{}}переход на \\ след. терм\end{tabular}         \\ \hline
+%7      & аналогичные действия до совпадения функтора                                                                                                                                                                                                                                                                                                                                                                                                                                                                &          \\ \hline
+%8      & \begin{tabular}[c]{@{}l@{}}ownership(Surname, car(Name, \_, \_, Price))=\\ ownership("Donnie", car("Ford", "yellow", "BBB222", 1500))\\ успешная унификация\\ Константа "Donnie" унифицируется со\\ связанной переменной Surname; константа "Ford"\\ унифицируется с несвязанной переменной Name, Name\\ принимает значение "Ford"; анонимные переменные не \\ связываются со значениями; константа 1500 унифицируется \\ с несвязанной переменной Price, Price пр.знач. 1500\end{tabular} & \begin{tabular}[c]{@{}l@{}}переход на \\ след. терм\end{tabular}         \\ \hline
+%9      & попытки унификации до конца БЗ                                                                                                                                                                                                                                                                                                                                                                                                                                                                             & \begin{tabular}[c]{@{}l@{}}переход на \\ след. терм\end{tabular}         \\ \hline
+%10     & аналогичные действия для остальных функторов условий                                                                                                                                                                                                                                                                                                                                                                                                                                                       &          \\ \hline
+%\end{tabular}
+%\end{table}
+
+
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+  
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+1   & \specialcell{all\_properties\_prices(<<Donnie>>, Name, Price)=\\ phone\_note(<<Eliza>>, <<111111>>, address(<<New-York>>, \\ <<One>>, 1, 2)) \\ \textbf{Нет}} & \specialcell{Прямой ход} \\ \hline
+2-18   & \specialcell{...} & \specialcell{} \\ \hline
+19   & \specialcell{all\_properties\_prices(<<Donnie>>, Name, Price)=\\all\_properties\_prices(Surname, Name, Price) \\ \textbf{Успех} \\ \textbf{Surname = <<Donnie>>} \\ \textbf{Остальные~---~сцепленные} } & \specialcell{Прямой ход \\ Унификация \\ ownership(Surname, car)} \\ \hline
+20   & \specialcell{ownership(Surname, car(Name, \_, \_, Price))=\\ phone\_note(<<Eliza>>, <<111111>>, address(<<New-York>>, \\ <<One>>, 1, 2))  \\ \textbf{Нет}} & \specialcell{Прямой ход} \\ \hline
+21-29   & \specialcell{...} & \specialcell{} \\ \hline
+30   & \specialcell{ownership(Surname, car(Name, \_, \_, Price))=\\ ownership(<<Eliza>>, car(<<BMW>>, <<black>>, <<AAA111>>, \\ 1000)) \\ \textbf{Нет}} & \specialcell{Прямой ход} \\ \hline
+31-33   & \specialcell{...} & \specialcell{} \\ \hline
+34   & \specialcell{ownership(Surname, car(Name, \_, \_, Price))=\\ ownership(<<Dabby>>, land(<<Dacha>>, 500, 2000)) \\ \textbf{Нет}} & \specialcell{Прямой ход} \\ \hline
+35   & \specialcell{...} & \specialcell{} \\ \hline
+36  & \specialcell{ownership(Surname, car(Name, \_, \_, Price))=\\ ownership(<<Dabby>>, car(<<Ford>>, <<pink>>, <<GGG777>>, \\ 1500)) \\ \textbf{Успех} \\ \textbf{Surname = <<Dabby>>} \\ \textbf{Name = <<Ford>>} \\ \textbf{Price = 1500}} & \specialcell{Решение найдено \\ Откат} \\ \hline
+
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+37  & \specialcell{ownership(Surname, car(Name, \_, \_, Price))=\\ all\_properties(Surname, Name) \\ \textbf{Нет}} & \specialcell{\specialcell{Прямой ход}} \\ \hline
+38-42  & \specialcell{...} & \specialcell{} \\ \hline
+43  & \specialcell{ownership(Surname, car(Name, \_, \_, Price))=\\ sum\_properties\_price(Surname, S) \\ \textbf{Нет}} & \specialcell{Откат к шагу 19 \\ Унификация \\ ownership(Surname, building)} \\ \hline
+44-58  & \specialcell{...} & \specialcell{} \\ \hline
+59  & \specialcell{ownership(Surname, building(Name, \_, Price)) = \\ ownership(<<Dabby>>, building(<<Green Palace>>, 4, \\ 5000)) \\ \textbf{Успех} \\ \textbf{Surname = <<Dabby>>} \\ \textbf{Name = <<Green Palace>>} \\ \textbf{Price = 5000}} & \specialcell{Решение найдено \\ Откат} \\ \hline
+60-66  & \specialcell{...} & \specialcell{} \\ \hline
+67  & \specialcell{ownership(Surname, building(Name, \_, Price)) = \\ sum\_properties\_price(Surname, S)} & \specialcell{Откат к шагу 19 \\ Унификация \\ ownership(Surname, land)} \\ \hline
+68-81  & \specialcell{...} & \specialcell{} \\ \hline
+82  & \specialcell{ownership(Surname, land(Name, \_, Price)) = \\ ownership(<<Dabby>>, land(<<Dacha>>, 500, 2000)) \\ \textbf{Успех} \\ \textbf{Surname = <<Dabby>>} \\ \textbf{Name = <<Dacha>>} \\ \textbf{Price = 2000}} & \specialcell{Решение найдено \\ Откат} \\ \hline
+83-90  & \specialcell{...} & \specialcell{} \\ \hline
+91  & \specialcell{ownership(Surname, land(Name, \_, Price)) = \\ sum\_properties\_price(Surname, S) \\ \textbf{Нет}} & \specialcell{Откат к шагу 19 \\ Унификация \\ ownership(Surname, water)} \\ \hline
+92-114  & \specialcell{...} & \specialcell{} \\ \hline
+
+\end{tabular}
+\end{table}
+
+\newpage
+\noindent
+
+\begin{table}[t!]
+\begin{tabular}{|l|l|l|}
+\hline
+\specialcell{№ шага} & \specialcell{Сравниваемые термы; \\ результат; подстановки}                                                                                                                                                                                                                                                                                                                                                                                                                     & \specialcell{Дальнейшие \\ действия} \\ \hline
+
+115  & \specialcell{ownership(Surname, water\_vehicle(Name, \\ \_, \_, Price)) = sum\_properties\_price(Surname, S) \\ \textbf{Нет}} & \specialcell{Откат к шагу 19 \\ Унификация \\ all\_properties\_prices \\ (<<Donnie>>, Name, Price)} \\ \hline
+116-119  & \specialcell{...} & \specialcell{} \\ \hline
+120  & \specialcell{all\_properties\_prices(<<Donnie>>, Name, Price)=\\sum\_properties\_price(Surname, S) \\ \textbf{Нет}} & \specialcell{Прямой ход} \\ \hline
+121 & Конец базы знаний & \\ \hline
+
+\end{tabular}
+\end{table}

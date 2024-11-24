@@ -1,0 +1,1 @@
+cmd_/home/muhomorfus/OS/lab_06/kittyfs.ko := ld -r -EL  -maarch64elf -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/muhomorfus/OS/lab_06/kittyfs.ko /home/muhomorfus/OS/lab_06/kittyfs.o /home/muhomorfus/OS/lab_06/kittyfs.mod.o;  true

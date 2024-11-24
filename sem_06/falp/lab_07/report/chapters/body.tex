@@ -1,0 +1,81 @@
+\setcounter{page}{3}
+
+\chapter{Практическая часть}
+\section{Задание №1}
+Запустить среду Visual Prolog 5.2. Настроить утилиту TestGoal.
+Запустить тестовую программу, проанализировать реакцию системы и множество ответов.
+Разработать свою программу~---~«Телефонный справочник». Абоненты могут иметь несколько телефонов. Протестировать работу программы, используя разные вопросы.
+
+\begin{itemize}
+ \item «Телефонный справочник»: фамилия, номер телефона, адрес~---~структура (город, улица, номер дома, номер квартиры).
+ \item «Автомобили»: фамилия владельца, марка, цвет, стоимость, номер.
+\end{itemize}
+
+Владелец может иметь несколько телефонов, автомобилей (Факты). В разных городах есть однофамильцы, в одном городе~---~фамилия уникальна.
+Используя конъюнктивное правило и простой вопрос, обеспечить возможность поиска:
+
+\begin{itemize}
+ \item По Марке и Цвету автомобиля найти Фамилию, Город, Телефон. Лишней информации не находить и не передавать!!!
+\end{itemize}
+  
+\begin{code}
+\caption{Задание №1}
+\label{code:bf2}
+\begin{minted}{lisp}
+domains
+ name, phone, city, street = symbol.
+        building, flat = integer.
+        address = address(city, street, building, flat).
+ model, color, number = symbol.
+ price = integer.
+
+predicates
+ nondeterm phone_note(name, phone, address).
+ nondeterm car_note(name, model, color, price, number).
+ nondeterm note_by_car(model, color, name, phone, city).
+
+clauses
+ phone_note("Eliza", "111111", address("New-York", "One", 1, 2)).
+ phone_note("Dabby", "222222", address("London", "Two", 3, 4)).
+ phone_note("Eliza", "333333", address("Paris", "Three", 5, 6)).
+ phone_note("Donnie", "444444", address("Oslo", "Four", 7, 8)).
+        phone_note("Darwin", "555555", address("Minsk", "Five", 7, 8)).
+ 
+ car_note("Eliza", "BMW", "black", 1000, "AAA111").
+ car_note("Donnie", "Ford", "yellow", 1500, "BBB222").
+ car_note("Donnie", "Mercedes", "pink", 2000, "CCC333").
+ car_note("Darwin", "BMW", "black", 1000, "DDD444").
+        car_note("Dabby", "Mercedes", "white", 2000, "EEE555").
+        car_note("Dabby", "Lada", "black", 500, "FFF666").
+        car_note("Dabby", "Ford", "pink", 1500, "GGG777").
+ 
+ note_by_car(Model, Color, Name, Phone, City) :- car_note(Name, Model, 
+ Color, _, _), phone_note(Name, Phone, address(City, _, _, _)).
+ 
+goal
+ %car_note("Eliza", Model, Color, Price, Number).
+ %phone__note(Name, Phone, address("Oslo", Street, House, Room)).
+ note_by_car("BMW", "black", Name, Phone, City).
+\end{minted}
+\end{code}
+
+\section{Вопросы}
+
+\subsection{Что собой представляет программа «Телефонный справочник» на Prolog, какова ее структура. }
+
+Программа <<Телефонный справочник>> представляет собой набор фактов и правило. Она состоит из четырех разделов:
+\begin{itemize}
+	\item domains --- раздел описания доменов;
+	\item predicates --- раздел описания предикатов;
+	\item clauses --- раздел описания предложений базы знаний;
+	\item goal --- раздел описания внутренней цели (вопроса).
+\end{itemize}
+
+Предикат --- логическая функция (отображение множества значений на аргументы \{"да", "нет"\}).
+Домен --- пользовательский тип данных.
+
+\subsection{Как она реализуется, как формируются результаты работы программы.}
+
+Программа реализуется с помощью описания базы знаний и задания вопроса.
+
+В процессе выполнения программы система, используя базу знаний, описанную в разделе clauses, будет пытаться найти такие значения переменных, при которых на поставленный вопрос можно ответить "да".

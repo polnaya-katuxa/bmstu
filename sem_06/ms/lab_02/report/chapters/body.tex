@@ -1,0 +1,180 @@
+\setcounter{page}{3}
+\chapter{Теоретическая часть}
+
+\section{Задание}
+
+
+\begin{enumerate}
+	\item Для выборки объема $n$ из нормальной генеральной совокупности $X$ реализовать в виде программы на ЭВМ
+	\begin{enumerate}
+		\item вычисление точечных оценок $\hat\mu(\vec x_n)$ и $S^2(\vec x_n)$ математического ожидания $MX$ и дисперсии $DX$ соответственно;
+		\item вычисление нижней и верхней границ $\underline\mu(\vec x_n)$, $\overline\mu(\vec x_n)$ для $\gamma$-доверительного интервала для математического ожидания $MX$;
+		\item вычисление нижней и верхней границ $\underline\sigma^2(\vec x_n)$, $\overline\sigma^2(\vec x_n)$ для $\gamma$-доверительного интервала для дисперсии $DX$;
+	\end{enumerate}
+	\item вычислить $\hat\mu$ и $S^2$ для выборки из индивидуального варианта;
+	\item для заданного пользователем уровня доверия $\gamma$ и $N$ – объема выборки из индивидуального варианта:
+	\begin{enumerate}
+		\item на координатной плоскости $Oyn$ построить прямую $y = \hat\mu(\vec{x_N})$, также графики функций $y = \hat\mu(\vec x_n)$, $y = \underline\mu(\vec x_n)$ и $y = \overline\mu(\vec x_n)$ как функций объема $n$ выборки, где $n$ изменяется от 1 до $N$;
+		\item на другой координатной плоскости $Ozn$ построить прямую $z = S^2(\vec{x_N})$, также графики функций $z = S^2(\vec x_n)$, $z = \underline\sigma^2(\vec x_n)$ и $z = \overline\sigma^2(\vec x_n)$ как функций объема $n$ выборки, где $n$ изменяется от 1 до $N$.
+	\end{enumerate}
+\end{enumerate}
+
+
+Данные для лабораторной работы по индивидуальному варианту:
+
+\begin{lstlisting}[caption={Выборка для варианта №8}]
+x = [7.76, 6.34, 5.11, 7.62, 8.84, 4.68, 8.65, 6.90, 8.79, 6.61, 6.62, 7.13, 6.75, 7.28, 7.74, 7.08, 5.57, 8.20, 7.78, 7.92, 6.00, 4.88, 6.75, 6.56, 7.48, 8.51, 9.06, 6.94, 6.93, 7.79, 5.71, 5.93, 6.81, 5.76, 5.88, 7.05, 7.22, 6.67, 5.59, 6.57, 7.28, 6.22, 6.31, 5.51, 6.69, 7.12, 7.40, 6.86, 7.28, 6.82, 7.08, 7.52, 6.81, 7.55, 4.89, 5.48, 7.74, 5.10, 8.17, 7.67, 7.07, 5.80, 6.10, 7.15, 7.88, 9.06, 6.85, 4.88, 6.74, 8.76, 8.53, 6.72, 7.21, 7.42, 8.29, 8.56, 9.25, 6.63, 7.49, 6.67, 6.79, 5.19, 8.20, 7.97, 8.64, 7.36, 6.72, 5.90, 5.53, 6.44, 7.35, 5.18, 8.25, 5.68, 6.29, 6.69, 6.08, 7.42, 7.10, 7.14, 7.10, 6.60, 6.35, 5.99, 6.17, 9.05, 6.01, 7.77, 6.27, 5.81, 7.80, 9.89, 4.39, 6.83, 6.53, 8.15, 6.68, 6.87, 6.31, 6.83]
+\end{lstlisting}
+
+
+\section{Теоретические сведения}
+
+Пусть X -- случайная величина, закон распределения которой известен с точностью до неизвестного параметра $\theta$. 
+
+Интервальной оценкой параметра $\theta$ уровня $\gamma$ ($\gamma$-интервальной оценкой) называют пару статистик $\underline{\theta}(\vec X) \text{ и } \overline{\theta}(\vec X)$ таких, что $$P\{\theta \in (\underline{\theta}(\vec X), \overline{\theta}(\vec X))\}=\gamma$$ 
+
+$\gamma$-доверительным интервалом (доверительным интервалом уровня $\gamma$) для параметра $\theta$ называют реализацию (выборочное значение) интервальной оценки уровня $\gamma$ для этого параметра, то есть интервал $(\underline{\theta}(\vec x), \overline{\theta}(\vec x))$ с детерминированными границами.
+
+Формулы для вычисления границ $\gamma$-доверительного интервала для математического ожидания нормальной случайной величины:
+
+$$
+\underline\mu(\vec X_n)=\overline X - \frac{S(\vec X)t^{(n-1)}_{\frac{1+\gamma}{2}}}{\sqrt{n}},
+$$
+
+$$
+\overline\mu(\vec X_n)=\overline X + \frac{S(\vec X)t^{(n-1)}_{\frac{1+\gamma}{2}}}{\sqrt{n}},
+$$
+где $\overline X$ -- выборочное среднее, $S^2(\vec X)$ -- исправленная выборочная дисперсия, $n$ -- объем выборки, $t^{(n-1)}_{\alpha}$ -- квантиль уровня $\alpha$ распределения Стьюдента с n-1 степенями свободы.
+
+Формулы для вычисления границ $\gamma$-доверительного интервала для дисперсии нормальной случайной величины:
+
+$$
+\underline\sigma^2(\vec X_n)= \frac{(n-1)S^2(\vec X)}{h^{(n-1)}_{\frac{1+\gamma}{2}}},
+$$
+
+$$
+\overline\sigma^2(\vec X_n)= \frac{(n-1)S^2(\vec X)}{h^{(n-1)}_{\frac{1-\gamma}{2}}},
+$$
+где $S^2(\vec X)$ -- исправленная выборочная дисперсия, $n$ -- объем выборки, $h^{(n-1)}_{\alpha}$ -- квантиль уровня $\alpha$ распределения $\chi^2$ с n - 1 степенями свободы.
+
+\chapter{Практическая часть}
+
+\section{Код программы}
+
+\begin{lstlisting}
+x = [7.76,6.34,5.11,7.62,8.84,4.68,8.65,6.90,8.79,6.61,6.62,7.13,6.75,...
+    7.28,7.74,7.08,5.57,8.20,7.78,7.92,6.00,4.88,6.75,6.56,7.48,8.51,...
+    9.06,6.94,6.93,7.79,5.71,5.93,6.81,5.76,5.88,7.05,7.22,6.67,5.59,...
+    6.57,7.28,6.22,6.31,5.51,6.69,7.12,7.40,6.86,7.28,6.82,7.08,7.52,...
+    6.81,7.55,4.89,5.48,7.74,5.10,8.17,7.67,7.07,5.80,6.10,7.15,7.88,...
+    9.06,6.85,4.88,6.74,8.76,8.53,6.72,7.21,7.42,8.29,8.56,9.25,6.63,...
+    7.49,6.67,6.79,5.19,8.20,7.97,8.64,7.36,6.72,5.90,5.53,6.44,7.35,...
+    5.18,8.25,5.68,6.29,6.69,6.08,7.42,7.10,7.14,7.10,6.60,6.35,5.99,...
+    6.17,9.05,6.01,7.77,6.27,5.81,7.80,9.89,4.39,6.83,6.53,8.15,6.68,...
+    6.87,6.31,6.83];
+
+prompt = "Enter gamma: ";
+gamma = input(prompt)
+
+n = length(x);
+
+mu = sum(x) / n
+s2 = sum((x - mu) .^ 2) / (n - 1)
+
+mu_low = mu - sqrt(s2) * tinv((1 + gamma) / 2, n - 1) / sqrt(n)
+mu_high = mu + sqrt(s2) * tinv((1 + gamma) / 2, n - 1) / sqrt(n)
+
+s2_low = (n - 1) * s2 / chi2inv((1 + gamma) / 2, n - 1)
+s2_high = (n - 1) * s2 / chi2inv((1 - gamma) / 2, n - 1)
+
+n_arr = zeros([1 n]);
+mu_arr = zeros([1 n]);
+mu_low_arr = zeros([1 n]);
+mu_high_arr = zeros([1 n]);
+s2_arr = zeros([1 n]);
+s2_low_arr = zeros([1 n]);
+s2_high_arr = zeros([1 n]);
+mu_narr = zeros([1 n]);
+s2_narr = zeros([1 n]);
+
+for i = 1:n
+    n_arr(i) = i;
+
+    mu_narr(i) = mu;
+    s2_narr(i) = s2;
+
+    mu_arr(i) = sum(x(1:i)) / i;
+    s2_arr(i) = sum((x(1:i) - mu) .^ 2) / (i - 1);
+
+    mu_low_arr(i) = mu_arr(i) - sqrt(s2_arr(i)) * ...
+        tinv((1 + gamma) / 2, i - 1) / sqrt(i);
+    mu_high_arr(i) = mu_arr(i) + sqrt(s2_arr(i)) * ...
+        tinv((1 + gamma) / 2, i - 1) / sqrt(i);
+
+    s2_low_arr(i) = (i - 1) * s2_arr(i) / ...
+        chi2inv((1 + gamma) / 2, i - 1);
+    s2_high_arr(i) = (i - 1) * s2_arr(i) / ...
+        chi2inv((1 - gamma) / 2, i - 1);
+end
+
+plot(n_arr, mu_narr, n_arr, mu_arr, ...
+    n_arr, mu_low_arr, n_arr, mu_high_arr, 'LineWidth', 1.5);
+title('Graphic for $\hat \mu$','interpreter','latex', 'FontSize', 14);
+xlabel('n');
+ylabel('y');
+xlim([1 n]);
+legend('$\hat \mu(\vec x_N)$', '$\hat \mu(\vec x_n)$', ...
+    '$\underline{\mu}(\vec x_n)$', '$\overline{\mu}(\vec x_n)$', ...
+    'Interpreter', 'latex', 'FontSize', 14);
+figure;
+
+plot(n_arr, s2_narr, n_arr, s2_arr, ...
+    n_arr, s2_low_arr, n_arr, s2_high_arr, 'LineWidth', 1.5);
+title('Graphic for $\hat S^2$','interpreter','latex', 'FontSize', 14);
+xlabel('n');
+ylabel('z');
+xlim([1 n]);
+legend('$\hat S^2(\vec x_N)$', '$\hat S^2(\vec x_n)$', ...
+   '$\underline{\sigma}^2(\vec x_n)$', ...
+   '$\overline{\sigma}^2(\vec x_n)$', ...
+   'Interpreter', 'latex', 'FontSize', 14);
+\end{lstlisting}
+
+\section{Результат работы программы}
+
+\subsection{Числовые характеристики}
+Для $\gamma = 0.9$:
+\begin{equation*}
+	\hat\mu(\vec x_n) = 6.9445\\
+\end{equation*}
+\begin{equation*}
+	S^2(\vec x_n) = 1.1720\\
+\end{equation*}
+\begin{equation*}
+	\underline\mu(\vec x_n) = 6.7807\\
+\end{equation*}
+\begin{equation*}
+	\overline\mu(\vec x_n) = 7.1083 \\
+\end{equation*}
+\begin{equation*}
+	\underline{S^2}(\vec x_n) = 0.9588\\
+\end{equation*}
+\begin{equation*}
+	\overline{S^2}(\vec x_n) = 1.4710\\
+\end{equation*}
+
+\newpage
+
+\subsection{Графики}
+
+\begin{figure}[!h]
+ \center{\includegraphics[width=0.7\textwidth]{images/1.png}}
+ \caption{Прямая $y = \hat\mu(\vec x_N)$, а также графики функций  $y(n) = \hat\mu(\vec x_n)$, $y(n) = \underline\mu(\vec x_n)$, $y(n) = \overline\mu(\vec x_n)$ как функций объема $n$ выборки, где $n$ изменяется от 1 до $N$}
+\end{figure}
+
+\begin{figure}[!h]
+ \center{\includegraphics[width=0.7\textwidth]{images/2.png}}
+ \caption{Прямая $z = S^2(\vec x_N)$, а также графики функций $z(n) = S^2(\vec x_n)$, $z(n) = \underline \sigma^2(\vec x_n)$, $z(n) = \overline \sigma^2(\vec x_n)$ как функций объема $n$ выборки, где $n$ изменяется от 1 до $N$}
+\end{figure}
+
+\newpage

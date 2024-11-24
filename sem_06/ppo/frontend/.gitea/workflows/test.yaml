@@ -1,0 +1,31 @@
+name: "Workflow тестирования сервиса"
+on: ["push"]
+
+jobs:
+  Lint:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Clone repository"
+        uses: "actions/checkout@v3.0.2"
+      - name: "List project files"
+        run: |
+          ls ${{ gitea.workspace }}
+      - name: "Run golangci-lint"
+        uses: "docker://golangci/golangci-lint:v1.57.1"
+        with:
+          entrypoint: "golangci-lint"
+          args: "run -v --skip-dirs pkg/api,internal/openapi --timeout 2m"
+
+  Test:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Clone repository"
+        uses: "actions/checkout@v3.0.2"
+      - name: "List project files"
+        run: |
+          ls ${{ gitea.workspace }}
+      - name: "Run tests"
+        uses: "docker://golang:1.22"
+        with:
+          entrypoint: "go"
+          args: "test -cover ./..."

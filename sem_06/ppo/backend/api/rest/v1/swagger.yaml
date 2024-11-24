@@ -1,0 +1,745 @@
+openapi: 3.0.0
+info:
+  title: API for ppo project
+  version: 0.0.1
+
+security:
+  - cookieAuth: [ ]
+
+paths:
+  /login:
+    post:
+      operationId: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: login user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        default:
+          description: login error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /register:
+    post:
+      operationId: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        "201":
+          description: register user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        default:
+          description: register error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /feed:
+    get:
+      operationId: ViewFeed
+      responses:
+        "200":
+          description: view feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewFeedResponse'
+        default:
+          description: view feed error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{login}:
+    get:
+      operationId: ViewProfileUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: view profile user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewProfileUserResponse'
+        default:
+          description: view profile error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      operationId: DeleteUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: delete user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteUserResponse'
+        default:
+          description: delete user error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{login}/posts:
+    get:
+      operationId: ViewProfilePosts
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: view profile posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewProfilePostsResponse'
+        default:
+          description: view profile error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/me:
+    get:
+      operationId: UserInfo
+      responses:
+        "200":
+          description: user info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        default:
+          description: user info error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users:
+    get:
+      operationId: ViewUsers
+      responses:
+        "200":
+          description: view users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewUsersResponse'
+        default:
+          description: view users error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}/subscribtions:
+    post:
+      operationId: Subscribe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: subscribe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribeResponse'
+        default:
+          description: subscribe error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts:
+    post:
+      operationId: Publish
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishRequest'
+      responses:
+        "201":
+          description: publish post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishResponse'
+        default:
+          description: publish post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/reactions:
+    post:
+      operationId: React
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReactRequest'
+      responses:
+        "200":
+          description: react to post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactResponse'
+        default:
+          description: react to post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/comments:
+    post:
+      operationId: Comment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        "201":
+          description: comment post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        default:
+          description: comment post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      operationId: Uncomment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UncommentRequest'
+      responses:
+        "200":
+          description: uncomment post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UncommentResponse'
+        default:
+          description: comment post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: ViewComments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: view post comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewCommentsResponse'
+        default:
+          description: comment post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}:
+    get:
+      operationId: GetPost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: get post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostResponse'
+        default:
+          description: get post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      operationId: DeletePost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: delete post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletePostResponse'
+        default:
+          description: delete post error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts/{id}/perms:
+    put:
+      operationId: ChangePostPerms
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: change post perms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePermsResponse'
+        default:
+          description: change post perms error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: user-token
+
+  schemas:
+    RegisterRequest:
+      type: object
+      title: RegisterRequest
+      required:
+        - login
+        - password
+        - picture
+        - description
+        - mail
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        picture:
+          type: string
+        description:
+          type: string
+        mail:
+          type: string
+
+    LoginRequest:
+      type: object
+      title: LoginRequest
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+
+    GetPostResponse:
+      type: object
+      title: GetPostResponse
+      required:
+        - post
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+
+    ChangePermsResponse:
+      type: object
+      title: ChangePermsResponse
+      required:
+        - changed
+      properties:
+        changed:
+          type: string
+
+    DeletePostResponse:
+      type: object
+      title: DeletePostResponse
+      required:
+        - deleted
+      properties:
+        deleted:
+          type: boolean
+
+    DeleteUserResponse:
+      type: object
+      title: DeleteUserResponse
+      required:
+        - deleted
+      properties:
+        deleted:
+          type: boolean
+
+    PublishRequest:
+      type: object
+      title: PublishRequest
+      required:
+        - content
+      properties:
+        content:
+          type: string
+        perms:
+          type: boolean
+
+    ReactRequest:
+      type: object
+      title: ReactRequest
+      required:
+        - typeID
+      properties:
+        typeID:
+          type: string
+
+    CommentRequest:
+      type: object
+      title: CommentRequest
+      required:
+        - content
+      properties:
+        content:
+          type: string
+
+    UncommentRequest:
+      type: object
+      title: UncommentRequest
+      required:
+        - commID
+      properties:
+        commID:
+          type: string
+
+    UncommentResponse:
+      type: object
+      title: UncommentResponse
+      required:
+        - uncommented
+      properties:
+        uncommented:
+          type: boolean
+
+    UserInfoResponse:
+      type: object
+      title: UserInfoResponse
+      required:
+        - user
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+
+    AuthResponse:
+      type: object
+      title: AuthResponse
+      required:
+        - token
+      properties:
+        token:
+          type: string
+
+    User:
+      type: object
+      title: User
+      required:
+        - id
+        - login
+        - picture
+        - description
+        - balance
+        - mail
+        - isAdmin
+      properties:
+        id:
+          type: string
+        login:
+          type: string
+        picture:
+          type: string
+        description:
+          type: string
+        balance:
+          type: integer
+        mail:
+          type: string
+        isAdmin:
+          type: boolean
+
+    Reaction:
+      type: object
+      title: Reaction
+      required:
+        - icon
+        - num
+        - typeID
+        - yours
+      properties:
+        icon:
+          type: string
+        num:
+          type: integer
+        typeID:
+          type: string
+        yours:
+          type: boolean
+
+    Post:
+      type: object
+      title: Post
+      required:
+        - id
+        - content
+        - pubTime
+        - author
+        - reactions
+        - commentsNum
+        - perms
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        pubTime:
+          type: string
+        author:
+          $ref: '#/components/schemas/User'
+        commentsNum:
+          type: integer
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reaction'
+        perms:
+          type: boolean
+
+    Comment:
+      type: object
+      title: Comment
+      required:
+        - id
+        - content
+        - pubTime
+        - commentator
+        - postID
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        pubTime:
+          type: string
+        commentator:
+          $ref: '#/components/schemas/User'
+        postID:
+          type: string
+
+    ViewFeedResponse:
+      type: object
+      title: ViewFeedResponse
+      required:
+        - subPosts
+        - noSubPosts
+      properties:
+        subPosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+        noSubPosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+
+    ViewUsersResponse:
+      type: object
+      title: ViewUsersResponse
+      required:
+        - users
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    ViewProfileUserResponse:
+      type: object
+      title: ViewProfileUserResponse
+      required:
+        - user
+        - subscribed
+        - self
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        subscribed:
+          type: boolean
+        self:
+          type: boolean
+
+    ViewProfilePostsResponse:
+      type: object
+      title: ViewProfilePostsResponse
+      required:
+        - posts
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+
+    SubscribeResponse:
+      type: object
+      title: SubscribeResponse
+      required:
+        - subscribed
+      properties:
+        subscribed:
+          type: boolean
+
+    PublishResponse:
+      type: object
+      title: PublishResponse
+      required:
+        - post
+        - published
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+        published:
+          type: boolean
+
+    ReactResponse:
+      type: object
+      title: ReactResponse
+      required:
+        - reacted
+      properties:
+        reacted:
+          type: boolean
+
+    CommentResponse:
+      type: object
+      title: CommentResponse
+      required:
+        - comment
+      properties:
+        comment:
+          $ref: '#/components/schemas/Comment'
+
+    ViewCommentsResponse:
+      type: object
+      title: ViewCommentsResponse
+      required:
+        - comments
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    ErrorResponse:
+      type: object
+      title: ErrorResponse
+      required:
+        - message
+        - systemMessage
+      properties:
+        message:
+          type: string
+          example: "Cannot login."
+        systemMessage:
+          type: string
