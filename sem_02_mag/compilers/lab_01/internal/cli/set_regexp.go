@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_01/internal/fa"
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_01/internal/regexp"
@@ -12,7 +13,7 @@ var Mode string
 
 func init() {
 	rootCmd.AddCommand(setRegexpCmd)
-	processSeqCmd.Flags().StringVarP(&Mode, "mode", "m", "", "Logs mode")
+	setRegexpCmd.Flags().StringVarP(&Mode, "mode", "m", "", "Logs mode")
 }
 
 var setRegexpCmd = &cobra.Command{
@@ -29,8 +30,10 @@ var setRegexpCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		in := cmd.Flags().Arg(0)
 		regexp := &regexp.Regexp{
-			Initial: in + "#",
+			Initial: "(" + in + ")" + "#",
 		}
+
+		slog.Info("start building DFA by regexp", slog.String("regexp", in))
 
 		err := fa.BuildFaByRegexp(regexp, Mode)
 		if err != nil {

@@ -35,3 +35,22 @@ func (s *State) String() string {
 	slices.Sort(s.State)
 	return fmt.Sprintf("%v", s.State)
 }
+
+func Union(s1 []*State, s2 []*State) []*State {
+	u := make([]*State, 0, len(s1)+len(s2))
+	u = append(u, s1...)
+
+	m := make(map[string]*State, len(s1)+len(s2))
+	for _, s := range s1 {
+		m[s.String()] = s
+	}
+
+	for _, s := range s2 {
+		if _, ok := m[s.String()]; !ok {
+			u = append(u, s)
+			m[s.String()] = s
+		}
+	}
+
+	return u
+}

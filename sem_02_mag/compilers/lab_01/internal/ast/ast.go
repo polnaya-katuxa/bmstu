@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_01/internal/common"
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_01/internal/regexp"
@@ -20,6 +21,8 @@ type AST struct {
 }
 
 func NewAST(regexp *regexp.Regexp) (*AST, error) {
+	slog.Info("start tokenize")
+
 	tokens, err := regexp.Tokenize()
 	if err != nil {
 		return nil, fmt.Errorf("tokenize: %w", err)
@@ -27,13 +30,20 @@ func NewAST(regexp *regexp.Regexp) (*AST, error) {
 
 	symbols := getSymbolsList(tokens)
 
+	slog.Info("start building AST by tokens")
+
 	parser := newParser(tokens)
 	root, err := parser.parseAlternation()
 	if err != nil {
 		return nil, fmt.Errorf("parse: %w", err)
 	}
+
+	slog.Info("counting follow pos")
+
 	parser.countFollowPos(root)
 	symbolsMap := parser.GetLeavesMap()
+
+	slog.Info("built AST")
 
 	return &AST{
 		root:       root,

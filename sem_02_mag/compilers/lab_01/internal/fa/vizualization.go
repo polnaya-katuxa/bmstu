@@ -183,3 +183,41 @@ func (d *NFA) Show(filename string) error {
 	cmd = exec.Command("open", png)
 	return cmd.Run()
 }
+
+const (
+	stateC   = "\033[105m"
+	borderC  = "\033[45m"
+	commentC = "\033[43m"
+	endC     = "\033[0m"
+)
+
+type way struct {
+	steps []*step
+}
+
+type step struct {
+	symbol string
+	dst    string
+	border bool
+}
+
+func (w *way) Show() {
+	fmt.Println(commentC, "PASSED WAY", endC)
+	for i, s := range w.steps {
+		switch i {
+		case 0:
+			fmt.Print(borderC, s.dst, endC)
+		case len(w.steps) - 1:
+			fmt.Printf(" ——[%s]——> ", s.symbol)
+			if s.border {
+				fmt.Print(borderC, s.dst, endC)
+			} else {
+				fmt.Print(stateC, s.dst, endC)
+			}
+		default:
+			fmt.Printf(" ——[%s]——> ", s.symbol)
+			fmt.Print(stateC, s.dst, endC)
+		}
+	}
+	fmt.Println()
+}

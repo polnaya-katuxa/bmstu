@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_01/internal/common"
 	"k8s.io/utils/set"
@@ -68,6 +69,8 @@ func (p *parser) parseAlternation() (Node, error) {
 	}
 
 	for p.current.Type == common.Pipe {
+		slog.Info("found alternation")
+
 		p.next()
 		right, err := p.parseConcatenation()
 		if err != nil {
@@ -92,6 +95,8 @@ func (p *parser) parseConcatenation() (Node, error) {
 	for {
 		switch p.current.Type {
 		case common.Symbol, common.LParen:
+			slog.Info("found concatenation")
+
 			right, err := p.parseQuantifier()
 			if err != nil {
 				return nil, fmt.Errorf("invalid right term: %w", err)
@@ -116,6 +121,8 @@ func (p *parser) parseQuantifier() (Node, error) {
 	for {
 		switch p.current.Type {
 		case common.KleeneStar:
+			slog.Info("found kleene star")
+
 			p.next()
 			node = &KleeneStar{
 				Child: node,
@@ -129,6 +136,8 @@ func (p *parser) parseQuantifier() (Node, error) {
 func (p *parser) parseSymbolOrGroup() (Node, error) {
 	switch p.current.Type {
 	case common.Symbol:
+		slog.Info("found symbol", slog.String("symbol", string(p.current.Value)))
+
 		sym := &Symbol{
 			Index: p.index,
 			Value: p.current.Value,
@@ -138,6 +147,8 @@ func (p *parser) parseSymbolOrGroup() (Node, error) {
 		p.next()
 		return sym, nil
 	case common.LParen:
+		slog.Info("found left parenthese")
+
 		p.next()
 		node, err := p.parseAlternation()
 		if err != nil {
@@ -147,6 +158,9 @@ func (p *parser) parseSymbolOrGroup() (Node, error) {
 		if p.current.Type != common.RParen {
 			return nil, fmt.Errorf("invalid token: %w", common.ErrUnclosedParen)
 		}
+
+		slog.Info("found right parenthese")
+
 		p.next()
 		return node, nil
 	default:

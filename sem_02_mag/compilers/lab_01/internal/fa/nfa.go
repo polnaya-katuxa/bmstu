@@ -1,6 +1,8 @@
 package fa
 
 import (
+	"fmt"
+	"log/slog"
 	"slices"
 
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_01/internal/ast"
@@ -9,25 +11,6 @@ import (
 type NFA struct {
 	States []*State
 	Tran   map[string]map[rune][]*State
-}
-
-func Union(s1 []*State, s2 []*State) []*State {
-	u := make([]*State, 0, len(s1)+len(s2))
-	u = append(u, s1...)
-
-	m := make(map[string]*State, len(s1)+len(s2))
-	for _, s := range s1 {
-		m[s.String()] = s
-	}
-
-	for _, s := range s2 {
-		if _, ok := m[s.String()]; !ok {
-			u = append(u, s)
-			m[s.String()] = s
-		}
-	}
-
-	return u
 }
 
 func (n *NFA) GetStartState() *State {
@@ -88,6 +71,8 @@ func NewNFA(d *DFA) *NFA {
 		Tran:   make(map[string]map[rune][]*State, len(d.Tran)),
 	}
 
+	slog.Info("start reversing DFA")
+
 	for _, s := range d.States {
 		last := false
 		start := false
@@ -107,6 +92,8 @@ func NewNFA(d *DFA) *NFA {
 
 		nfa.States = append(nfa.States, state)
 	}
+
+	slog.Info("got NFA states", slog.Int("count", len(nfa.States)))
 
 	for stateStart, tran := range d.Tran {
 		var state *State
@@ -137,6 +124,8 @@ func NewNFA(d *DFA) *NFA {
 		}
 	}
 
+	slog.Info("got NFA transitions", slog.Int("count", len(nfa.Tran)))
+
 	// fmt.Println("REV")
 	// for i := range nfa.States {
 	// 	fmt.Printf("%#v\n", nfa.States[i])
@@ -158,6 +147,19 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 		Tran:   make(map[string]map[rune]*State, len(n.Tran)),
 	}
 
+	fmt.Println("NFA")
+	for i := range n.States {
+		fmt.Printf("%#v\n", n.States[i])
+	}
+	fmt.Println()
+	for k, v := range n.Tran {
+		for k1, v1 := range v {
+			fmt.Printf("%s %c %#v\n", k, k1, v1)
+		}
+	}
+
+	slog.Info("start determine NFA")
+
 	s0EpcClosure := n.EpsClosure([]*State{n.GetStartState()})
 	first := &State{
 		State:  s0EpcClosure,
@@ -167,6 +169,8 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 	}
 	dfa.States = append(dfa.States, first)
 
+	slog.Info("got first state (indexes of NFA states)", slog.String("state", first.String()))
+
 	nStates := n.GetByIndexes(first)
 	for _, s := range nStates {
 		if s.Last {
@@ -174,6 +178,8 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 			break
 		}
 	}
+
+	slog.Info("starting unmarked states cycle")
 
 	for {
 		var s *State
@@ -188,6 +194,8 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 			break
 		}
 
+		slog.Info("found unmarked", slog.String("unmarked", s.String()))
+
 		slices.Sort(s.State)
 		s.Marked = true
 		for _, a := range symbolsList {
@@ -195,6 +203,8 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 			if len(u) == 0 {
 				continue
 			}
+
+			slog.Info("calculated union eps-closure", slog.String("ec", fmt.Sprintf("%v", u)))
 
 			contains := false
 			for _, v := range dfa.States {
@@ -221,6 +231,7 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 			}
 
 			if !contains {
+				slog.Info("adding new state", slog.String("state", uState.String()))
 				dfa.States = append(dfa.States, uState)
 			}
 
@@ -231,6 +242,8 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 				tr[a] = uState
 			}
 			dfa.Tran[s.String()] = tr
+
+			slog.Info("adding new tran", slog.String("from", s.String()), slog.String("by", string(a)), slog.String("to", uState.String()))
 		}
 	}
 
