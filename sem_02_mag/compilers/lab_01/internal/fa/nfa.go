@@ -13,14 +13,15 @@ type NFA struct {
 	Tran   map[string]map[rune][]*State
 }
 
-func (n *NFA) GetStartState() *State {
+func (n *NFA) GetStartStates() []*State {
+	states := make([]*State, 0, len(n.States))
 	for _, s := range n.States {
 		if s.Start {
-			return s
+			states = append(states, s)
 		}
 	}
 
-	return nil
+	return states
 }
 
 func (n *NFA) GetByIndexes(s *State) []*State {
@@ -147,20 +148,20 @@ func (n *NFA) Determine(ast *ast.AST) *DFA {
 		Tran:   make(map[string]map[rune]*State, len(n.Tran)),
 	}
 
-	fmt.Println("NFA")
-	for i := range n.States {
-		fmt.Printf("%#v\n", n.States[i])
-	}
-	fmt.Println()
-	for k, v := range n.Tran {
-		for k1, v1 := range v {
-			fmt.Printf("%s %c %#v\n", k, k1, v1)
-		}
-	}
+	// fmt.Println("NFA")
+	// for i := range n.States {
+	// 	fmt.Printf("%#v\n", n.States[i])
+	// }
+	// fmt.Println()
+	// for k, v := range n.Tran {
+	// 	for k1, v1 := range v {
+	// 		fmt.Printf("%s %c %#v\n", k, k1, v1)
+	// 	}
+	// }
 
 	slog.Info("start determine NFA")
 
-	s0EpcClosure := n.EpsClosure([]*State{n.GetStartState()})
+	s0EpcClosure := n.EpsClosure(n.GetStartStates())
 	first := &State{
 		State:  s0EpcClosure,
 		Marked: false,

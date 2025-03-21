@@ -78,7 +78,7 @@ func (r *Regexp) Tokenize() ([]common.Token, error) {
 			tokens = append(tokens, common.Token{common.Pipe, cur})
 		case cur == '#':
 			tokens = append(tokens, common.Token{common.Symbol, cur})
-		case unicode.IsLetter(cur):
+		case unicode.IsLetter(cur) || unicode.IsDigit(cur):
 			tokens = append(tokens, common.Token{common.Symbol, cur})
 		default:
 			return nil, fmt.Errorf("invalid sequence: %s", string(cur))
