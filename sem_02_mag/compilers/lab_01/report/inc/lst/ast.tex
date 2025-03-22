@@ -1,0 +1,197 @@
+type AST struct {
+	root       Node
+	symbols    []rune
+	symbolsMap map[int]*Symbol
+}
+
+func NewAST(regexp *regexp.Regexp) (*AST, error) {
+	slog.Info("start tokenize")
+
+	tokens, err := regexp.Tokenize()
+	if err != nil {
+		return nil, fmt.Errorf("tokenize: %w", err)
+	}
+
+	symbols := getSymbolsList(tokens)
+
+	slog.Info("start building AST by tokens")
+
+	parser := newParser(tokens)
+	root, err := parser.parseAlternation()
+	if err != nil {
+		return nil, fmt.Errorf("parse: %w", err)
+	}
+
+	slog.Info("counting follow pos")
+
+	parser.countFollowPos(root)
+	symbolsMap := parser.GetLeavesMap()
+
+	slog.Info("built AST")
+
+	return &AST{
+		root:       root,
+		symbols:    symbols,
+		symbolsMap: symbolsMap,
+	}, nil
+}
+
+type parser struct {
+	index     int
+	leavesMap map[int]*Symbol
+	tokens    []common.Token
+	pos       int
+	current   common.Token
+}
+
+func newParser(tokens []common.Token) *parser {
+	return &parser{
+		index:     0,
+		leavesMap: make(map[int]*Symbol, len(tokens)),
+		tokens:    tokens,
+		pos:       0,
+		current:   tokens[0],
+	}
+}
+
+func (p *parser) GetLeavesMap() map[int]*Symbol {
+	return p.leavesMap
+}
+
+func (p *parser) next() {
+	p.pos++
+	if p.pos < len(p.tokens) {
+		p.current = p.tokens[p.pos]
+	} else {
+		p.current = common.Token{common.EOF, 0}
+	}
+}
+
+func (p *parser) countFollowPos(root Node) {
+	switch node := root.(type) {
+	case *Concatenation:
+		for _, v := range node.Left.GetLastPos() {
+			leaf := p.leavesMap[v]
+			leaf.FollowPos = set.New(leaf.FollowPos...).Union(set.New(node.Right.GetFirstPos()...)).SortedList()
+		}
+		p.countFollowPos(node.Left)
+		p.countFollowPos(node.Right)
+	case *KleeneStar:
+		for _, v := range node.GetLastPos() {
+			leaf := p.leavesMap[v]
+			leaf.FollowPos = set.New(leaf.FollowPos...).Union(set.New(node.GetFirstPos()...)).SortedList()
+		}
+		p.countFollowPos(node.Child)
+	case *Alternation:
+		p.countFollowPos(node.Left)
+		p.countFollowPos(node.Right)
+	default:
+		return
+	}
+}
+
+func (p *parser) parseAlternation() (Node, error) {
+	node, err := p.parseConcatenation()
+	if err != nil {
+		return nil, fmt.Errorf("invalid concat: %w", err)
+	}
+
+	for p.current.Type == common.Pipe {
+		slog.Info("found alternation")
+
+		p.next()
+		right, err := p.parseConcatenation()
+		if err != nil {
+			return nil, fmt.Errorf("invalid right concat: %w", err)
+		}
+
+		node = &Alternation{
+			Left:  node,
+			Right: right,
+		}
+	}
+
+	return node, nil
+}
+
+func (p *parser) parseConcatenation() (Node, error) {
+	node, err := p.parseQuantifier()
+	if err != nil {
+		return nil, fmt.Errorf("invalid term: %w", err)
+	}
+
+	for {
+		switch p.current.Type {
+		case common.Symbol, common.LParen:
+			slog.Info("found concatenation")
+
+			right, err := p.parseQuantifier()
+			if err != nil {
+				return nil, fmt.Errorf("invalid right term: %w", err)
+			}
+
+			node = &Concatenation{
+				Left:  node,
+				Right: right,
+			}
+		default:
+			return node, nil
+		}
+	}
+}
+
+func (p *parser) parseQuantifier() (Node, error) {
+	node, err := p.parseSymbolOrGroup()
+	if err != nil {
+		return nil, fmt.Errorf("invalid factor: %w", err)
+	}
+
+	for {
+		switch p.current.Type {
+		case common.KleeneStar:
+			slog.Info("found kleene star")
+
+			p.next()
+			node = &KleeneStar{
+				Child: node,
+			}
+		default:
+			return node, nil
+		}
+	}
+}
+
+func (p *parser) parseSymbolOrGroup() (Node, error) {
+	switch p.current.Type {
+	case common.Symbol:
+		slog.Info("found symbol", slog.String("symbol", string(p.current.Value)))
+
+		sym := &Symbol{
+			Index: p.index,
+			Value: p.current.Value,
+		}
+		p.leavesMap[p.index] = sym
+		p.index++
+		p.next()
+		return sym, nil
+	case common.LParen:
+		slog.Info("found left parenthese")
+
+		p.next()
+		node, err := p.parseAlternation()
+		if err != nil {
+			return nil, fmt.Errorf("invalid alt: %w", err)
+		}
+
+		if p.current.Type != common.RParen {
+			return nil, fmt.Errorf("invalid token: %w", common.ErrUnclosedParen)
+		}
+
+		slog.Info("found right parenthese")
+
+		p.next()
+		return node, nil
+	default:
+		return nil, fmt.Errorf("invalid token: %s", string(p.current.Value))
+	}
+}

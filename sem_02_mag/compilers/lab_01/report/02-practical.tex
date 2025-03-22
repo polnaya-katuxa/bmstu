@@ -1,0 +1,49 @@
+\chapter{Практическая часть}
+
+\section{Листинг}
+
+\includelistingpretty{ast}{go}{Исходный код построения AST}
+
+\includelistingpretty{dfa}{go}{Исходный построения ДКА}
+
+\includelistingpretty{minimize}{go}{Исходный минимизации ДКА}
+
+\includelistingpretty{model}{go}{Исходный код моделирования ДКА}
+
+%\newpage
+%
+%\section{Результаты работы программы для задачи минимизации}
+%
+%\includelistingpretty{min}{matlab}{Результат работы программы}
+%
+%\newpage
+%
+%\section{Результаты работы программы для задачи максимизации}
+%
+%\includelistingpretty{max}{matlab}{Результат работы программы}
+
+\newpage
+
+\section{Результаты выполнения программы}
+
+\begin{table}[h!]
+\caption{Результаты выполнения программы}
+\label{tab:results}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Регулярное выражение} & \textbf{Входная строка} & \textbf{Результат} \\ \hline
+\multirow{4}{*}{a}            & пустая строка           & FAIL               \\ \cline{2-3} 
+                              & a                       & OK                 \\ \cline{2-3} 
+                              & aa                      & FAIL               \\ \cline{2-3} 
+                              & b                       & FAIL               \\ \hline
+\multirow{4}{*}{ab(ab|b*)*}   & пустая строка           & FAIL               \\ \cline{2-3} 
+                              & abbb                    & OK                 \\ \cline{2-3} 
+                              & ab                      & OK                 \\ \cline{2-3} 
+                              & bbb                     & FAIL               \\ \hline
+\multirow{5}{*}{a*|(bb*|c*a)} & b                       & OK                 \\ \cline{2-3} 
+                              & a                       & OK                 \\ \cline{2-3} 
+                              & ccccca                  & OK                 \\ \cline{2-3} 
+                              & cccab                   & FAIL               \\ \cline{2-3} 
+                              & пустая строка           & OK                 \\ \hline
+\end{tabular}
+\end{table}

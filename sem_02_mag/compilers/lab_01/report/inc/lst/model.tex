@@ -1,0 +1,58 @@
+func (d *DFA) Model(in string) bool {
+	fmt.Println(commentC, "START MODELING FOR", in, endC)
+
+	curState := d.GetStart()
+
+	way := &way{
+		steps: []*step{
+			{
+				symbol: "",
+				dst:    curState.String(),
+				border: true,
+			},
+		},
+	}
+
+	for _, s := range in {
+		slog.Info("current state", slog.String("state", curState.String()))
+
+		tr, ok := d.Tran[curState.String()]
+		if !ok {
+			slog.Error("can't find transition starting with such state", slog.Any("valid options", maps.Keys(d.Tran)))
+			way.Show()
+			return false
+		}
+
+		slog.Info("found transition with such start state", slog.String("from", curState.String()))
+
+		next, ok := tr[s]
+		if !ok {
+			slog.Error("can't find transition by such symbol", slog.String("symbol", string(s)),
+				slog.Any("valid options", maps.Keys(tr)))
+			way.Show()
+			return false
+		}
+
+		slog.Info("found transition by such symbol", slog.String("from", curState.String()),
+			slog.String("by", string(s)), slog.String("to", next.String()))
+
+		way.steps = append(way.steps, &step{
+			symbol: string(s),
+			dst:    next.String(),
+		})
+
+		curState = next
+	}
+
+	if !curState.Last {
+		slog.Error("end state isn't last", slog.String("state", curState.String()),
+			slog.String("last", d.GetLast().String()))
+		way.Show()
+		return false
+	}
+
+	way.steps[len(way.steps)-1].border = true
+	way.Show()
+
+	return true
+}

@@ -1,0 +1,197 @@
+\chapter{Контрольные вопросы}
+
+\section{Какие из следующих множеств регулярны? Для тех, которые регулярны, напишите регулярные выражения}
+
+\begin{enumerate}
+	\item Множество цепочек с равным числом нулей и единиц
+	
+	Не является регулярным.
+	
+	\item Множество цепочек из {0, 1}* с четным числом нулей и нечетным числом единиц
+	
+	((0(00)*1)(1(00)*1)*1(00)*01|(0(00)*1)(1(00)*1)*0|0(00)*01|1)
+(((10)(00)*1|0)(1(00)*1)*1(00)*01|((10)(00)*1|0)(1(00)*1)*0|(10)(00)*01|11)*
+
+	\item Множество цепочек из {0, 1}*, длины которых делятся на 3
+	
+	((0|1)(0|1)(0|1))*
+	
+	\item Множество цепочек из {0, 1}*, не содержащих подцепочки 101
+	
+	0*(1|00|000)*0*
+\end{enumerate}
+
+\section{Найдите праволинейные грамматики для тех множеств из вопроса 1, которые регулярны}
+
+\begin{enumerate}
+	\item[2.] Множество цепочек из {0, 1}* с четным числом нулей и нечетным числом единиц
+	
+	S -> 1C|0A 
+	
+	A -> 0S|1B
+	
+	B -> 1A|0C
+	
+	C -> 1S|0B|$\epsilon$
+	
+	\item[3.] Множество цепочек из {0, 1}*, длины которых делятся на 3
+	
+	S -> 0A|1A|$\epsilon$
+	
+	A -> 0B|1B
+	
+	B -> 0S|1S
+	
+	\item[4.] Множество цепочек из {0, 1}*, не содержащих подцепочки 101
+	
+	S -> 0S|$\epsilon$A
+	
+	A -> 1A|00A|000A|$\epsilon$B
+	
+	B -> 0B|$\epsilon$
+	
+\end{enumerate}
+
+\section{Найдите детерминированные и недетерминированные конечные автоматы для тех множеств из вопроса 1, которые регулярны}
+
+\begin{enumerate}
+	\item[2.] Множество цепочек из {0, 1}* с четным числом нулей и нечетным числом единиц
+	
+	\begin{enumerate}
+		\item НКА
+		
+		\includeimage
+    	{nfa_2}
+    	{f}
+    	{h!}
+    	{0.9\textwidth}
+    	{НКА}
+		
+		\item ДКА
+		
+		\includeimage
+    	{dfa_2}
+    	{f}
+    	{h!}
+    	{0.9\textwidth}
+    	{ДКА}
+		
+	\end{enumerate}
+	
+	\item[3.] Множество цепочек из {0, 1}*, длины которых делятся на 3
+	
+	\begin{enumerate}
+		\item НКА
+		
+		\includeimage
+    	{nfa_3}
+    	{f}
+    	{h!}
+    	{0.9\textwidth}
+    	{НКА}
+		
+		\item ДКА
+		
+		\includeimage
+    	{dfa_3}
+    	{f}
+    	{h!}
+    	{0.9\textwidth}
+    	{ДКА}
+		
+	\end{enumerate}
+	
+	\item[4.] Множество цепочек из {0, 1}*, не содержащих подцепочки 101
+	
+	\begin{enumerate}
+		\item НКА
+		
+		\includeimage
+    	{nfa_4}
+    	{f}
+    	{h!}
+    	{0.9\textwidth}
+    	{НКА}
+		
+		\item ДКА
+		
+		\includeimage
+    	{dfa_4}
+    	{f}
+    	{h!}
+    	{0.9\textwidth}
+    	{ДКА}
+		
+	\end{enumerate}
+	
+\end{enumerate}
+
+\section{Найдите конечный автомат с минимальным числом состояний для языка, определяемого автоматом M = (\{A, B, C, D, E\}, \{0, 1\}, d, A, \{E, F\}), где функция задается таблицей}
+
+\newpage
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[h!]
+\caption{}
+\label{tab:my-table}
+\begin{tabular}{|l|ll|}
+\hline
+\multirow{2}{*}{\textbf{Состояние}} & \multicolumn{2}{l|}{\textbf{Вход}}           \\ \cline{2-3} 
+                                    & \multicolumn{1}{l|}{\textbf{0}} & \textbf{1} \\ \hline
+A                                   & \multicolumn{1}{l|}{B}          & C          \\ \hline
+B                                   & \multicolumn{1}{l|}{E}          & F          \\ \hline
+C                                   & \multicolumn{1}{l|}{A}          & A          \\ \hline
+D                                   & \multicolumn{1}{l|}{F}          & E          \\ \hline
+E                                   & \multicolumn{1}{l|}{D}          & F          \\ \hline
+F                                   & \multicolumn{1}{l|}{D}          & E          \\ \hline
+\end{tabular}
+\end{table}
+
+Исходный конечный автомат:
+
+\includeimage
+    {last_dfa}
+    {f}
+    {h!}
+    {0.9\textwidth}
+    {Конечный автомат}
+
+Классы 0-эквивалентности:
+
+\begin{equation*}
+\{A, B, C, D\}, \{E, F\}.
+\end{equation*}
+
+Классы 1-эквивалентности:
+
+\begin{equation*}
+\{A, C\}, \{B, D\}, \{E, F\}.
+\end{equation*}
+
+Классы 2-эквивалентности:
+
+\begin{equation*}
+\{A\}, \{C\}, \{B, D\}, \{E, F\}.
+\end{equation*}
+
+Классы 3-эквивалентности:
+
+\begin{equation*}
+\{A\}, \{C\}, \{B, D\}, \{E, F\}.
+\end{equation*}
+
+Классы 3-эквивалентности и 2-эквивалентности совпадают. Таким образом, в минимизированном конечном автомате будет 4 состояния:
+
+\begin{equation*}
+\{A\}, \{C\}, \{B, D\}, \{E, F\}.
+\end{equation*}
+
+Таким образом, минимизированный конечный автомат:
+
+\includeimage
+    {last_minimized}
+    {f}
+    {h!}
+    {0.7\textwidth}
+    {Минимизированный конечный автомат}
