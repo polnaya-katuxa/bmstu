@@ -1,0 +1,11 @@
+2
+S A
+4
+a b c d
+5
+S -> Aa
+S -> b
+A -> Ac
+A -> Sd
+A -> ε
+S

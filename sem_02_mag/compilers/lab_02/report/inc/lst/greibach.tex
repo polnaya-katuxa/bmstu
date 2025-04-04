@@ -1,0 +1,65 @@
+func sortRules(g *grammar.Grammar) {
+	slices.SortFunc(g.Rules, func(rule1 grammar.Rule, rule2 grammar.Rule) int {
+		for _, c := range rule2.Combinations {
+			if rule1.NonTerminal == c[0] {
+				return 1
+			}
+		}
+
+		for _, c := range rule1.Combinations {
+			if rule2.NonTerminal == c[0] {
+				return -1
+			}
+		}
+
+		return 0
+	})
+}
+
+func Greibach(g *grammar.Grammar) *grammar.Grammar {
+	sortRules(g)
+
+	for i := len(g.Rules) - 1; i >= 0; i-- {
+		for j := i + 1; j < len(g.Rules); j++ {
+			newCombinations := make([][]string, 0, len(g.Rules[i].Combinations))
+			for _, iCombination := range g.Rules[i].Combinations {
+				if iCombination[0] != g.Rules[j].NonTerminal {
+					newCombinations = append(newCombinations, iCombination)
+				} else {
+					for _, jCombination := range g.Rules[j].Combinations {
+						newCombinations = append(newCombinations, append(slices.Clone(jCombination), iCombination[1:]...))
+					}
+				}
+			}
+
+			g.Rules[i].Combinations = newCombinations
+		}
+	}
+
+	rules := make([]grammar.Rule, 0, len(g.Rules))
+	for i, r := range g.Rules {
+		for j, c := range r.Combinations {
+			for k := len(c) - 1; k > 0; k-- {
+				if !slices.Contains(g.Terminals, c[k]) {
+					continue
+				}
+
+				oldTerminal := c[k]
+				newNonTerminal := oldTerminal + "'"
+				g.Rules[i].Combinations[j][k] = newNonTerminal
+
+				if !slices.Contains(g.NonTerminals, newNonTerminal) {
+					g.NonTerminals = append(g.NonTerminals, newNonTerminal)
+					rules = append(rules, grammar.Rule{
+						NonTerminal:  newNonTerminal,
+						Combinations: [][]string{{oldTerminal}},
+					})
+				}
+			}
+		}
+	}
+
+	g.Rules = append(g.Rules, rules...)
+
+	return g
+}

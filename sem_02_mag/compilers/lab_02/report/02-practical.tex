@@ -1,0 +1,47 @@
+\chapter{Практическая часть}
+
+\section{Листинг}
+
+\includelistingpretty{model}{go}{Исходный код модели для грамматики}
+
+\includelistingpretty{recursion}{go}{Исходный код алгоритма устранения левой рекурсии}
+
+\includelistingpretty{greibach}{go}{Исходный код алгоритма приведения к форме Грейбах}
+
+%\newpage
+%
+%\section{Результаты работы программы для задачи минимизации}
+%
+%\includelistingpretty{min}{matlab}{Результат работы программы}
+%
+%\newpage
+%
+%\section{Результаты работы программы для задачи максимизации}
+%
+%\includelistingpretty{max}{matlab}{Результат работы программы}
+
+\newpage
+
+\section{Результаты выполнения программы}
+
+\begin{table}[h!]
+    \caption{Результаты выполнения программы для устранения левой рекурсии}
+    \label{tab:results1}
+    \begin{tabular}{|ll|}
+    \hline
+    \multicolumn{1}{|c|}{Входная грамматика}                                                                                                                                                                                                                                                                                         & \multicolumn{1}{c|}{Результат}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \\ \hline
+    \multicolumn{2}{|c|}{Устранение левой рекурсии}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\ \hline
+    \multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}2\\ S A\\ 4\\ a b c d\\ 5\\ S -\textgreater Aa\\ S -\textgreater b\\ A -\textgreater Ac\\ A -\textgreater Sd\\ A -\textgreater $\epsilon$\\ S\end{tabular}}                                                                                                                               & \begin{tabular}[c]{@{}l@{}}3\\ S A A' \\ 4\\ a b c d \\ 10\\ S -\textgreater Aa\\ S -\textgreater b\\ A -\textgreater bd\\ A -\textgreater bdA'\\ A -\textgreater $\epsilon$\\ A -\textgreater $\epsilon$A'\\ A' -\textgreater c\\ A' -\textgreater cA'\\ A' -\textgreater ad\\ A' -\textgreater adA'\\ S\end{tabular}                                                                                                                                                                                                                                  \\ \hline
+    \multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}3\\ E T F\\ 5\\ + * ( ) a\\ 6\\ E -\textgreater E+T\\ E -\textgreater T\\ T -\textgreater T*F\\ T -\textgreater F\\ F -\textgreater (E)\\ F -\textgreater a\\ E\end{tabular}}                                                                                                    & \begin{tabular}[c]{@{}l@{}}5\\ E T F E' T'\\ 5\\ + * ( ) a\\ 10\\ E -\textgreater T\\ E -\textgreater TE'\\ T -\textgreater F\\ T -\textgreater FT'\\ F -\textgreater (E)\\ F -\textgreater a\\ E' -\textgreater +T\\ E' -\textgreater +TE'\\ T' -\textgreater *F\\ T' -\textgreater *FT'\\ E\end{tabular}                                                                                                                                                                                                                            \\ \hline
+    \end{tabular}
+    \end{table}
+
+\begin{table}[h!]
+    \caption{Результаты выполнения программы для приведения к форме Грейбах}
+    \label{tab:results2}
+    \begin{tabular}{|ll|}
+    \hline
+    \multicolumn{2}{|c|}{Приведение к форме Грейбах}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \\ \hline
+    \multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}5\\ E T F E' T'\\ 5\\ + * ( ) a\\ 10\\ E -\textgreater T\\ E -\textgreater TE'\\ T -\textgreater F\\ T -\textgreater FT'\\ F -\textgreater (E)\\ F -\textgreater a\\ E' -\textgreater +T\\ E' -\textgreater +TE'\\ T' -\textgreater *F\\ T' -\textgreater *FT'\\ E\end{tabular}} & \begin{tabular}[c]{@{}l@{}}6\\ E T F E' T' )'\\ 5\\ + * ( ) a\\ 19\\ E -\textgreater (E)'\\ E -\textgreater a\\ E -\textgreater (E)'T'\\ E -\textgreater aT'\\ E -\textgreater (E)'E'\\ E -\textgreater aE'\\ E -\textgreater (E)'T'E'\\ E -\textgreater aT'E'\\ T -\textgreater (E)'\\ T -\textgreater a\\ T -\textgreater (E)'T'\\ T -\textgreater aT'\\ F -\textgreater (E)'\\ F -\textgreater a\\ E' -\textgreater +T\\ E' -\textgreater +TE'\\ T' -\textgreater *F\\ T' -\textgreater *FT'\\ )' -\textgreater )\\ E\end{tabular} \\ \hline
+    \end{tabular}
+    \end{table}
