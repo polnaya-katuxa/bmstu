@@ -1,0 +1,224 @@
+package ast
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/lab_03/internal/token"
+)
+
+type Node interface {
+	draw(file *os.File) error
+	Pass() []string
+}
+
+func New(tokens []token.Token) (Node, error) {
+	p := newParser(tokens)
+	expression, err := p.parseExpression()
+	if err != nil {
+		return nil, fmt.Errorf("parse expression: %w", err)
+	}
+
+	return expression, nil
+}
+
+func DepthPass(root Node) []string {
+	return root.Pass()
+}
+
+type Expression struct {
+	Left              *ArithmeticalExpression
+	RelationOperation *RelationOperation
+	Right             *ArithmeticalExpression
+	Postfix           []string
+}
+
+func (e *Expression) Pass() []string {
+	if e == nil {
+		return nil
+	}
+
+	postfix := e.Left.Pass()
+	postfix = append(postfix, e.Right.Pass()...)
+	postfix = append(postfix, e.RelationOperation.Pass()...)
+
+	e.Postfix = postfix
+
+	return postfix
+}
+
+type ArithmeticalExpression struct {
+	Term                   *Term
+	ArithmeticalExpression *ArithmeticalExpressionX
+	Postfix                []string
+}
+
+func (e *ArithmeticalExpression) Pass() []string {
+	if e == nil {
+		return nil
+	}
+
+	postfix := e.Term.Pass()
+	postfix = append(postfix, e.ArithmeticalExpression.Pass()...)
+
+	e.Postfix = postfix
+
+	return postfix
+}
+
+type Term struct {
+	Factor  *Factor
+	Term    *TermX
+	Postfix []string
+}
+
+func (t *Term) Pass() []string {
+	if t == nil {
+		return nil
+	}
+
+	postfix := t.Factor.Pass()
+	postfix = append(postfix, t.Term.Pass()...)
+
+	t.Postfix = postfix
+
+	return postfix
+}
+
+type Factor struct {
+	Identifier             *Identifier
+	Constant               *Constant
+	ArithmeticalExpression *ArithmeticalExpression
+	Postfix                []string
+}
+
+func (f *Factor) Pass() []string {
+	if f == nil {
+		return nil
+	}
+
+	postfix := f.Identifier.Pass()
+	postfix = append(postfix, f.Constant.Pass()...)
+	postfix = append(postfix, f.ArithmeticalExpression.Pass()...)
+
+	f.Postfix = postfix
+
+	return postfix
+}
+
+type RelationOperation struct {
+	Value   string
+	Postfix []string
+}
+
+func (r *RelationOperation) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	r.Postfix = []string{r.Value}
+
+	return r.Postfix
+}
+
+type SumOperation struct {
+	Value   string
+	Postfix []string
+}
+
+func (r *SumOperation) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	r.Postfix = []string{r.Value}
+
+	return r.Postfix
+}
+
+type MulOperation struct {
+	Value   string
+	Postfix []string
+}
+
+func (r *MulOperation) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	r.Postfix = []string{r.Value}
+
+	return r.Postfix
+}
+
+type ArithmeticalExpressionX struct {
+	SumOperation           *SumOperation
+	Term                   *Term
+	ArithmeticalExpression *ArithmeticalExpressionX
+	Postfix                []string
+}
+
+func (r *ArithmeticalExpressionX) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	postfix := r.Term.Pass()
+	postfix = append(postfix, r.ArithmeticalExpression.Pass()...)
+	postfix = append(postfix, r.SumOperation.Pass()...)
+
+	r.Postfix = postfix
+
+	return postfix
+}
+
+type TermX struct {
+	MulOperation *MulOperation
+	Factor       *Factor
+	Term         *TermX
+	Postfix      []string
+}
+
+func (r *TermX) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	postfix := r.Factor.Pass()
+	postfix = append(postfix, r.MulOperation.Pass()...)
+	postfix = append(postfix, r.Term.Pass()...)
+
+	r.Postfix = postfix
+
+	return postfix
+}
+
+type Identifier struct {
+	Value   string
+	Postfix []string
+}
+
+func (r *Identifier) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	r.Postfix = []string{r.Value}
+
+	return r.Postfix
+}
+
+type Constant struct {
+	Value   string
+	Postfix []string
+}
+
+func (r *Constant) Pass() []string {
+	if r == nil {
+		return nil
+	}
+
+	r.Postfix = []string{r.Value}
+
+	return r.Postfix
+}
