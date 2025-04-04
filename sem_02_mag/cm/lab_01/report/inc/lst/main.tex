@@ -1,0 +1,67 @@
+# Лабораторная работа 1. Вариант 7.
+
+function main()
+  clc;
+
+  debug = true;
+
+  a = 1;
+  b = 2;
+  eps = 0.001;
+
+  draw_plot(a, b, eps);
+
+  [x_min, f_min, n] = find_min(debug, a, b, eps);
+  fprintf('\n\033[36mТочка минимума (x*, f(x*)) = (%f, %f), количество вычислений функции: %d.\033[0m\n', x_min, f_min, n);
+end
+
+function [x_min, f_min, n] = find_min(debug, a, b, eps)
+  x0 = a;
+  f0 = f(x0);
+  delta = (b - a)/4;
+
+  if debug
+    fprintf('(x0, f(x0)) = (%f, %f).\n', x0, f0);
+  endif
+
+  i = 1;
+
+  while true
+    x1 = x0 + delta;
+    f1 = f(x1);
+    i = i + 1;
+
+    if debug
+      fprintf('(x%d, f(x%d)) = (%f, %f).\n', i-1, i-1, x1, f1);
+    endif
+
+    if f0 > f1
+      if a <= x1 <= b
+        x0 = x1;
+        f0 = f1;
+        continue;
+      endif
+    endif
+
+    if abs(delta) < eps
+      x_min = x0;
+      f_min = f0;
+      n = i;
+      return;
+    endif
+
+    delta = -delta / 4;
+    x0 = x1;
+    f0 = f1;
+  endwhile
+end
+
+function draw_plot(a, b, step)
+  x=a:step:b;
+  y=f(x);
+  plot(x,y);
+end
+
+function y = f(x)
+  y = atan(x .^ 3 - 5 * x + 1) + ((x .^ 2) / (3 * x - 2)) .^ sqrt(3);
+end
