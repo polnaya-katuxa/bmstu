@@ -1,0 +1,30 @@
+11
+P B L O E A R S T M F
+23
+b e g i n e d i c ; = ( ) < <= == <> > >= + - * /
+24
+P -> B
+B -> beginLend
+L -> O
+L -> L;O
+O -> i=E
+E -> ARA
+E -> A
+A -> AST
+A -> T
+T -> TMF
+T -> F
+F -> i
+F -> c
+F -> (A)
+R -> <
+R -> <=
+R -> ==
+R -> <>
+R -> >
+R -> >=
+S -> +
+S -> -
+M -> *
+M -> /
+P

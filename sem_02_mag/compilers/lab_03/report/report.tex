@@ -1,0 +1,27 @@
+\documentclass{bmstu}
+
+\newcommand{\specialcell}[2][c]{%
+	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\newcommand{\img}[3] {
+	\begin{figure}[H]
+		\center{\includegraphics[width=#1]{inc/img/#2}}
+		\caption{#3}
+		\label{img:#2}
+	\end{figure}
+	}
+	
+\renewcommand\labelitemi{---}
+\renewcommand\labelitemii{---}
+
+\usepackage{multirow}
+
+\begin{document}
+
+\makereporttitle{Информатика и системы управления}{Программное обеспечение ЭВМ и информационные технологии}{лабораторной работе №3}{Конструирование компиляторов}{Синтаксический разбор с использованием метода рекурсивного спуска}{7}{Е.~О.~Карпова/ИУ7-22М}{А.~А.~Ступников}
+
+\include{01-theoretical}
+\include{02-practical}
+% \include{03-questions}
+
+\end{document}
