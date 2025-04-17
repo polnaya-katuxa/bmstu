@@ -3,24 +3,32 @@
 function main()
   clc;
 
-  debug = true;
+  debug = false;
 
   a = 1;
   b = 2;
-  eps = 1e-6;
+  eps = 1e-2;
 
-  draw_plot(a, b, eps);
-
-  [x_min, f_min, n] = find_min(debug, a, b, eps);
+  [x_min, f_min, n, xs, fs, as, bs] = find_min(debug, a, b, eps);
+  draw_plot(a, b, eps, x_min, f_min, xs, fs, as, bs);
   fprintf('\n\033[36mТочка минимума (x*, f(x*)) = (%f, %f), количество вычислений функции: %d.\033[0m\n', x_min, f_min, n);
 end
 
-function [x_min, f_min, n] = find_min(debug, a, b, eps)
+function [x_min, f_min, n, xs, fs, as, bs] = find_min(debug, a, b, eps)
   tau = (sqrt(5) - 1) / 2;
   l = b - a;
 
   x1 = b - tau*l;
   f1 = f(x1);
+
+  as = [];
+  bs = [];
+  as(end + 1) = a;
+  bs(end + 1) = b;
+  xs = [];
+  fs = [];
+  xs(end + 1) = x1;
+  fs(end + 1) = f1;
 
   if debug
     fprintf('(x0, f(x0)) = (%f, %f).\n', x1, f1);
@@ -28,6 +36,8 @@ function [x_min, f_min, n] = find_min(debug, a, b, eps)
 
   x2 = a + tau*l;
   f2 = f(x2);
+  xs(end + 1) = x2;
+  fs(end + 1) = f2;
 
   if debug
     fprintf('(x1, f(x1)) = (%f, %f).\n', x2, f2);
@@ -54,6 +64,11 @@ function [x_min, f_min, n] = find_min(debug, a, b, eps)
       f1 = f(x1);
       i = i + 1;
 
+      xs(end + 1) = x1;
+      fs(end + 1) = f1;
+      as(end + 1) = a;
+      bs(end + 1) = b;
+
       if debug
         fprintf('(x%d, f(x%d)) = (%f, %f).\n', i-1, i-1, x1, f1);
       endif
@@ -68,6 +83,11 @@ function [x_min, f_min, n] = find_min(debug, a, b, eps)
       f2 = f(x2);
       i = i + 1;
 
+      xs(end + 1) = x2;
+      fs(end + 1) = f2;
+      as(end + 1) = a;
+      bs(end + 1) = b;
+
       if debug
         fprintf('(x%d, f(x%d)) = (%f, %f).\n', i-1, i-1, x2, f2);
       endif
@@ -75,10 +95,39 @@ function [x_min, f_min, n] = find_min(debug, a, b, eps)
   endwhile
 end
 
-function draw_plot(a, b, step)
-  x=a:step:b;
-  y=f(x);
+function draw_plot(a, b, step, x_min, f_min, xs, fs, as, bs)
+  fprintf('as %d, xs %d\n', length(as), length(xs));
+
+  x = a:step:b;
+  y = zeros(size(x));
+  for i = 1:length(x)
+      y(i) = f(x(i));
+  end
   plot(x,y);
+  hold on;
+
+  scatter(xs(1), fs(1), 8, 'r', 'filled');
+  line([as(1), bs(1)], [f(as(1)), f(bs(1))], 'DisplayName', sprintf('шаг %d', 1), 'Color', 'r');
+  pause(2);
+
+  for i = 2:length(xs)
+      scatter(xs(i-1), fs(i-1), 8, 'b', 'filled');
+      scatter(xs(i), fs(i), 8, 'r', 'filled');
+      pause(1);
+
+      if i < length(as)
+        line([bs(i-1), as(i)], [f(bs(i-1)), f(as(i))], 'DisplayName', sprintf('шаг %d', i), 'Color', 'r');
+        pause(1);
+        line([as(i), bs(i)], [f(as(i)), f(bs(i))], 'DisplayName', sprintf('шаг %d', i), 'Color', 'r');
+      endif
+
+      pause(2);
+  end
+
+  scatter(x_min, f_min, 10, 'g', 'filled');
+  text(x_min, f_min, sprintf('\n\n\n\n(%.3f, %.3f)', x_min, f_min), 'FontSize', 12);
+
+  hold off;
 end
 
 function y = f(x)

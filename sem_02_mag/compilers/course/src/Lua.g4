@@ -1,0 +1,249 @@
+grammar Lua;
+
+chunk
+    : block EOF
+    ;
+
+block
+    : stat* retstat?
+    ;
+
+stat
+    : ';'                                                                           # StatEmptySemicolon
+    | varlist '=' explist                                                           # StatAssignment
+    | functioncall                                                                  # StatFunctionCall
+    | 'do' block 'end'                                                              # StatDo
+    | 'while' exp 'do' block 'end'                                                  # StatWhile
+    | 'repeat' block 'until' exp                                                    # StatRepeat
+    | 'if' exp 'then' block ('elseif' exp 'then' block)* ('else' block)? 'end'      # StatIfThenElse
+    | 'for' NAME '=' exp ',' exp (',' exp)? 'do' block 'end'                        # StatNumericFor
+    | 'for' namelist 'in' explist 'do' block 'end'                                  # StatGenericFor
+    | 'function' funcname funcbody                                                  # StatFunction
+    | 'local' 'function' NAME funcbody                                              # StatLocalFunction
+    | 'local' attnamelist ('=' explist)?                                            # StatLocalAttributeNameList
+    ;
+
+attnamelist
+    : NAME attrib (',' NAME attrib)*
+    ;
+
+attrib
+    : ('<' NAME '>')?
+    ;
+
+retstat
+    : 'return' explist? ';'?                                                        # StatReturn
+    ;
+
+funcname
+    : NAME ('.' NAME)* (':' NAME)?
+    ;
+
+varlist
+    : var (',' var)*
+    ;
+
+namelist
+    : NAME (',' NAME)*
+    ;
+
+explist
+    : exp (',' exp)*
+    ;
+
+exp
+    : 'nil'                                                                         # ExpNil
+    | 'false'                                                                       # ExpFalse
+    | 'true'                                                                        # ExpTrue
+    | number                                                                        # ExpNumber
+    | string                                                                        # ExpString
+    | '...'                                                                         # ExpVararg
+    | functiondef                                                                   # ExpFunctionDef
+    | prefixexp                                                                     # ExpPrefixExp
+    | tableconstructor                                                              # ExpTableConstructor
+    | <assoc=right> exp operatorPower exp                                           # ExpOperatorPower
+    | operatorUnary exp                                                             # ExpOperatorUnary
+    | exp operatorMulDivMod exp                                                     # ExpOperatorMulDivMod
+    | exp operatorAddSub exp                                                        # ExpOperatorAddSub
+    | <assoc=right> exp operatorStrcat exp                                          # ExpOperatorStrcat
+    | exp operatorComparison exp                                                    # ExpOperatorComparison
+    | exp operatorAnd exp                                                           # ExpOperatorAnd
+    | exp operatorOr exp                                                            # ExpOperatorOr
+    ;
+
+prefixexp
+    : varOrExp nameAndArgs*
+    ;
+
+functioncall
+    : varOrExp nameAndArgs+
+    ;
+
+varOrExp
+    : var | '(' exp ')'
+    ;
+
+var
+    : (NAME | '(' exp ')' varSuffix) varSuffix*
+    ;
+
+varSuffix
+    : nameAndArgs* ('[' exp ']' | '.' NAME)
+    ;
+
+nameAndArgs
+    : (':' NAME)? args
+    ;
+
+args
+    : '(' explist? ')' | tableconstructor | string
+    ;
+
+functiondef
+    : 'function' funcbody
+    ;
+
+funcbody
+    : '(' parlist? ')' block 'end'
+    ;
+
+parlist
+    : namelist (',' '...')? | '...'
+    ;
+
+tableconstructor
+    : '{' fieldlist? '}'
+    ;
+
+fieldlist
+    : field (fieldsep field)* fieldsep?
+    ;
+
+field
+    : '[' exp ']' '=' exp | NAME '=' exp | exp
+    ;
+
+fieldsep
+    : ',' | ';'
+    ;
+
+operatorOr
+	: 'or';
+
+operatorAnd
+	: 'and';
+
+operatorComparison
+	: '<' | '>' | '<=' | '>=' | '~=' | '==';
+
+operatorStrcat
+	: '..';
+
+operatorAddSub
+	: '+' | '-';
+
+operatorMulDivMod
+	: '*' | '/' | '%' | '//';
+
+operatorUnary
+    : 'not' | '#' | '-';
+
+operatorPower
+    : '^';
+
+number
+    : INT | FLOAT
+    ;
+
+string
+    : NORMALSTRING
+    ;
+
+// LEXER
+
+NAME
+    : [a-zA-Z_][a-zA-Z_0-9]*
+    ;
+
+NORMALSTRING
+    : '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+    ;
+
+fragment
+NESTED_STR
+    : '=' NESTED_STR '='
+    | '[' .*? ']'
+    ;
+
+INT
+    : Digit+
+    ;
+
+FLOAT
+    : Digit+ '.' Digit* ExponentPart?
+    | '.' Digit+ ExponentPart?
+    | Digit+ ExponentPart
+    ;
+
+fragment
+ExponentPart
+    : [eE] [+-]? Digit+
+    ;
+
+fragment
+EscapeSequence
+    : '\\' [abfnrtvz"'\\]
+    | '\\' '\r'? '\n'
+    | DecimalEscape
+    | HexEscape
+    | UtfEscape
+    ;
+
+fragment
+DecimalEscape
+    : '\\' Digit
+    | '\\' Digit Digit
+    | '\\' [0-2] Digit Digit
+    ;
+
+fragment
+HexEscape
+    : '\\' 'x' HexDigit HexDigit
+    ;
+
+fragment
+UtfEscape
+    : '\\' 'u{' HexDigit+ '}'
+    ;
+
+fragment
+Digit
+    : [0-9]
+    ;
+
+fragment
+HexDigit
+    : [0-9a-fA-F]
+    ;
+
+COMMENT
+    : '--[' NESTED_STR ']' -> channel(HIDDEN)
+    ;
+
+LINE_COMMENT
+    : '--'
+    (                                               // --
+    | '[' '='*                                      // --[==
+    | '[' '='* ~('='|'['|'\r'|'\n') ~('\r'|'\n')*   // --[==AA
+    | ~('['|'\r'|'\n') ~('\r'|'\n')*                // --AAA
+    ) ('\r\n'|'\r'|'\n'|EOF)
+    -> channel(HIDDEN)
+    ;
+
+WS
+    : [ \t\u000C\r\n]+ -> skip
+    ;
+
+SHEBANG
+    : '#' '!' ~('\n'|'\r')* -> channel(HIDDEN)
+    ;
