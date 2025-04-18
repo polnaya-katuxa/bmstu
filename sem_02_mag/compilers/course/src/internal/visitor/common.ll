@@ -23,6 +23,27 @@ declare double @pow(double, double)
   i8*      ; указатель на данные
 }
 
+define void @copy(%Generic* %src, %Generic* %dst) {
+entry:
+  ; Копируем первое поле (i32 - тип данных)
+  ; Получаем указатель на src.type = gep %src, 0, 0
+  %src.type.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 0
+  %type = load i32, i32* %src.type.ptr
+  ; Записываем в dst.type
+  %dst.type.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 0
+  store i32 %type, i32* %dst.type.ptr
+
+  ; Копируем второе поле (i8* - данные)
+  ; Получаем указатель на src.data = gep %src, 0, 1
+  %src.data.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 1
+  %data = load i8*, i8** %src.data.ptr
+  ; Записываем в dst.data
+  %dst.data.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 1
+  store i8* %data, i8** %dst.data.ptr
+
+  ret void
+}
+
 define %Generic* @create_nil() {
   ret %Generic* null
 }
@@ -1529,6 +1550,39 @@ print_false:
 
 unknown:
   ret void
+}
+
+define i1 @check(%Generic* %obj) {
+entry:
+  %is_null = icmp eq %Generic* %obj, null
+  br i1 %is_null, label %error, label %check_value
+
+check_value:
+  %type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
+  %type = load i32, i32* %type_ptr
+  
+  %data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
+  %data_ptr = load i8*, i8** %data_ptr_ptr
+  
+  switch i32 %type, label %error [
+    i32 3, label %check_bool
+  ]
+
+check_bool:
+  %bool_ptr = bitcast i8* %data_ptr to i8*
+  %bool_val = load i8, i8* %bool_ptr
+
+  %is_true = icmp eq i32 %bool_val, 1
+  br i1 %is_true, label %ret_true, label %ret_false
+
+ret_true:
+  ret i1 true
+
+ret_false:
+  ret i1 false
+
+error:
+  ret i1 false
 }
 
 define %Generic* @concat(%Generic* %a, %Generic* %b) {

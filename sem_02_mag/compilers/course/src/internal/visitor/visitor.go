@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"log"
+	"maps"
 	"slices"
 	"strings"
 
@@ -16,6 +17,8 @@ import (
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/course/src/internal/parser"
 )
 
+const mainFunc = "main"
+
 type Visitor struct {
 	*parser.BaseLuaVisitor
 
@@ -26,7 +29,8 @@ type Visitor struct {
 
 	IR *ir.Module
 
-	entries []*ir.Block
+	entries   []*ir.Block
+	functions []*ir.Func
 
 	falseConst value.Value
 	trueConst  value.Value
@@ -37,6 +41,8 @@ type Visitor struct {
 	funcs map[string]*ir.Func
 
 	variables []map[string]value.Value
+
+	endBlocks []*ir.Block
 }
 
 func (v *Visitor) currentEntry() *ir.Block {
@@ -66,7 +72,7 @@ func New() *Visitor {
 		funcs[f.Name()] = f
 	}
 
-	fmt.Printf("%#v\n", funcs)
+	// fmt.Printf("%#v\n", funcs)
 
 	return &Visitor{
 		BaseLuaVisitor:  &parser.BaseLuaVisitor{},
@@ -85,15 +91,11 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 }
 
 func (v *Visitor) VisitChunk(ctx *parser.ChunkContext) interface{} {
-	main := v.IR.NewFunc("main", types.I64)
-	entry := main.NewBlock("entry")
+	main := v.IR.NewFunc(mainFunc, types.I64)
 
-	v.entries = append(v.entries, entry)
-	v.variables = append(v.variables, make(map[string]value.Value))
+	v.functions = append(v.functions, main)
 
 	v.VisitBlock(ctx.Block().(*parser.BlockContext))
-
-	entry.NewRet(v.nilConst)
 
 	return nil
 }
@@ -101,7 +103,16 @@ func (v *Visitor) VisitChunk(ctx *parser.ChunkContext) interface{} {
 func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
 	fmt.Println("block")
 
+	v.variables = append(v.variables, make(map[string]value.Value))
 	v.visionScope = append(v.visionScope, len(v.declaredVarList))
+	if len(v.variables) > 1 {
+		v.variables[len(v.variables)-1] = maps.Clone(v.variables[len(v.variables)-2])
+	}
+
+	curFunc := v.functions[len(v.functions)-1]
+	block := curFunc.NewBlock("")
+
+	v.entries = append(v.entries, block)
 
 	for _, statUntyped := range ctx.AllStat() {
 		switch stat := statUntyped.(type) {
@@ -132,17 +143,29 @@ func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
 		}
 	}
 
-	fmt.Println("declaredVarList", v.declaredVarList)
-	fmt.Println("visionScope", v.visionScope)
+	// fmt.Println("declaredVarList", v.declaredVarList)
+	// fmt.Println("visionScope", v.visionScope)
 
 	v.declaredVarList = v.declaredVarList[:v.visionScope[len(v.visionScope)-1]]
 	v.visionScope = v.visionScope[:len(v.visionScope)-1]
 
-	return nil
+	// fmt.Println("len", len(v.entries), curFunc.Name())
+
+	endBlock := v.entries[len(v.entries)-1]
+
+	v.entries = v.entries[:len(v.entries)-1]
+
+	if curFunc.Name() == mainFunc && len(v.entries) == 0 {
+		endBlock.NewRet(v.nilConst)
+	} else if len(v.endBlocks) > 0 {
+		endBlock.NewBr(v.endBlocks[len(v.endBlocks)-1])
+	}
+
+	return block
 }
 
 func (v *Visitor) VisitStatAssignment(ctx *parser.StatAssignmentContext) interface{} {
-	fmt.Println("assignment")
+	// fmt.Println("assignment")
 
 	varlist := v.VisitVarlist(ctx.Varlist().(*parser.VarlistContext)).([]variableLeft)
 	explist := v.VisitExplist(ctx.Explist().(*parser.ExplistContext)).([]expression)
@@ -157,17 +180,21 @@ func (v *Visitor) VisitStatAssignment(ctx *parser.StatAssignmentContext) interfa
 			continue
 		}
 
-		v.variables[len(v.variables)-1][varlist[i].name] = explist[i].value
+		if v.variables[len(v.variables)-1][varlist[i].name] == nil {
+			v.variables[len(v.variables)-1][varlist[i].name] = explist[i].value
+		} else {
+			v.currentEntry().NewCall(v.funcs["copy"], explist[i].value, v.variables[len(v.variables)-1][varlist[i].name])
+		}
 	}
 
-	fmt.Println(varlist)
-	fmt.Println(explist)
+	// fmt.Println(varlist)
+	// fmt.Println(explist)
 
 	return nil
 }
 
 func (v *Visitor) VisitNumber(ctx *parser.NumberContext) interface{} {
-	fmt.Println("number")
+	// fmt.Println("number")
 
 	num := ctx.FLOAT()
 	if num == nil {
@@ -220,24 +247,164 @@ func (v *Visitor) VisitStatFunctionCall(ctx *parser.StatFunctionCallContext) int
 }
 
 func (v *Visitor) VisitStatDo(ctx *parser.StatDoContext) interface{} {
-	return v.VisitChildren(ctx)
+	block := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+
+	v.currentEntry().NewBr(block)
+
+	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+	block.NewBr(endBlock)
+
+	v.entries[len(v.entries)-1] = endBlock
+
+	return endBlock
 }
 
 func (v *Visitor) VisitStatWhile(ctx *parser.StatWhileContext) interface{} {
-	return v.VisitChildren(ctx)
+	whileCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	v.currentEntry().NewBr(whileCheckBlock)
+
+	v.entries = append(v.entries, whileCheckBlock)
+	whileExpression := v.currentEntry().NewCall(v.funcs["check"], v.VisitExp(ctx.Exp()).(value.Value))
+	v.entries = v.entries[:len(v.entries)-1]
+
+	whileBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+	whileBodyBlock.NewBr(whileCheckBlock)
+
+	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	whileCheckBlock.NewCondBr(whileExpression, whileBodyBlock, endBlock)
+
+	v.entries[len(v.entries)-1] = endBlock
+
+	return endBlock
 }
 
 func (v *Visitor) VisitStatRepeat(ctx *parser.StatRepeatContext) interface{} {
-	return v.VisitChildren(ctx)
+	repeatBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+	v.currentEntry().NewBr(repeatBodyBlock)
+
+	repeatCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
+	repeatBodyBlock.NewBr(repeatCheckBlock)
+
+	v.entries = append(v.entries, repeatCheckBlock)
+	repeatExpression := v.currentEntry().NewCall(v.funcs["check"], v.VisitExp(ctx.Exp()).(value.Value))
+	v.entries = v.entries[:len(v.entries)-1]
+
+	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	repeatCheckBlock.NewCondBr(repeatExpression, repeatBodyBlock, endBlock)
+
+	v.entries[len(v.entries)-1] = endBlock
+
+	return endBlock
 }
 
 func (v *Visitor) VisitStatIfThenElse(ctx *parser.StatIfThenElseContext) interface{} {
 	fmt.Println("if")
-	return v.VisitChildren(ctx)
+
+	expressions := make([]value.Value, len(ctx.AllExp()))
+	for i, expCtx := range ctx.AllExp() {
+		expressions[i] = v.currentEntry().NewCall(v.funcs["check"], v.VisitExp(expCtx).(value.Value))
+	}
+
+	expBlocks := make([]*ir.Block, len(ctx.AllBlock()))
+	expBlocks[0] = v.currentEntry()
+	for i := 1; i < len(ctx.AllBlock()); i++ {
+		expBlocks[i] = v.functions[len(v.functions)-1].NewBlock("")
+	}
+
+	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+	v.endBlocks = append(v.endBlocks, endBlock)
+
+	blocks := make([]*ir.Block, len(ctx.AllBlock()))
+	for i, blockCtx := range ctx.AllBlock() {
+		blocks[i] = v.VisitBlock(blockCtx.(*parser.BlockContext)).(*ir.Block)
+	}
+
+	v.endBlocks = v.endBlocks[:len(v.endBlocks)-1]
+
+	for i := range expressions {
+		if i == len(expBlocks)-1 {
+			expBlocks[i].NewCondBr(expressions[i], blocks[i], endBlock)
+		} else {
+			expBlocks[i].NewCondBr(expressions[i], blocks[i], expBlocks[i+1])
+		}
+	}
+
+	if len(blocks) > len(expressions) {
+		expBlocks[len(expBlocks)-1].NewBr(blocks[len(expBlocks)-1])
+	}
+
+	v.entries[len(v.entries)-1] = endBlock
+
+	return endBlock
 }
 
 func (v *Visitor) VisitStatNumericFor(ctx *parser.StatNumericForContext) interface{} {
-	return v.VisitChildren(ctx)
+	fmt.Println("for")
+
+	zeroConst := constant.NewInt(types.I64, 0)
+	zeroPtr := constant.NewIntToPtr(
+		zeroConst,
+		types.I8Ptr,
+	)
+	genZero := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 0), zeroPtr)
+
+	expressions := make([]value.Value, len(ctx.AllExp()))
+	for i, expCtx := range ctx.AllExp() {
+		expressions[i] = v.VisitExp(expCtx).(value.Value)
+	}
+
+	if len(expressions) == 2 {
+		numConst := constant.NewInt(types.I64, 1)
+		numPtr := constant.NewIntToPtr(
+			numConst,
+			types.I8Ptr,
+		)
+		genInt := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 0), numPtr)
+
+		expressions = append(expressions, genInt)
+	}
+
+	name := ctx.NAME()
+	v.variables[len(v.variables)-1][name.GetText()] = expressions[0]
+	v.declaredVarList = append(v.declaredVarList, name.GetText())
+
+	forCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
+	v.currentEntry().NewBr(forCheckBlock)
+
+	forBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	v.entries = append(v.entries, forCheckBlock)
+	forCheckExpr := v.currentEntry().NewCall(v.funcs["check"], v.currentEntry().NewCall(v.funcs["lt"], expressions[2], genZero))
+	v.entries = v.entries[:len(v.entries)-1]
+
+	forCheckBlockGt := v.functions[len(v.functions)-1].NewBlock("")
+	v.entries = append(v.entries, forCheckBlockGt)
+	forGtExpression := v.currentEntry().NewCall(v.funcs["check"], v.currentEntry().NewCall(v.funcs["lt"], expressions[0], expressions[1]))
+	forCheckBlockGt.NewCondBr(forGtExpression, forBodyBlock, endBlock)
+	v.entries = v.entries[:len(v.entries)-1]
+
+	forCheckBlockLt := v.functions[len(v.functions)-1].NewBlock("")
+	v.entries = append(v.entries, forCheckBlockLt)
+	forLtExpression := v.currentEntry().NewCall(v.funcs["check"], v.currentEntry().NewCall(v.funcs["gt"], expressions[0], expressions[1]))
+	forCheckBlockLt.NewCondBr(forLtExpression, forBodyBlock, endBlock)
+	v.entries = v.entries[:len(v.entries)-1]
+
+	forCheckBlock.NewCondBr(forCheckExpr, forCheckBlockLt, forCheckBlockGt)
+
+	v.entries = append(v.entries, forBodyBlock)
+	forMoveExpr := v.currentEntry().NewCall(v.funcs["add"], expressions[0], expressions[2])
+	v.currentEntry().NewCall(v.funcs["copy"], forMoveExpr, expressions[0])
+	v.entries = v.entries[:len(v.entries)-1]
+
+	forBodyBlock.NewBr(forCheckBlock)
+
+	v.entries[len(v.entries)-1] = endBlock
+
+	return endBlock
 }
 
 func (v *Visitor) VisitStatGenericFor(ctx *parser.StatGenericForContext) interface{} {
@@ -273,7 +440,7 @@ func (v *Visitor) VisitFuncname(ctx *parser.FuncnameContext) interface{} {
 }
 
 func (v *Visitor) VisitVarlist(ctx *parser.VarlistContext) interface{} {
-	fmt.Println("varlist")
+	// fmt.Println("varlist")
 
 	variables := make([]variableLeft, 0, len(ctx.AllVar_()))
 
@@ -331,7 +498,7 @@ func (v *Visitor) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 				key:  index.(value.Value),
 			})
 		} else {
-			fmt.Println("new", variable.NAME())
+			// fmt.Println("new", variable.NAME())
 			v.declaredVarList = append(v.declaredVarList, name)
 			variables = append(variables, variableLeft{
 				name: name,
@@ -343,7 +510,7 @@ func (v *Visitor) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 }
 
 func (v *Visitor) VisitNamelist(ctx *parser.NamelistContext) interface{} {
-	fmt.Println("namelist")
+	// fmt.Println("namelist")
 
 	variables := make([]variableLeft, 0, len(ctx.AllNAME()))
 	for _, n := range ctx.AllNAME() {
@@ -360,7 +527,7 @@ func (v *Visitor) VisitNamelist(ctx *parser.NamelistContext) interface{} {
 }
 
 func (v *Visitor) VisitExplist(ctx *parser.ExplistContext) interface{} {
-	fmt.Println("explist")
+	// fmt.Println("explist")
 
 	expressions := make([]expression, 0, len(ctx.AllExp()))
 	for _, exp := range ctx.AllExp() {
@@ -369,7 +536,7 @@ func (v *Visitor) VisitExplist(ctx *parser.ExplistContext) interface{} {
 			continue
 		}
 
-		fmt.Printf("%T %#v\n", exp, exp)
+		// fmt.Printf("%T %#v\n", exp, exp)
 
 		expressions = append(expressions, expression{
 			value: index.(value.Value),
@@ -414,7 +581,7 @@ func (v *Visitor) VisitExpTrue(ctx *parser.ExpTrueContext) interface{} {
 }
 
 func (v *Visitor) VisitExpNumber(ctx *parser.ExpNumberContext) interface{} {
-	fmt.Println("exp number")
+	// fmt.Println("exp number")
 
 	return v.VisitNumber(ctx.Number().(*parser.NumberContext))
 }
@@ -435,7 +602,7 @@ func (v *Visitor) VisitExpOperatorUnary(ctx *parser.ExpOperatorUnaryContext) int
 }
 
 func (v *Visitor) VisitExpOperatorAnd(ctx *parser.ExpOperatorAndContext) interface{} {
-	fmt.Printf("AND %#v\n", ctx)
+	// fmt.Printf("AND %#v\n", ctx)
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
@@ -446,7 +613,7 @@ func (v *Visitor) VisitExpOperatorAnd(ctx *parser.ExpOperatorAndContext) interfa
 }
 
 func (v *Visitor) VisitExpOperatorPower(ctx *parser.ExpOperatorPowerContext) interface{} {
-	fmt.Printf("MULDIVMOD %#v\n", ctx)
+	// fmt.Printf("MULDIVMOD %#v\n", ctx)
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
@@ -457,10 +624,11 @@ func (v *Visitor) VisitExpOperatorPower(ctx *parser.ExpOperatorPowerContext) int
 }
 
 func (v *Visitor) VisitExpOperatorAddSub(ctx *parser.ExpOperatorAddSubContext) interface{} {
-	fmt.Printf("ADDSUB %#v\n", ctx)
+	// fmt.Printf("ADDSUB %#v\n", ctx)
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
+		// fmt.Println(e.GetText())
 		values[i] = v.Visit(e).(value.Value)
 	}
 
@@ -476,7 +644,7 @@ func (v *Visitor) VisitExpOperatorAddSub(ctx *parser.ExpOperatorAddSubContext) i
 }
 
 func (v *Visitor) VisitExpOperatorStrcat(ctx *parser.ExpOperatorStrcatContext) interface{} {
-	fmt.Println("strcat")
+	// fmt.Println("strcat")
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
@@ -492,7 +660,7 @@ func (v *Visitor) VisitExpOperatorStrcat(ctx *parser.ExpOperatorStrcatContext) i
 }
 
 func (v *Visitor) VisitExpOperatorComparison(ctx *parser.ExpOperatorComparisonContext) interface{} {
-	fmt.Printf("CMP %#v\n", ctx)
+	// fmt.Printf("CMP %#v\n", ctx)
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
@@ -517,8 +685,6 @@ func (v *Visitor) VisitExpOperatorComparison(ctx *parser.ExpOperatorComparisonCo
 		v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid cmp operation"))
 		return nil
 	}
-
-	return nil
 }
 
 func (v *Visitor) VisitExpNil(ctx *parser.ExpNilContext) interface{} {
@@ -526,7 +692,7 @@ func (v *Visitor) VisitExpNil(ctx *parser.ExpNilContext) interface{} {
 }
 
 func (v *Visitor) VisitExpOperatorOr(ctx *parser.ExpOperatorOrContext) interface{} {
-	fmt.Printf("AND %#v\n", ctx)
+	// fmt.Printf("AND %#v\n", ctx)
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
@@ -537,7 +703,7 @@ func (v *Visitor) VisitExpOperatorOr(ctx *parser.ExpOperatorOrContext) interface
 }
 
 func (v *Visitor) VisitExpString(ctx *parser.ExpStringContext) interface{} {
-	fmt.Println("string")
+	// fmt.Println("string")
 
 	s := strings.Trim(ctx.GetText(), "\"")
 
@@ -562,7 +728,7 @@ func (v *Visitor) VisitExpString(ctx *parser.ExpStringContext) interface{} {
 }
 
 func (v *Visitor) VisitExpOperatorMulDivMod(ctx *parser.ExpOperatorMulDivModContext) interface{} {
-	fmt.Printf("MULDIVMOD %#v\n", ctx)
+	// fmt.Printf("MULDIVMOD %#v\n", ctx)
 	expressions := ctx.AllExp()
 	values := make([]value.Value, len(expressions))
 	for i, e := range expressions {
@@ -645,7 +811,7 @@ func (v *Visitor) VisitExp(ctx parser.IExpContext) interface{} {
 func (v *Visitor) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 	if ctx.Exp() != nil {
 		exp := v.VisitExp(ctx.Exp())
-		fmt.Println("!!!", exp)
+		// fmt.Println("!!!", exp)
 		return exp
 	}
 
@@ -653,7 +819,7 @@ func (v *Visitor) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 		return v.variables[len(v.variables)-1][ctx.Var_().NAME().GetText()]
 	}
 
-	fmt.Println("!PARASHA!!")
+	// fmt.Println("!PARASHA!!")
 
 	return nil
 }

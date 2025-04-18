@@ -5,6 +5,7 @@ go 1.22.4
 require (
 	github.com/antlr4-go/antlr v0.0.0-20230518091524-98b52378c522 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/llir/ll v0.0.0-20220802044011-65001c0fb73c // indirect

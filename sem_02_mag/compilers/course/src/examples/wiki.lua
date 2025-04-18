@@ -1,5 +1,27 @@
-a = 5.0
-b = 2
+-- a = 2.0
+-- b = 2
+
+-- if b < 3 then 
+--     if b == 2 then
+--         print(a)
+--         print("pupi")
+--     else
+--         print("b != 2")
+--     end
+--     print("www")
+-- else
+--     print("else if")
+-- end
+
+a = 0
+
+print("start loop")
+
+for i = 10, 0, -3 do
+    print(i)
+end
+
+print("end loop")
 
 -- print(a == b)
 -- print(a == 5.0)

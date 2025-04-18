@@ -6,10 +6,8 @@
 @.str.true = private unnamed_addr constant [6 x i8] c"true\0A\00", align 1
 @.str.false = private unnamed_addr constant [7 x i8] c"false\0A\00", align 1
 @.str.nil = private unnamed_addr constant [5 x i8] c"nil\0A\00", align 1
-@.str0 = global [6 x i8] c"false\00"
-@.str1 = global [6 x i8] c"false\00"
-@.str2 = global [3 x i8] c"ok\00"
-@.str3 = global [3 x i8] c"kk\00"
+@.str0 = global [11 x i8] c"start loop\00"
+@.str1 = global [9 x i8] c"end loop\00"
 
 declare i8* @malloc(i64 %0)
 
@@ -28,6 +26,19 @@ declare void @llvm.memcpy.p0i8.p0i8.i64(i8* %0, i8* %1, i64 %2, i1 immarg %3)
 declare i32 @printf(i8* %0, ...)
 
 declare double @pow(double %0, double %1)
+
+define void @copy(%Generic* %src, %Generic* %dst) {
+entry:
+	%src.type.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 0
+	%type = load i32, i32* %src.type.ptr
+	%dst.type.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 0
+	store i32 %type, i32* %dst.type.ptr
+	%src.data.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 1
+	%data = load i8*, i8** %src.data.ptr
+	%dst.data.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 1
+	store i8* %data, i8** %dst.data.ptr
+	ret void
+}
 
 define %Generic* @create_nil() {
 0:
@@ -1315,6 +1326,36 @@ unknown:
 	ret void
 }
 
+define i1 @check(%Generic* %obj) {
+entry:
+	%is_null = icmp eq %Generic* %obj, null
+	br i1 %is_null, label %error, label %check_value
+
+check_value:
+	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
+	%type = load i32, i32* %type_ptr
+	%data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
+	%data_ptr = load i8*, i8** %data_ptr_ptr
+	switch i32 %type, label %error [
+		i32 3, label %check_bool
+	]
+
+check_bool:
+	%bool_ptr = bitcast i8* %data_ptr to i8*
+	%bool_val = load i8, i8* %bool_ptr
+	%is_true = icmp eq i8 %bool_val, 1
+	br i1 %is_true, label %ret_true, label %ret_false
+
+ret_true:
+	ret i1 true
+
+ret_false:
+	ret i1 false
+
+error:
+	ret i1 false
+}
+
 define %Generic* @concat(%Generic* %a, %Generic* %b) {
 entry:
 	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
@@ -1347,38 +1388,40 @@ error:
 }
 
 define i64 @main() {
-entry:
-	%0 = alloca double
-	store double 5.0, double* %0
-	%1 = bitcast double* %0 to i8*
-	%2 = call %Generic* @create(i32 1, i8* %1)
-	%3 = call %Generic* @create(i32 0, i8* inttoptr (i64 2 to i8*))
-	%4 = call %Generic* @nequal(%Generic* %2, %Generic* %3)
+0:
+	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%2 = call %Generic* @create(i32 2, i8* getelementptr ([11 x i8], [11 x i8]* @.str0, i32 0, i32 0))
+	call void @print(%Generic* %2)
+	%3 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%4 = call %Generic* @create(i32 0, i8* inttoptr (i64 10 to i8*))
+	%5 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%6 = call %Generic* @create(i32 0, i8* inttoptr (i64 3 to i8*))
+	%7 = call %Generic* @neg(%Generic* %6)
+	br label %8
+
+8:
+	%9 = call %Generic* @lt(%Generic* %7, %Generic* %3)
+	%10 = call i1 @check(%Generic* %9)
+	br i1 %10, label %18, label %15
+
+11:
 	call void @print(%Generic* %4)
-	%5 = alloca double
-	store double 5.0, double* %5
-	%6 = bitcast double* %5 to i8*
-	%7 = call %Generic* @create(i32 1, i8* %6)
-	%8 = call %Generic* @nequal(%Generic* %2, %Generic* %7)
-	call void @print(%Generic* %8)
-	%9 = call %Generic* @create(i32 0, i8* inttoptr (i64 2 to i8*))
-	%10 = call %Generic* @nequal(%Generic* %3, %Generic* %9)
-	call void @print(%Generic* %10)
-	%11 = call %Generic* @create(i32 3, i8* inttoptr (i8 1 to i8*))
-	%12 = call %Generic* @create(i32 3, i8* inttoptr (i8 0 to i8*))
-	%13 = call %Generic* @nequal(%Generic* %11, %Generic* %12)
-	call void @print(%Generic* %13)
-	%14 = call %Generic* @create(i32 3, i8* inttoptr (i8 0 to i8*))
-	%15 = call %Generic* @create(i32 3, i8* inttoptr (i8 0 to i8*))
-	%16 = call %Generic* @nequal(%Generic* %14, %Generic* %15)
-	call void @print(%Generic* %16)
-	%17 = call %Generic* @create(i32 2, i8* getelementptr ([6 x i8], [6 x i8]* @.str0, i32 0, i32 0))
-	%18 = call %Generic* @create(i32 2, i8* getelementptr ([6 x i8], [6 x i8]* @.str1, i32 0, i32 0))
-	%19 = call %Generic* @nequal(%Generic* %17, %Generic* %18)
-	call void @print(%Generic* %19)
-	%20 = call %Generic* @create(i32 2, i8* getelementptr ([3 x i8], [3 x i8]* @.str2, i32 0, i32 0))
-	%21 = call %Generic* @create(i32 2, i8* getelementptr ([3 x i8], [3 x i8]* @.str3, i32 0, i32 0))
-	%22 = call %Generic* @nequal(%Generic* %20, %Generic* %21)
-	call void @print(%Generic* %22)
+	%12 = call %Generic* @add(%Generic* %4, %Generic* %7)
+	call void @copy(%Generic* %12, %Generic* %4)
+	br label %8
+
+13:
+	%14 = call %Generic* @create(i32 2, i8* getelementptr ([9 x i8], [9 x i8]* @.str1, i32 0, i32 0))
+	call void @print(%Generic* %14)
 	ret i64 0
+
+15:
+	%16 = call %Generic* @lt(%Generic* %4, %Generic* %5)
+	%17 = call i1 @check(%Generic* %16)
+	br i1 %17, label %11, label %13
+
+18:
+	%19 = call %Generic* @gt(%Generic* %4, %Generic* %5)
+	%20 = call i1 @check(%Generic* %19)
+	br i1 %20, label %11, label %13
 }
