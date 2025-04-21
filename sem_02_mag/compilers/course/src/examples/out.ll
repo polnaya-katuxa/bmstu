@@ -1,13 +1,38 @@
 %Generic = type { i32, i8* }
+%LuaTable = type { i32, i32, %TableEntry* }
+%TableEntry = type { %Generic*, %Generic*, i1 }
 
+@.str.error = private unnamed_addr constant [46 x i8] c"\0A\0A################ PANIC ################\0A%s\0A\00", align 1
+@.error.error = constant [6 x i8] c"Error\00"
+@NIL_TYPE = constant i32 5
+@.error.null_value = private constant [11 x i8] c"Null value\00"
+@TABLE_TYPE = constant i32 4
+@INITIAL_CAPACITY = constant i32 16
+@.error.table_expected = private constant [22 x i8] c"Value should be table\00"
+@.error.cannot_extract_table = private constant [21 x i8] c"Cannot extract table\00"
+@.error.null_table = private constant [11 x i8] c"Null table\00"
 @.str.int = private unnamed_addr constant [6 x i8] c"%lld\0A\00", align 1
 @.str.float = private unnamed_addr constant [4 x i8] c"%f\0A\00", align 1
 @.str.string = private unnamed_addr constant [4 x i8] c"%s\0A\00", align 1
 @.str.true = private unnamed_addr constant [6 x i8] c"true\0A\00", align 1
 @.str.false = private unnamed_addr constant [7 x i8] c"false\0A\00", align 1
 @.str.nil = private unnamed_addr constant [5 x i8] c"nil\0A\00", align 1
-@.str0 = global [11 x i8] c"start loop\00"
-@.str1 = global [9 x i8] c"end loop\00"
+@.str0 = global [7 x i8] c"tabnum\00"
+@.str1 = global [47 x i8] c"\D0\98\D0\B2\D0\B0\D0\BD\D0\BE\D0\B2 \D0\A1\D1\82\D0\B5\D0\BF\D0\B0\D0\BD \D0\92\D0\B0\D1\81\D0\B8\D0\BB\D1\8C\D0\B5\D0\B2\D0\B8\D1\87\00"
+@.str2 = global [4 x i8] c"fio\00"
+@.str3 = global [48 x i8] c"\D1\81\D0\BB\D0\B5\D1\81\D0\B0\D1\80\D1\8C-\D0\B8\D0\BD\D1\81\D1\82\D1\80\D1\83\D0\BC\D0\B5\D0\BD\D1\82\D0\B0\D0\BB\D1\8C\D1\89\D0\B8\D0\BA\00"
+@.str4 = global [5 x i8] c"post\00"
+@.str5 = global [7 x i8] c"salary\00"
+@.str6 = global [11 x i8] c"23.10.2013\00"
+@.str7 = global [6 x i8] c"sdate\00"
+@.str8 = global [11 x i8] c"08.08.1973\00"
+@.str9 = global [6 x i8] c"bdate\00"
+@.str10 = global [4 x i8] c"fio\00"
+@.str11 = global [18 x i8] c"\D0\98\D0\B2\D0\B0\D0\BD \D0\A5\D1\83\D0\B5\D0\B2\00"
+@.str12 = global [5 x i8] c"post\00"
+@.str13 = global [17 x i8] c"\D0\B3\D0\BB\D0\B8\D0\BD\D0\BE\D0\BC\D0\B5\D1\81\00"
+@.str14 = global [4 x i8] c"fio\00"
+@.str15 = global [5 x i8] c"post\00"
 
 declare i8* @malloc(i64 %0)
 
@@ -27,22 +52,26 @@ declare i32 @printf(i8* %0, ...)
 
 declare double @pow(double %0, double %1)
 
-define void @copy(%Generic* %src, %Generic* %dst) {
+declare void @exit(i64 %0)
+
+define void @panic(i8* %msg) {
 entry:
-	%src.type.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 0
-	%type = load i32, i32* %src.type.ptr
-	%dst.type.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 0
-	store i32 %type, i32* %dst.type.ptr
-	%src.data.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 1
-	%data = load i8*, i8** %src.data.ptr
-	%dst.data.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 1
-	store i8* %data, i8** %dst.data.ptr
+	%fmt = getelementptr inbounds [46 x i8], [46 x i8]* @.str.error, i32 0, i32 0
+	%0 = call i32 (i8*, ...) @printf(i8* %fmt, i8* %msg)
+	call void @exit(i64 1)
 	ret void
 }
 
 define %Generic* @create_nil() {
-0:
-	ret %Generic* null
+entry:
+	%size = ptrtoint %Generic* getelementptr inbounds (%Generic, %Generic* null, i32 1) to i64
+	%nil = call i8* @malloc(i64 %size)
+	%nil_generic = bitcast i8* %nil to %Generic*
+	%type_ptr = getelementptr inbounds %Generic, %Generic* %nil_generic, i32 0, i32 0
+	store i32 5, i32* %type_ptr, align 4
+	%data_ptr = getelementptr inbounds %Generic, %Generic* %nil_generic, i32 0, i32 1
+	store i8* null, i8** %data_ptr, align 8
+	ret %Generic* %nil_generic
 }
 
 define %Generic* @create(i32 %type, i8* %value) {
@@ -56,6 +85,7 @@ entry:
 		i32 1, label %init_float
 		i32 2, label %init_str
 		i32 3, label %init_bool
+		i32 4, label %init_table
 	]
 
 init_int:
@@ -94,8 +124,50 @@ init_bool:
 	store i8* %bool_space, i8** %data_bool
 	ret %Generic* %g
 
+init_table:
+	%data_table = getelementptr inbounds %Generic, %Generic* %g, i32 0, i32 1
+	store i8* %value, i8** %data_table
+	ret %Generic* %g
+
+error:
+	call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_value, i32 0, i32 0))
+	ret %Generic* %g
+
 invalid:
 	ret %Generic* %g
+}
+
+define void @copy(%Generic* %src, %Generic* %dst) {
+entry:
+	%src.type.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 0
+	%type = load i32, i32* %src.type.ptr
+	%dst.type.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 0
+	store i32 %type, i32* %dst.type.ptr
+	%src.data.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 1
+	%data = load i8*, i8** %src.data.ptr
+	%dst.data.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 1
+	store i8* %data, i8** %dst.data.ptr
+	ret void
+}
+
+define void @destroy(%Generic* %obj) {
+entry:
+	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
+	%type = load i32, i32* %type_ptr
+	%data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
+	%data_ptr = load i8*, i8** %data_ptr_ptr
+	switch i32 %type, label %free_obj [
+		i32 2, label %free_str
+	]
+
+free_str:
+	call void @free(i8* %data_ptr)
+	br label %free_obj
+
+free_obj:
+	%obj_ptr = bitcast %Generic* %obj to i8*
+	call void @free(i8* %obj_ptr)
+	ret void
 }
 
 define %Generic* @neg(%Generic* %v) {
@@ -128,109 +200,6 @@ neg_int:
 	%v_val.i8.i_neg = inttoptr i64 %v_val to i8*
 	%fresult.i_neg = call %Generic* @create(i32 0, i8* %v_val.i8.i_neg)
 	ret %Generic* %fresult.i_neg
-}
-
-define %Generic* @not(%Generic* %v) {
-entry:
-	%v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
-	%v_type = load i32, i32* %v_type_ptr
-	%type_eq_bool = icmp eq i32 %v_type, 3
-	br i1 %type_eq_bool, label %not_bool, label %error
-
-not_bool:
-	%v_data_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
-	%v_data = load i8*, i8** %v_data_ptr
-	%v_val = load i8, i8* %v_data
-	%is_true = icmp eq i8 %v_val, 1
-	br i1 %is_true, label %not_true, label %not_false
-
-not_true:
-	%result.false = call %Generic* @create(i32 3, i8* inttoptr (i8 0 to i8*))
-	ret %Generic* %result.false
-
-not_false:
-	%result.true = call %Generic* @create(i32 3, i8* inttoptr (i8 1 to i8*))
-	ret %Generic* %result.true
-
-error:
-	ret %Generic* null
-}
-
-define %Generic* @string_len(%Generic* %v) {
-entry:
-	%v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
-	%v_type = load i32, i32* %v_type_ptr
-	%type_eq_string = icmp eq i32 %v_type, 2
-	br i1 %type_eq_string, label %len_string, label %error
-
-len_string:
-	%v_data_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
-	%v_data = load i8*, i8** %v_data_ptr
-	%v_len = call i64 @strlen(i8* %v_data)
-	%len_ptr = inttoptr i64 %v_len to i8*
-	%result = call %Generic* @create(i32 0, i8* %len_ptr)
-	ret %Generic* %result
-
-error:
-	ret %Generic* null
-}
-
-define %Generic* @and(%Generic* %a, %Generic* %b) {
-entry:
-	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
-	%a_type = load i32, i32* %a_type_ptr
-	%b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
-	%b_type = load i32, i32* %b_type_ptr
-	%type_eq = icmp eq i32 %a_type, %b_type
-	br i1 %type_eq, label %same_type, label %error
-
-same_type:
-	%type_bool = icmp eq i32 %a_type, 3
-	br i1 %type_bool, label %and_bool, label %error
-
-and_bool:
-	%a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
-	%a_data = load i8*, i8** %a_data_ptr
-	%a_val = load i8, i8* %a_data
-	%b_data_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 1
-	%b_data = load i8*, i8** %b_data_ptr
-	%b_val = load i8, i8* %b_data
-	%and = and i8 %a_val, %b_val
-	%and.i8 = inttoptr i8 %and to i8*
-	%result = call %Generic* @create(i32 3, i8* %and.i8)
-	ret %Generic* %result
-
-error:
-	ret %Generic* null
-}
-
-define %Generic* @or(%Generic* %a, %Generic* %b) {
-entry:
-	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
-	%a_type = load i32, i32* %a_type_ptr
-	%b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
-	%b_type = load i32, i32* %b_type_ptr
-	%type_eq = icmp eq i32 %a_type, %b_type
-	br i1 %type_eq, label %same_type, label %error
-
-same_type:
-	%type_bool = icmp eq i32 %a_type, 3
-	br i1 %type_bool, label %or_bool, label %error
-
-or_bool:
-	%a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
-	%a_data = load i8*, i8** %a_data_ptr
-	%a_val = load i8, i8* %a_data
-	%b_data_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 1
-	%b_data = load i8*, i8** %b_data_ptr
-	%b_val = load i8, i8* %b_data
-	%or = or i8 %a_val, %b_val
-	%or.i8 = inttoptr i8 %or to i8*
-	%result = call %Generic* @create(i32 3, i8* %or.i8)
-	ret %Generic* %result
-
-error:
-	ret %Generic* null
 }
 
 define %Generic* @add(%Generic* %a, %Generic* %b) {
@@ -776,6 +745,171 @@ error:
 	ret %Generic* null
 }
 
+define %Generic* @not(%Generic* %v) {
+entry:
+	%v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
+	%v_type = load i32, i32* %v_type_ptr
+	%type_eq_bool = icmp eq i32 %v_type, 3
+	br i1 %type_eq_bool, label %not_bool, label %error
+
+not_bool:
+	%v_data_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
+	%v_data = load i8*, i8** %v_data_ptr
+	%v_val = load i8, i8* %v_data
+	%is_true = icmp eq i8 %v_val, 1
+	br i1 %is_true, label %not_true, label %not_false
+
+not_true:
+	%result.false = call %Generic* @create(i32 3, i8* inttoptr (i8 0 to i8*))
+	ret %Generic* %result.false
+
+not_false:
+	%result.true = call %Generic* @create(i32 3, i8* inttoptr (i8 1 to i8*))
+	ret %Generic* %result.true
+
+error:
+	ret %Generic* null
+}
+
+define %Generic* @and(%Generic* %a, %Generic* %b) {
+entry:
+	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
+	%a_type = load i32, i32* %a_type_ptr
+	%b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
+	%b_type = load i32, i32* %b_type_ptr
+	%type_eq = icmp eq i32 %a_type, %b_type
+	br i1 %type_eq, label %same_type, label %error
+
+same_type:
+	%type_bool = icmp eq i32 %a_type, 3
+	br i1 %type_bool, label %and_bool, label %error
+
+and_bool:
+	%a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
+	%a_data = load i8*, i8** %a_data_ptr
+	%a_val = load i8, i8* %a_data
+	%b_data_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 1
+	%b_data = load i8*, i8** %b_data_ptr
+	%b_val = load i8, i8* %b_data
+	%and = and i8 %a_val, %b_val
+	%and.i8 = inttoptr i8 %and to i8*
+	%result = call %Generic* @create(i32 3, i8* %and.i8)
+	ret %Generic* %result
+
+error:
+	call void @panic(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.error.error, i32 0, i32 0))
+	ret %Generic* null
+}
+
+define %Generic* @or(%Generic* %a, %Generic* %b) {
+entry:
+	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
+	%a_type = load i32, i32* %a_type_ptr
+	%b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
+	%b_type = load i32, i32* %b_type_ptr
+	%type_eq = icmp eq i32 %a_type, %b_type
+	br i1 %type_eq, label %same_type, label %error
+
+same_type:
+	%type_bool = icmp eq i32 %a_type, 3
+	br i1 %type_bool, label %or_bool, label %error
+
+or_bool:
+	%a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
+	%a_data = load i8*, i8** %a_data_ptr
+	%a_val = load i8, i8* %a_data
+	%b_data_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 1
+	%b_data = load i8*, i8** %b_data_ptr
+	%b_val = load i8, i8* %b_data
+	%or = or i8 %a_val, %b_val
+	%or.i8 = inttoptr i8 %or to i8*
+	%result = call %Generic* @create(i32 3, i8* %or.i8)
+	ret %Generic* %result
+
+error:
+	ret %Generic* null
+}
+
+define i1 @check(%Generic* %obj) {
+entry:
+	%is_null = icmp eq %Generic* %obj, null
+	br i1 %is_null, label %error, label %check_value
+
+check_value:
+	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
+	%type = load i32, i32* %type_ptr
+	%data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
+	%data_ptr = load i8*, i8** %data_ptr_ptr
+	switch i32 %type, label %error [
+		i32 3, label %check_bool
+	]
+
+check_bool:
+	%bool_ptr = bitcast i8* %data_ptr to i8*
+	%bool_val = load i8, i8* %bool_ptr
+	%is_true = icmp eq i8 %bool_val, 1
+	br i1 %is_true, label %ret_true, label %ret_false
+
+ret_true:
+	ret i1 true
+
+ret_false:
+	ret i1 false
+
+error:
+	ret i1 false
+}
+
+define %Generic* @string_len(%Generic* %v) {
+entry:
+	%v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
+	%v_type = load i32, i32* %v_type_ptr
+	%type_eq_string = icmp eq i32 %v_type, 2
+	br i1 %type_eq_string, label %len_string, label %error
+
+len_string:
+	%v_data_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
+	%v_data = load i8*, i8** %v_data_ptr
+	%v_len = call i64 @strlen(i8* %v_data)
+	%len_ptr = inttoptr i64 %v_len to i8*
+	%result = call %Generic* @create(i32 0, i8* %len_ptr)
+	ret %Generic* %result
+
+error:
+	ret %Generic* null
+}
+
+define %Generic* @concat(%Generic* %a, %Generic* %b) {
+entry:
+	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
+	%a_type = load i32, i32* %a_type_ptr
+	%b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
+	%b_type = load i32, i32* %b_type_ptr
+	%both_string = icmp eq i32 %a_type, 2
+	%both_string1 = icmp eq i32 %b_type, 2
+	%both_ok = and i1 %both_string, %both_string1
+	br i1 %both_ok, label %concat_strings, label %error
+
+concat_strings:
+	%a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
+	%a_str_ptr = load i8*, i8** %a_data_ptr
+	%a_str = load i8*, i8** %a_data_ptr
+	%b_data_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 1
+	%b_str = load i8*, i8** %b_data_ptr
+	%a_len = call i64 @strlen(i8* %a_str)
+	%b_len = call i64 @strlen(i8* %b_str)
+	%total_len = add i64 %a_len, %b_len
+	%buffer = call i8* @malloc(i64 %total_len)
+	%0 = call i8* @strcpy(i8* %buffer, i8* %a_str)
+	%1 = call i8* @strcat(i8* %buffer, i8* %b_str)
+	%result = call %Generic* @create(i32 2, i8* %buffer)
+	call void @free(i8* %buffer)
+	ret %Generic* %result
+
+error:
+	ret %Generic* null
+}
+
 define %Generic* @equal(%Generic* %a, %Generic* %b) {
 entry:
 	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
@@ -1244,37 +1378,237 @@ error:
 	ret %Generic* null
 }
 
-define void @destroy(%Generic* %obj) {
+define %Generic* @lua_table_new() {
 entry:
-	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
-	%type = load i32, i32* %type_ptr
-	%data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
-	%data_ptr = load i8*, i8** %data_ptr_ptr
-	switch i32 %type, label %free_obj [
-		i32 2, label %free_str
-	]
+	%capacity = load i32, i32* @INITIAL_CAPACITY
+	%entry_size = ptrtoint %TableEntry* getelementptr inbounds (%TableEntry, %TableEntry* null, i32 1) to i64
+	%capacity_sext = sext i32 %capacity to i64
+	%entries_size = mul i64 %entry_size, %capacity_sext
+	%entries = call i8* @malloc(i64 %entries_size)
+	%entries_ptr = bitcast i8* %entries to %TableEntry*
+	br label %init_loop
 
-free_str:
-	call void @free(i8* %data_ptr)
-	br label %free_obj
+init_loop:
+	%i = phi i32 [ 0, %entry ], [ %next_i, %init_loop ]
+	%entry_ptr = getelementptr inbounds %TableEntry, %TableEntry* %entries_ptr, i32 %i
+	%flag_ptr = getelementptr inbounds %TableEntry, %TableEntry* %entry_ptr, i32 0, i32 2
+	store i1 false, i1* %flag_ptr, align 1
+	%next_i = add i32 %i, 1
+	%done = icmp eq i32 %next_i, %capacity
+	br i1 %done, label %create_table, label %init_loop
 
-free_obj:
-	%obj_ptr = bitcast %Generic* %obj to i8*
-	call void @free(i8* %obj_ptr)
+create_table:
+	%table_size = ptrtoint %LuaTable* getelementptr inbounds (%LuaTable, %LuaTable* null, i32 1) to i64
+	%table = call i8* @malloc(i64 %table_size)
+	%null_table = icmp eq i8* %table, null
+	br i1 %null_table, label %error, label %continue
+
+continue:
+	%table_ptr = bitcast i8* %table to %LuaTable*
+	%size_ptr = getelementptr inbounds %LuaTable, %LuaTable* %table_ptr, i32 0, i32 0
+	store i32 0, i32* %size_ptr, align 4
+	%cap_ptr = getelementptr inbounds %LuaTable, %LuaTable* %table_ptr, i32 0, i32 1
+	store i32 %capacity, i32* %cap_ptr, align 4
+	%entries_field = getelementptr inbounds %LuaTable, %LuaTable* %table_ptr, i32 0, i32 2
+	store %TableEntry* %entries_ptr, %TableEntry** %entries_field, align 8
+	%generic = call %Generic* @create(i32 4, i8* %table)
+	ret %Generic* %generic
+
+error:
+	call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_table, i32 0, i32 0))
+	ret %Generic* null
+}
+
+define void @lua_table_set(%Generic* %table, %Generic* %key, %Generic* %value) {
+entry:
+	%tbl = call %LuaTable* @extract_table(%Generic* %table)
+	%is_valid = icmp ne %LuaTable* %tbl, null
+	br i1 %is_valid, label %proceed, label %error
+
+proceed:
+	%key_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %key, %Generic* %key_copy)
+	%value_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %value, %Generic* %value_copy)
+	%entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+	%entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
+	%capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+	%capacity = load i32, i32* %capacity_ptr, align 4
+	%size_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 0
+	%size = load i32, i32* %size_ptr, align 4
+	br label %search_loop
+
+search_loop:
+	%i = phi i32 [ 0, %proceed ], [ %next_i, %next ]
+	%current = getelementptr inbounds %TableEntry, %TableEntry* %entries, i32 %i
+	%occupied_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 2
+	%occupied = load i1, i1* %occupied_ptr, align 1
+	br i1 %occupied, label %check_key, label %try_insert
+
+check_key:
+	%current_key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 0
+	%current_key = load %Generic*, %Generic** %current_key_ptr, align 8
+	%is_equal = call %Generic* @equal(%Generic* %current_key, %Generic* %key)
+	%is_true = call i1 @check(%Generic* %is_equal)
+	br i1 %is_true, label %update, label %next
+
+update:
+	%old_value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 1
+	%old_value = load %Generic*, %Generic** %old_value_ptr, align 8
+	call void @destroy(%Generic* %old_value)
+	store %Generic* %value_copy, %Generic** %old_value_ptr, align 8
+	br label %exit
+
+try_insert:
+	%key_slot_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 0
+	store %Generic* %key_copy, %Generic** %key_slot_ptr, align 8
+	%value_slot_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 1
+	store %Generic* %value_copy, %Generic** %value_slot_ptr, align 8
+	store i1 true, i1* %occupied_ptr, align 1
+	%new_size = add i32 %size, 1
+	store i32 %new_size, i32* %size_ptr, align 4
+	br label %exit
+
+next:
+	%next_i = add i32 %i, 1
+	%in_bounds = icmp ult i32 %next_i, %capacity
+	br i1 %in_bounds, label %search_loop, label %resize
+
+resize:
+	call void @resize_table(%LuaTable* %tbl)
+	call void @lua_table_set(%Generic* %table, %Generic* %key, %Generic* %value)
+	br label %exit
+
+exit:
+	ret void
+
+error:
+	call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.cannot_extract_table, i32 0, i32 0))
+	ret void
+}
+
+define %Generic* @lua_table_get(%Generic* %table, %Generic* %key) {
+entry:
+	%tbl = call %LuaTable* @extract_table(%Generic* %table)
+	%valid = icmp ne %LuaTable* %tbl, null
+	br i1 %valid, label %proceed, label %error
+
+proceed:
+	%entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+	%entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
+	%capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+	%capacity = load i32, i32* %capacity_ptr, align 4
+	br label %search_loop
+
+search_loop:
+	%i = phi i32 [ 0, %proceed ], [ %next_i, %next ]
+	%current = getelementptr inbounds %TableEntry, %TableEntry* %entries, i32 %i
+	%occupied_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 2
+	%occupied = load i1, i1* %occupied_ptr, align 1
+	br i1 %occupied, label %check_key, label %next
+
+check_key:
+	%current_key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 0
+	%current_key = load %Generic*, %Generic** %current_key_ptr, align 8
+	%is_equal = call %Generic* @equal(%Generic* %current_key, %Generic* %key)
+	%is_true = call i1 @check(%Generic* %is_equal)
+	br i1 %is_true, label %found, label %next
+
+found:
+	%value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 1
+	%value = load %Generic*, %Generic** %value_ptr, align 8
+	%value_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %value, %Generic* %value_copy)
+	ret %Generic* %value_copy
+
+next:
+	%next_i = add i32 %i, 1
+	%in_bounds = icmp ult i32 %next_i, %capacity
+	br i1 %in_bounds, label %search_loop, label %not_found
+
+not_found:
+	%nil = call %Generic* @create_nil()
+	ret %Generic* %nil
+
+error:
+	call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.cannot_extract_table, i32 0, i32 0))
+	ret %Generic* null
+}
+
+define %LuaTable* @extract_table(%Generic* %table_generic) {
+entry:
+	%type_ptr = getelementptr inbounds %Generic, %Generic* %table_generic, i32 0, i32 0
+	%type = load i32, i32* %type_ptr, align 4
+	%is_table = icmp eq i32 %type, 4
+	br i1 %is_table, label %valid, label %error
+
+valid:
+	%data_ptr = getelementptr inbounds %Generic, %Generic* %table_generic, i32 0, i32 1
+	%data = load i8*, i8** %data_ptr, align 8
+	%table = bitcast i8* %data to %LuaTable*
+	ret %LuaTable* %table
+
+error:
+	call void @panic(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @.error.table_expected, i32 0, i32 0))
+	ret %LuaTable* null
+}
+
+define void @resize_table(%LuaTable* %tbl) {
+entry:
+	%old_capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+	%old_capacity = load i32, i32* %old_capacity_ptr, align 4
+	%new_capacity = mul i32 %old_capacity, 2
+	%entry_size = ptrtoint %TableEntry* getelementptr inbounds (%TableEntry, %TableEntry* null, i32 1) to i64
+	%new_capacity_sext = sext i32 %new_capacity to i64
+	%new_entries_size = mul i64 %entry_size, %new_capacity_sext
+	%new_entries = call i8* @malloc(i64 %new_entries_size)
+	%new_entries_ptr = bitcast i8* %new_entries to %TableEntry*
+	%old_entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+	%old_entries = load %TableEntry*, %TableEntry** %old_entries_ptr, align 8
+	br label %copy_loop
+
+copy_loop:
+	%i = phi i32 [ 0, %entry ], [ %next_i, %next ]
+	%current_old = getelementptr inbounds %TableEntry, %TableEntry* %old_entries, i32 %i
+	%current_new = getelementptr inbounds %TableEntry, %TableEntry* %new_entries_ptr, i32 %i
+	%flag_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_old, i32 0, i32 2
+	%flag = load i1, i1* %flag_ptr, align 1
+	%new_flag_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_new, i32 0, i32 2
+	store i1 %flag, i1* %new_flag_ptr, align 1
+	br i1 %flag, label %copy_data, label %next
+
+copy_data:
+	%old_key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_old, i32 0, i32 0
+	%old_key = load %Generic*, %Generic** %old_key_ptr, align 8
+	%new_key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_new, i32 0, i32 0
+	%key_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %old_key, %Generic* %key_copy)
+	store %Generic* %key_copy, %Generic** %new_key_ptr, align 8
+	%old_value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_old, i32 0, i32 1
+	%old_value = load %Generic*, %Generic** %old_value_ptr, align 8
+	%new_value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_new, i32 0, i32 1
+	%value_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %old_value, %Generic* %value_copy)
+	store %Generic* %value_copy, %Generic** %new_value_ptr, align 8
+	br label %next
+
+next:
+	%next_i = add i32 %i, 1
+	%done = icmp eq i32 %next_i, %old_capacity
+	br i1 %done, label %finish, label %copy_loop
+
+finish:
+	%old_entries_i8 = bitcast %TableEntry* %old_entries to i8*
+	call void @free(i8* %old_entries_i8)
+	%new_entries_field = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+	store %TableEntry* %new_entries_ptr, %TableEntry** %new_entries_field, align 8
+	%new_capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+	store i32 %new_capacity, i32* %new_capacity_ptr, align 4
 	ret void
 }
 
 define void @print(%Generic* %obj) {
 entry:
-	%is_null = icmp eq %Generic* %obj, null
-	br i1 %is_null, label %print_nil, label %print_value
-
-print_nil:
-	%nil_fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str.nil, i32 0, i32 0
-	%0 = call i32 (i8*, ...) @printf(i8* %nil_fmt)
-	ret void
-
-print_value:
 	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
 	%type = load i32, i32* %type_ptr
 	%data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
@@ -1284,26 +1618,27 @@ print_value:
 		i32 1, label %print_float
 		i32 2, label %print_string
 		i32 3, label %print_bool
+		i32 5, label %print_nil
 	]
 
 print_int:
 	%int_ptr = bitcast i8* %data_ptr to i64*
 	%int_val = load i64, i64* %int_ptr
 	%int_fmt = getelementptr inbounds [6 x i8], [6 x i8]* @.str.int, i32 0, i32 0
-	%1 = call i32 (i8*, ...) @printf(i8* %int_fmt, i64 %int_val)
+	%0 = call i32 (i8*, ...) @printf(i8* %int_fmt, i64 %int_val)
 	ret void
 
 print_float:
 	%float_ptr = bitcast i8* %data_ptr to double*
 	%float_val = load double, double* %float_ptr
 	%float_fmt = getelementptr inbounds [4 x i8], [4 x i8]* @.str.float, i32 0, i32 0
-	%2 = call i32 (i8*, ...) @printf(i8* %float_fmt, double %float_val)
+	%1 = call i32 (i8*, ...) @printf(i8* %float_fmt, double %float_val)
 	ret void
 
 print_string:
 	%string_val = bitcast i8* %data_ptr to i8*
 	%string_fmt = getelementptr inbounds [4 x i8], [4 x i8]* @.str.string, i32 0, i32 0
-	%3 = call i32 (i8*, ...) @printf(i8* %string_fmt, i8* %string_val)
+	%2 = call i32 (i8*, ...) @printf(i8* %string_fmt, i8* %string_val)
 	ret void
 
 print_bool:
@@ -1314,114 +1649,58 @@ print_bool:
 
 print_true:
 	%true_fmt = getelementptr inbounds [6 x i8], [6 x i8]* @.str.true, i32 0, i32 0
-	%4 = call i32 (i8*, ...) @printf(i8* %true_fmt)
+	%3 = call i32 (i8*, ...) @printf(i8* %true_fmt)
 	ret void
 
 print_false:
 	%false_fmt = getelementptr inbounds [7 x i8], [7 x i8]* @.str.false, i32 0, i32 0
-	%5 = call i32 (i8*, ...) @printf(i8* %false_fmt)
+	%4 = call i32 (i8*, ...) @printf(i8* %false_fmt)
+	ret void
+
+print_nil:
+	%nil_fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str.nil, i32 0, i32 0
+	%5 = call i32 (i8*, ...) @printf(i8* %nil_fmt)
 	ret void
 
 unknown:
 	ret void
 }
 
-define i1 @check(%Generic* %obj) {
-entry:
-	%is_null = icmp eq %Generic* %obj, null
-	br i1 %is_null, label %error, label %check_value
-
-check_value:
-	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
-	%type = load i32, i32* %type_ptr
-	%data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
-	%data_ptr = load i8*, i8** %data_ptr_ptr
-	switch i32 %type, label %error [
-		i32 3, label %check_bool
-	]
-
-check_bool:
-	%bool_ptr = bitcast i8* %data_ptr to i8*
-	%bool_val = load i8, i8* %bool_ptr
-	%is_true = icmp eq i8 %bool_val, 1
-	br i1 %is_true, label %ret_true, label %ret_false
-
-ret_true:
-	ret i1 true
-
-ret_false:
-	ret i1 false
-
-error:
-	ret i1 false
-}
-
-define %Generic* @concat(%Generic* %a, %Generic* %b) {
-entry:
-	%a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
-	%a_type = load i32, i32* %a_type_ptr
-	%b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
-	%b_type = load i32, i32* %b_type_ptr
-	%both_string = icmp eq i32 %a_type, 2
-	%both_string1 = icmp eq i32 %b_type, 2
-	%both_ok = and i1 %both_string, %both_string1
-	br i1 %both_ok, label %concat_strings, label %error
-
-concat_strings:
-	%a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
-	%a_str_ptr = load i8*, i8** %a_data_ptr
-	%a_str = load i8*, i8** %a_data_ptr
-	%b_data_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 1
-	%b_str = load i8*, i8** %b_data_ptr
-	%a_len = call i64 @strlen(i8* %a_str)
-	%b_len = call i64 @strlen(i8* %b_str)
-	%total_len = add i64 %a_len, %b_len
-	%buffer = call i8* @malloc(i64 %total_len)
-	%0 = call i8* @strcpy(i8* %buffer, i8* %a_str)
-	%1 = call i8* @strcat(i8* %buffer, i8* %b_str)
-	%result = call %Generic* @create(i32 2, i8* %buffer)
-	call void @free(i8* %buffer)
-	ret %Generic* %result
-
-error:
-	ret %Generic* null
-}
-
 define i64 @main() {
 0:
-	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
-	%2 = call %Generic* @create(i32 2, i8* getelementptr ([11 x i8], [11 x i8]* @.str0, i32 0, i32 0))
-	call void @print(%Generic* %2)
-	%3 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
-	%4 = call %Generic* @create(i32 0, i8* inttoptr (i64 10 to i8*))
-	%5 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
-	%6 = call %Generic* @create(i32 0, i8* inttoptr (i64 3 to i8*))
-	%7 = call %Generic* @neg(%Generic* %6)
-	br label %8
-
-8:
-	%9 = call %Generic* @lt(%Generic* %7, %Generic* %3)
-	%10 = call i1 @check(%Generic* %9)
-	br i1 %10, label %18, label %15
-
-11:
-	call void @print(%Generic* %4)
-	%12 = call %Generic* @add(%Generic* %4, %Generic* %7)
-	call void @copy(%Generic* %12, %Generic* %4)
-	br label %8
-
-13:
-	%14 = call %Generic* @create(i32 2, i8* getelementptr ([9 x i8], [9 x i8]* @.str1, i32 0, i32 0))
-	call void @print(%Generic* %14)
+	%1 = call %Generic* @lua_table_new()
+	%2 = call %Generic* @create(i32 0, i8* inttoptr (i64 123342 to i8*))
+	%3 = call %Generic* @create(i32 2, i8* getelementptr ([7 x i8], [7 x i8]* @.str0, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %3, %Generic* %2)
+	%4 = call %Generic* @create(i32 2, i8* getelementptr ([47 x i8], [47 x i8]* @.str1, i32 0, i32 0))
+	%5 = call %Generic* @create(i32 2, i8* getelementptr ([4 x i8], [4 x i8]* @.str2, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %5, %Generic* %4)
+	%6 = call %Generic* @create(i32 2, i8* getelementptr ([48 x i8], [48 x i8]* @.str3, i32 0, i32 0))
+	%7 = call %Generic* @create(i32 2, i8* getelementptr ([5 x i8], [5 x i8]* @.str4, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %7, %Generic* %6)
+	%8 = alloca double
+	store double 0x40D9321CCCCCCCCD, double* %8
+	%9 = bitcast double* %8 to i8*
+	%10 = call %Generic* @create(i32 1, i8* %9)
+	%11 = call %Generic* @create(i32 2, i8* getelementptr ([7 x i8], [7 x i8]* @.str5, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %11, %Generic* %10)
+	%12 = call %Generic* @create(i32 2, i8* getelementptr ([11 x i8], [11 x i8]* @.str6, i32 0, i32 0))
+	%13 = call %Generic* @create(i32 2, i8* getelementptr ([6 x i8], [6 x i8]* @.str7, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %13, %Generic* %12)
+	%14 = call %Generic* @create(i32 2, i8* getelementptr ([11 x i8], [11 x i8]* @.str8, i32 0, i32 0))
+	%15 = call %Generic* @create(i32 2, i8* getelementptr ([6 x i8], [6 x i8]* @.str9, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %15, %Generic* %14)
+	%16 = call %Generic* @create(i32 2, i8* getelementptr ([4 x i8], [4 x i8]* @.str10, i32 0, i32 0))
+	%17 = call %Generic* @create(i32 2, i8* getelementptr ([18 x i8], [18 x i8]* @.str11, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %16, %Generic* %17)
+	%18 = call %Generic* @create(i32 2, i8* getelementptr ([5 x i8], [5 x i8]* @.str12, i32 0, i32 0))
+	%19 = call %Generic* @create(i32 2, i8* getelementptr ([17 x i8], [17 x i8]* @.str13, i32 0, i32 0))
+	call void @lua_table_set(%Generic* %1, %Generic* %18, %Generic* %19)
+	%20 = call %Generic* @create(i32 2, i8* getelementptr ([4 x i8], [4 x i8]* @.str14, i32 0, i32 0))
+	%21 = call %Generic* @lua_table_get(%Generic* %1, %Generic* %20)
+	call void @print(%Generic* %21)
+	%22 = call %Generic* @create(i32 2, i8* getelementptr ([5 x i8], [5 x i8]* @.str15, i32 0, i32 0))
+	%23 = call %Generic* @lua_table_get(%Generic* %1, %Generic* %22)
+	call void @print(%Generic* %23)
 	ret i64 0
-
-15:
-	%16 = call %Generic* @lt(%Generic* %4, %Generic* %5)
-	%17 = call i1 @check(%Generic* %16)
-	br i1 %17, label %11, label %13
-
-18:
-	%19 = call %Generic* @gt(%Generic* %4, %Generic* %5)
-	%20 = call i1 @check(%Generic* %19)
-	br i1 %20, label %11, label %13
 }

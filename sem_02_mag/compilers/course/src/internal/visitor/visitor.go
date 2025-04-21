@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"maps"
+	"os"
 	"slices"
 	"strings"
 
@@ -16,6 +17,32 @@ import (
 	"github.com/llir/llvm/ir/value"
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/course/src/internal/parser"
 )
+
+//go:embed llvm/base.ll
+var baseLLVM string
+
+//go:embed llvm/generic.ll
+var genericLLVM string
+
+//go:embed llvm/math.ll
+var mathLLVM string
+
+//go:embed llvm/logical.ll
+var logicalLLVM string
+
+//go:embed llvm/string.ll
+var stringLLVM string
+
+//go:embed llvm/compare.ll
+var compareLLVM string
+
+//go:embed llvm/table.ll
+var tableLLVM string
+
+//go:embed llvm/io.ll
+var ioLLVM string
+
+var commonLLVM = strings.Join([]string{baseLLVM, genericLLVM, mathLLVM, logicalLLVM, stringLLVM, compareLLVM, tableLLVM, ioLLVM}, "\n\n")
 
 const mainFunc = "main"
 
@@ -49,10 +76,9 @@ func (v *Visitor) currentEntry() *ir.Block {
 	return v.entries[len(v.entries)-1]
 }
 
-//go:embed common.ll
-var commonLLVM string
-
 func New() *Visitor {
+	os.WriteFile("debug.ll", []byte(commonLLVM), 0666)
+
 	llvm, err := asm.ParseString("", commonLLVM)
 	if err != nil {
 		log.Fatalf("%+v", err)
@@ -177,6 +203,7 @@ func (v *Visitor) VisitStatAssignment(ctx *parser.StatAssignmentContext) interfa
 
 	for i := range varlist {
 		if varlist[i].key != nil {
+			v.currentEntry().NewCall(v.funcs["lua_table_set"], v.variables[len(v.variables)-1][varlist[i].name], varlist[i].key, explist[i].value)
 			continue
 		}
 
@@ -314,6 +341,9 @@ func (v *Visitor) VisitStatIfThenElse(ctx *parser.StatIfThenElseContext) interfa
 		expBlocks[i] = v.functions[len(v.functions)-1].NewBlock("")
 	}
 
+	fmt.Println("exp blocks", len(expBlocks))
+	fmt.Println("expressions", len(expressions))
+
 	endBlock := v.functions[len(v.functions)-1].NewBlock("")
 	v.endBlocks = append(v.endBlocks, endBlock)
 
@@ -342,7 +372,7 @@ func (v *Visitor) VisitStatIfThenElse(ctx *parser.StatIfThenElseContext) interfa
 }
 
 func (v *Visitor) VisitStatNumericFor(ctx *parser.StatNumericForContext) interface{} {
-	fmt.Println("for")
+	// fmt.Println("for")
 
 	zeroConst := constant.NewInt(types.I64, 0)
 	zeroPtr := constant.NewIntToPtr(
@@ -374,8 +404,14 @@ func (v *Visitor) VisitStatNumericFor(ctx *parser.StatNumericForContext) interfa
 	forCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
 	v.currentEntry().NewBr(forCheckBlock)
 
-	forBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
 	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+	bodyEndBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	v.endBlocks = append(v.endBlocks, bodyEndBlock)
+
+	forBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+
+	v.endBlocks = v.endBlocks[:len(v.endBlocks)-1]
 
 	v.entries = append(v.entries, forCheckBlock)
 	forCheckExpr := v.currentEntry().NewCall(v.funcs["check"], v.currentEntry().NewCall(v.funcs["lt"], expressions[2], genZero))
@@ -395,12 +431,12 @@ func (v *Visitor) VisitStatNumericFor(ctx *parser.StatNumericForContext) interfa
 
 	forCheckBlock.NewCondBr(forCheckExpr, forCheckBlockLt, forCheckBlockGt)
 
-	v.entries = append(v.entries, forBodyBlock)
-	forMoveExpr := v.currentEntry().NewCall(v.funcs["add"], expressions[0], expressions[2])
-	v.currentEntry().NewCall(v.funcs["copy"], forMoveExpr, expressions[0])
+	v.entries = append(v.entries, bodyEndBlock)
+	forMoveExpr := bodyEndBlock.NewCall(v.funcs["add"], expressions[0], expressions[2])
+	bodyEndBlock.NewCall(v.funcs["copy"], forMoveExpr, expressions[0])
 	v.entries = v.entries[:len(v.entries)-1]
 
-	forBodyBlock.NewBr(forCheckBlock)
+	bodyEndBlock.NewBr(forCheckBlock)
 
 	v.entries[len(v.entries)-1] = endBlock
 
@@ -449,7 +485,7 @@ func (v *Visitor) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 
 		if len(variable.AllVarSuffix()) > 0 {
 			// [1] [""] .ss
-			fmt.Println("old", variable.NAME())
+			// fmt.Println("old", variable.NAME())
 			if !slices.Contains(v.declaredVarList, name) {
 				v.ErrorList = append(v.ErrorList, fmt.Errorf("var %s used but not declared, line: %d, column: %d", name, variable.GetStart().GetLine(), variable.GetStart().GetColumn()))
 				continue
@@ -487,7 +523,7 @@ func (v *Visitor) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 			case *parser.ExpOperatorOrContext:
 				index = v.VisitExpOperatorOr(keyCtx)
 			case *antlr.TerminalNodeImpl:
-				index = v.VisitTerminal(keyCtx)
+				index = v.VisitTerminalNode(keyCtx)
 			default:
 				v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid key type, line: %d, column: %d", variable.GetStart().GetLine(), variable.GetStart().GetColumn()))
 				continue
@@ -507,6 +543,27 @@ func (v *Visitor) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 	}
 
 	return variables
+}
+
+func (v *Visitor) VisitTerminalNode(ctx *antlr.TerminalNodeImpl) interface{} {
+	tm := ctx.GetText() + "\x00"
+	strType := types.NewArray(uint64(len(tm)), types.I8)
+
+	globalStr := v.IR.NewGlobalDef(fmt.Sprintf(".str%d", v.globalsCounter), constant.NewCharArray([]byte(tm)))
+
+	zero := constant.NewInt(types.I32, 0)
+	strPtr := constant.NewGetElementPtr(
+		strType,
+		globalStr,
+		zero,
+		zero,
+	)
+
+	v.globalsCounter++
+
+	genStr := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 2), strPtr)
+
+	return genStr
 }
 
 func (v *Visitor) VisitNamelist(ctx *parser.NamelistContext) interface{} {
@@ -562,7 +619,57 @@ func (v *Visitor) VisitExpVararg(ctx *parser.ExpVarargContext) interface{} {
 }
 
 func (v *Visitor) VisitExpTableConstructor(ctx *parser.ExpTableConstructorContext) interface{} {
-	return v.VisitChildren(ctx)
+	table := v.currentEntry().NewCall(v.funcs["lua_table_new"])
+
+	count := 0
+	for _, f := range ctx.Tableconstructor().Fieldlist().AllField() {
+		fieldExp := make([]value.Value, 0, len(f.AllExp()))
+		for _, e := range f.AllExp() {
+			fieldExp = append(fieldExp, v.VisitExp(e).(value.Value))
+		}
+
+		switch len(fieldExp) {
+		case 2:
+			v.currentEntry().NewCall(v.funcs["lua_table_set"], table, fieldExp[0], fieldExp[1])
+		case 1:
+			tm := f.NAME()
+			if tm == nil {
+				numConst := constant.NewInt(types.I64, int64(count))
+				numPtr := constant.NewIntToPtr(
+					numConst,
+					types.I8Ptr,
+				)
+				genInt := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 0), numPtr)
+
+				v.currentEntry().NewCall(v.funcs["lua_table_set"], table, genInt, fieldExp[0])
+				count++
+			} else {
+				s := f.NAME().GetText() + "\x00"
+				strType := types.NewArray(uint64(len(s)), types.I8)
+
+				globalStr := v.IR.NewGlobalDef(fmt.Sprintf(".str%d", v.globalsCounter), constant.NewCharArray([]byte(s)))
+
+				zero := constant.NewInt(types.I32, 0)
+				strPtr := constant.NewGetElementPtr(
+					strType,
+					globalStr,
+					zero,
+					zero,
+				)
+
+				v.globalsCounter++
+
+				genStr := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 2), strPtr)
+
+				v.currentEntry().NewCall(v.funcs["lua_table_set"], table, genStr, fieldExp[0])
+			}
+		default:
+			v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid table constructor"))
+			return nil
+		}
+	}
+
+	return table
 }
 
 func (v *Visitor) VisitExpPrefixExp(ctx *parser.ExpPrefixExpContext) interface{} {
@@ -597,6 +704,7 @@ func (v *Visitor) VisitExpOperatorUnary(ctx *parser.ExpOperatorUnaryContext) int
 	case "#":
 		return v.currentEntry().NewCall(v.funcs["string_len"], exp)
 	default:
+		v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid unary operation"))
 		return nil
 	}
 }
@@ -638,6 +746,9 @@ func (v *Visitor) VisitExpOperatorAddSub(ctx *parser.ExpOperatorAddSubContext) i
 		return v.currentEntry().NewCall(v.funcs["add"], values[0], values[1])
 	case "-":
 		return v.currentEntry().NewCall(v.funcs["sub"], values[0], values[1])
+	default:
+		v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid add sub operation"))
+		return nil
 	}
 
 	return nil
@@ -816,7 +927,36 @@ func (v *Visitor) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 	}
 
 	if ctx.Var_() != nil {
-		return v.variables[len(v.variables)-1][ctx.Var_().NAME().GetText()]
+		if len(ctx.Var_().AllVarSuffix()) == 0 {
+			return v.variables[len(v.variables)-1][ctx.Var_().NAME().GetText()]
+		}
+
+		variable := v.variables[len(v.variables)-1][ctx.Var_().NAME().GetText()]
+		suffix := ctx.Var_().AllVarSuffix()[0].GetChildren()[1]
+		var key value.Value
+		switch suffixWithType := suffix.(type) {
+		case parser.IExpContext:
+			key = v.VisitExp(suffixWithType).(value.Value)
+		case *antlr.TerminalNodeImpl:
+			s := suffixWithType.GetText() + "\x00"
+			strType := types.NewArray(uint64(len(s)), types.I8)
+
+			globalStr := v.IR.NewGlobalDef(fmt.Sprintf(".str%d", v.globalsCounter), constant.NewCharArray([]byte(s)))
+
+			zero := constant.NewInt(types.I32, 0)
+			strPtr := constant.NewGetElementPtr(
+				strType,
+				globalStr,
+				zero,
+				zero,
+			)
+
+			v.globalsCounter++
+
+			key = v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 2), strPtr)
+		}
+
+		return v.currentEntry().NewCall(v.funcs["lua_table_get"], variable, key)
 	}
 
 	// fmt.Println("!PARASHA!!")
