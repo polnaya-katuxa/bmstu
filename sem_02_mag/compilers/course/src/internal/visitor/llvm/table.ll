@@ -291,3 +291,141 @@ finish:
   
   ret void
 }
+
+; =============================================
+; Получение количества элементов в таблице
+; =============================================
+define %Generic* @lua_table_len(%Generic* %table) {
+entry:
+  %tbl = call %LuaTable* @extract_table(%Generic* %table)
+  %is_valid = icmp ne %LuaTable* %tbl, null
+  br i1 %is_valid, label %valid, label %error
+
+valid:
+  %size_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 0
+  %size = load i32, i32* %size_ptr, align 4
+  %size_i64 = sext i32 %size to i64
+  %size_i8 = inttoptr i64 %size_i64 to i8*
+  %size_gen = call %Generic* @create(i32 0, i8* %size_i8)
+  ret %Generic* %size_gen
+
+error:
+  %nil = call %Generic* @create_nil()
+  ret %Generic* %nil
+}
+
+; =============================================
+; Получение i-го ключа в таблице
+; =============================================
+define %Generic* @lua_table_get_key_at(%Generic* %table, %Generic* %ind) {
+entry:
+  %v_data_ptr_int = getelementptr inbounds %Generic, %Generic* %ind, i32 0, i32 1
+  %v_data_int = load i8*, i8** %v_data_ptr_int
+  %v_ptr_int = bitcast i8* %v_data_int to i64*
+  %v_val_int = load i64, i64* %v_ptr_int
+  %index = trunc i64 %v_val_int to i32
+
+  %tbl = call %LuaTable* @extract_table(%Generic* %table)
+  %is_valid = icmp ne %LuaTable* %tbl, null
+  br i1 %is_valid, label %proceed, label %error
+
+proceed:
+  %entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+  %entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
+  %capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+  %capacity = load i32, i32* %capacity_ptr, align 4
+  
+  br label %search_loop
+
+search_loop:
+  %i = phi i32 [0, %proceed], [%next_i, %next]
+  %count = phi i32 [0, %proceed], [%new_count, %next]
+  
+  %current = getelementptr inbounds %TableEntry, %TableEntry* %entries, i32 %i
+  %occupied_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 2
+  %occupied = load i1, i1* %occupied_ptr, align 1
+  
+  %found = icmp eq i32 %count, %index
+  br i1 %occupied, label %check_index, label %next
+
+check_index:
+  br i1 %found, label %extract_key, label %increment_count
+
+increment_count:
+  %new_count = add i32 %count, 1
+  br label %next
+
+extract_key:
+  %key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 0
+  %key = load %Generic*, %Generic** %key_ptr, align 8
+  %key_copy = call %Generic* @create_nil()
+  call void @copy(%Generic* %key, %Generic* %key_copy)
+  ret %Generic* %key_copy
+
+next:
+  %next_i = add i32 %i, 1
+  %in_bounds = icmp ult i32 %next_i, %capacity
+  br i1 %in_bounds, label %search_loop, label %error
+
+error:
+  %nil = call %Generic* @create_nil()
+  ret %Generic* %nil
+}
+
+; =============================================
+; Получение i-го значения в таблице
+; =============================================
+define %Generic* @lua_table_get_value_at(%Generic* %table, %Generic* %ind) {
+entry:
+  %v_data_ptr_int = getelementptr inbounds %Generic, %Generic* %ind, i32 0, i32 1
+  %v_data_int = load i8*, i8** %v_data_ptr_int
+  %v_ptr_int = bitcast i8* %v_data_int to i64*
+  %v_val_int = load i64, i64* %v_ptr_int
+  %index = trunc i64 %v_val_int to i32
+
+  %tbl = call %LuaTable* @extract_table(%Generic* %table)
+  %is_valid = icmp ne %LuaTable* %tbl, null
+  br i1 %is_valid, label %proceed, label %error
+
+proceed:
+  %entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+  %entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
+  %capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+  %capacity = load i32, i32* %capacity_ptr, align 4
+  
+  br label %search_loop
+
+search_loop:
+  %i = phi i32 [0, %proceed], [%next_i, %next]
+  %count = phi i32 [0, %proceed], [%new_count, %next]
+  
+  %current = getelementptr inbounds %TableEntry, %TableEntry* %entries, i32 %i
+  %occupied_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 2
+  %occupied = load i1, i1* %occupied_ptr, align 1
+  
+  %found = icmp eq i32 %count, %index
+  br i1 %occupied, label %check_index, label %next
+
+check_index:
+  br i1 %found, label %extract_value, label %increment_count
+
+increment_count:
+  %new_count = add i32 %count, 1
+  br label %next
+
+extract_value:
+  %value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 1
+  %value = load %Generic*, %Generic** %value_ptr, align 8
+  %value_copy = call %Generic* @create_nil()
+  call void @copy(%Generic* %value, %Generic* %value_copy)
+  ret %Generic* %value_copy
+
+next:
+  %next_i = add i32 %i, 1
+  %in_bounds = icmp ult i32 %next_i, %capacity
+  br i1 %in_bounds, label %search_loop, label %error
+
+error:
+  %nil = call %Generic* @create_nil()
+  ret %Generic* %nil
+}

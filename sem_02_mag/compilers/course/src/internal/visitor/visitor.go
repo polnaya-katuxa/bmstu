@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/llir/llvm/asm"
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
@@ -444,7 +445,110 @@ func (v *Visitor) VisitStatNumericFor(ctx *parser.StatNumericForContext) interfa
 }
 
 func (v *Visitor) VisitStatGenericFor(ctx *parser.StatGenericForContext) interface{} {
-	return v.VisitChildren(ctx)
+	curIndexConst := constant.NewInt(types.I64, 0)
+	curIndexPtr := constant.NewIntToPtr(
+		curIndexConst,
+		types.I8Ptr,
+	)
+	gencurIndex := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 0), curIndexPtr)
+
+	oneConst := constant.NewInt(types.I64, 1)
+	onePtr := constant.NewIntToPtr(
+		oneConst,
+		types.I8Ptr,
+	)
+	genOne := v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 0), onePtr)
+
+	iVariables := v.VisitNamelist(ctx.Namelist().(*parser.NamelistContext))
+	variables := iVariables.([]variableLeft)
+	iTable := v.VisitExplist(ctx.Explist().(*parser.ExplistContext))
+	tables := iTable.([]expression)
+	if len(tables) == 0 {
+		v.ErrorList = append(v.ErrorList, fmt.Errorf("empty explist"))
+		return nil
+	}
+	table := tables[0]
+
+	var endBlock *ir.Block
+	switch len(variables) {
+	case 2:
+		v.declaredVarList = append(v.declaredVarList, variables[0].name)
+		v.declaredVarList = append(v.declaredVarList, variables[1].name)
+		forKeyExpr := v.currentEntry().NewCall(v.funcs["lua_table_get_key_at"], table.value, gencurIndex)
+		forValExpr := v.currentEntry().NewCall(v.funcs["lua_table_get_value_at"], table.value, gencurIndex)
+		v.variables[len(v.variables)-1][variables[0].name] = forKeyExpr
+		v.variables[len(v.variables)-1][variables[1].name] = forValExpr
+
+		forCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
+		v.currentEntry().NewBr(forCheckBlock)
+
+		endBlock = v.functions[len(v.functions)-1].NewBlock("")
+		bodyEndBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+		v.endBlocks = append(v.endBlocks, bodyEndBlock)
+
+		forBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+
+		v.endBlocks = v.endBlocks[:len(v.endBlocks)-1]
+
+		v.entries = append(v.entries, forCheckBlock)
+		forCheckExpr := v.currentEntry().NewCall(v.funcs["check"], v.currentEntry().NewCall(v.funcs["ge"], gencurIndex, v.currentEntry().NewCall(v.funcs["lua_table_len"], table.value)))
+		v.entries = v.entries[:len(v.entries)-1]
+		forCheckBlock.NewCondBr(forCheckExpr, endBlock, forBodyBlock)
+
+		v.entries = append(v.entries, bodyEndBlock)
+		newIndexExpr := bodyEndBlock.NewCall(v.funcs["add"], gencurIndex, genOne)
+		bodyEndBlock.NewCall(v.funcs["copy"], newIndexExpr, gencurIndex)
+		forKeyExpr = bodyEndBlock.NewCall(v.funcs["lua_table_get_key_at"], table.value, gencurIndex)
+		forValExpr = bodyEndBlock.NewCall(v.funcs["lua_table_get_value_at"], table.value, gencurIndex)
+		bodyEndBlock.NewCall(v.funcs["copy"], forKeyExpr, v.variables[len(v.variables)-1][variables[0].name])
+		bodyEndBlock.NewCall(v.funcs["copy"], forValExpr, v.variables[len(v.variables)-1][variables[1].name])
+		v.entries = v.entries[:len(v.entries)-1]
+
+		bodyEndBlock.NewBr(forCheckBlock)
+
+		v.entries[len(v.entries)-1] = endBlock
+	case 1:
+		v.declaredVarList = append(v.declaredVarList, variables[0].name)
+		forKeyExpr := v.currentEntry().NewCall(v.funcs["lua_table_get_key_at"], table.value, gencurIndex)
+		v.variables[len(v.variables)-1][variables[0].name] = forKeyExpr
+
+		forCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
+		v.currentEntry().NewBr(forCheckBlock)
+
+		endBlock = v.functions[len(v.functions)-1].NewBlock("")
+		bodyEndBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+		v.endBlocks = append(v.endBlocks, bodyEndBlock)
+
+		forBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+
+		v.endBlocks = v.endBlocks[:len(v.endBlocks)-1]
+
+		v.entries = append(v.entries, forCheckBlock)
+		forCheckExpr := v.currentEntry().NewCall(v.funcs["check"], v.currentEntry().NewCall(v.funcs["ge"], gencurIndex, v.currentEntry().NewCall(v.funcs["lua_table_len"], table.value)))
+		v.entries = v.entries[:len(v.entries)-1]
+		forCheckBlock.NewCondBr(forCheckExpr, endBlock, forBodyBlock)
+
+		v.entries = append(v.entries, bodyEndBlock)
+		newIndexExpr := bodyEndBlock.NewCall(v.funcs["add"], gencurIndex, genOne)
+		bodyEndBlock.NewCall(v.funcs["copy"], newIndexExpr, gencurIndex)
+		forKeyExpr = bodyEndBlock.NewCall(v.funcs["lua_table_get_key_at"], table.value, gencurIndex)
+		bodyEndBlock.NewCall(v.funcs["copy"], forKeyExpr, v.variables[len(v.variables)-1][variables[0].name])
+		v.entries = v.entries[:len(v.entries)-1]
+
+		bodyEndBlock.NewBr(forCheckBlock)
+
+		v.entries[len(v.entries)-1] = endBlock
+	default:
+		v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid variables len"))
+		return nil
+	}
+
+	fmt.Println("END")
+	spew.Dump(endBlock)
+
+	return endBlock
 }
 
 func (v *Visitor) VisitStatFunction(ctx *parser.StatFunctionContext) interface{} {
@@ -750,8 +854,6 @@ func (v *Visitor) VisitExpOperatorAddSub(ctx *parser.ExpOperatorAddSubContext) i
 		v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid add sub operation"))
 		return nil
 	}
-
-	return nil
 }
 
 func (v *Visitor) VisitExpOperatorStrcat(ctx *parser.ExpOperatorStrcatContext) interface{} {
@@ -954,6 +1056,9 @@ func (v *Visitor) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 			v.globalsCounter++
 
 			key = v.currentEntry().NewCall(v.funcs["create"], constant.NewInt(types.I32, 2), strPtr)
+		default:
+			v.ErrorList = append(v.ErrorList, fmt.Errorf("invalid var suffix"))
+			return nil
 		}
 
 		return v.currentEntry().NewCall(v.funcs["lua_table_get"], variable, key)

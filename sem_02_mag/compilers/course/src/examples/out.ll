@@ -27,12 +27,6 @@
 @.str7 = global [6 x i8] c"sdate\00"
 @.str8 = global [11 x i8] c"08.08.1973\00"
 @.str9 = global [6 x i8] c"bdate\00"
-@.str10 = global [4 x i8] c"fio\00"
-@.str11 = global [18 x i8] c"\D0\98\D0\B2\D0\B0\D0\BD \D0\A5\D1\83\D0\B5\D0\B2\00"
-@.str12 = global [5 x i8] c"post\00"
-@.str13 = global [17 x i8] c"\D0\B3\D0\BB\D0\B8\D0\BD\D0\BE\D0\BC\D0\B5\D1\81\00"
-@.str14 = global [4 x i8] c"fio\00"
-@.str15 = global [5 x i8] c"post\00"
 
 declare i8* @malloc(i64 %0)
 
@@ -1607,6 +1601,127 @@ finish:
 	ret void
 }
 
+define %Generic* @lua_table_len(%Generic* %table) {
+entry:
+	%tbl = call %LuaTable* @extract_table(%Generic* %table)
+	%is_valid = icmp ne %LuaTable* %tbl, null
+	br i1 %is_valid, label %valid, label %error
+
+valid:
+	%size_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 0
+	%size = load i32, i32* %size_ptr, align 4
+	%size_i64 = sext i32 %size to i64
+	%size_i8 = inttoptr i64 %size_i64 to i8*
+	%size_gen = call %Generic* @create(i32 0, i8* %size_i8)
+	ret %Generic* %size_gen
+
+error:
+	%nil = call %Generic* @create_nil()
+	ret %Generic* %nil
+}
+
+define %Generic* @lua_table_get_key_at(%Generic* %table, %Generic* %ind) {
+entry:
+	%v_data_ptr_int = getelementptr inbounds %Generic, %Generic* %ind, i32 0, i32 1
+	%v_data_int = load i8*, i8** %v_data_ptr_int
+	%v_ptr_int = bitcast i8* %v_data_int to i64*
+	%v_val_int = load i64, i64* %v_ptr_int
+	%index = trunc i64 %v_val_int to i32
+	%tbl = call %LuaTable* @extract_table(%Generic* %table)
+	%is_valid = icmp ne %LuaTable* %tbl, null
+	br i1 %is_valid, label %proceed, label %error
+
+proceed:
+	%entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+	%entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
+	%capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+	%capacity = load i32, i32* %capacity_ptr, align 4
+	br label %search_loop
+
+search_loop:
+	%i = phi i32 [ 0, %proceed ], [ %next_i, %next ]
+	%count = phi i32 [ 0, %proceed ], [ %new_count, %next ]
+	%current = getelementptr inbounds %TableEntry, %TableEntry* %entries, i32 %i
+	%occupied_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 2
+	%occupied = load i1, i1* %occupied_ptr, align 1
+	%found = icmp eq i32 %count, %index
+	br i1 %occupied, label %check_index, label %next
+
+check_index:
+	br i1 %found, label %extract_key, label %increment_count
+
+increment_count:
+	%new_count = add i32 %count, 1
+	br label %next
+
+extract_key:
+	%key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 0
+	%key = load %Generic*, %Generic** %key_ptr, align 8
+	%key_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %key, %Generic* %key_copy)
+	ret %Generic* %key_copy
+
+next:
+	%next_i = add i32 %i, 1
+	%in_bounds = icmp ult i32 %next_i, %capacity
+	br i1 %in_bounds, label %search_loop, label %error
+
+error:
+	%nil = call %Generic* @create_nil()
+	ret %Generic* %nil
+}
+
+define %Generic* @lua_table_get_value_at(%Generic* %table, %Generic* %ind) {
+entry:
+	%v_data_ptr_int = getelementptr inbounds %Generic, %Generic* %ind, i32 0, i32 1
+	%v_data_int = load i8*, i8** %v_data_ptr_int
+	%v_ptr_int = bitcast i8* %v_data_int to i64*
+	%v_val_int = load i64, i64* %v_ptr_int
+	%index = trunc i64 %v_val_int to i32
+	%tbl = call %LuaTable* @extract_table(%Generic* %table)
+	%is_valid = icmp ne %LuaTable* %tbl, null
+	br i1 %is_valid, label %proceed, label %error
+
+proceed:
+	%entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
+	%entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
+	%capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
+	%capacity = load i32, i32* %capacity_ptr, align 4
+	br label %search_loop
+
+search_loop:
+	%i = phi i32 [ 0, %proceed ], [ %next_i, %next ]
+	%count = phi i32 [ 0, %proceed ], [ %new_count, %next ]
+	%current = getelementptr inbounds %TableEntry, %TableEntry* %entries, i32 %i
+	%occupied_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 2
+	%occupied = load i1, i1* %occupied_ptr, align 1
+	%found = icmp eq i32 %count, %index
+	br i1 %occupied, label %check_index, label %next
+
+check_index:
+	br i1 %found, label %extract_value, label %increment_count
+
+increment_count:
+	%new_count = add i32 %count, 1
+	br label %next
+
+extract_value:
+	%value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current, i32 0, i32 1
+	%value = load %Generic*, %Generic** %value_ptr, align 8
+	%value_copy = call %Generic* @create_nil()
+	call void @copy(%Generic* %value, %Generic* %value_copy)
+	ret %Generic* %value_copy
+
+next:
+	%next_i = add i32 %i, 1
+	%in_bounds = icmp ult i32 %next_i, %capacity
+	br i1 %in_bounds, label %search_loop, label %error
+
+error:
+	%nil = call %Generic* @create_nil()
+	ret %Generic* %nil
+}
+
 define void @print(%Generic* %obj) {
 entry:
 	%type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
@@ -1690,17 +1805,28 @@ define i64 @main() {
 	%14 = call %Generic* @create(i32 2, i8* getelementptr ([11 x i8], [11 x i8]* @.str8, i32 0, i32 0))
 	%15 = call %Generic* @create(i32 2, i8* getelementptr ([6 x i8], [6 x i8]* @.str9, i32 0, i32 0))
 	call void @lua_table_set(%Generic* %1, %Generic* %15, %Generic* %14)
-	%16 = call %Generic* @create(i32 2, i8* getelementptr ([4 x i8], [4 x i8]* @.str10, i32 0, i32 0))
-	%17 = call %Generic* @create(i32 2, i8* getelementptr ([18 x i8], [18 x i8]* @.str11, i32 0, i32 0))
-	call void @lua_table_set(%Generic* %1, %Generic* %16, %Generic* %17)
-	%18 = call %Generic* @create(i32 2, i8* getelementptr ([5 x i8], [5 x i8]* @.str12, i32 0, i32 0))
-	%19 = call %Generic* @create(i32 2, i8* getelementptr ([17 x i8], [17 x i8]* @.str13, i32 0, i32 0))
-	call void @lua_table_set(%Generic* %1, %Generic* %18, %Generic* %19)
-	%20 = call %Generic* @create(i32 2, i8* getelementptr ([4 x i8], [4 x i8]* @.str14, i32 0, i32 0))
-	%21 = call %Generic* @lua_table_get(%Generic* %1, %Generic* %20)
-	call void @print(%Generic* %21)
-	%22 = call %Generic* @create(i32 2, i8* getelementptr ([5 x i8], [5 x i8]* @.str15, i32 0, i32 0))
-	%23 = call %Generic* @lua_table_get(%Generic* %1, %Generic* %22)
-	call void @print(%Generic* %23)
+	%16 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%17 = call %Generic* @create(i32 0, i8* inttoptr (i64 1 to i8*))
+	%18 = call %Generic* @lua_table_get_key_at(%Generic* %1, %Generic* %16)
+	br label %19
+
+19:
+	%20 = call %Generic* @lua_table_len(%Generic* %1)
+	%21 = call %Generic* @ge(%Generic* %16, %Generic* %20)
+	%22 = call i1 @check(%Generic* %21)
+	br i1 %22, label %23, label %27
+
+23:
 	ret i64 0
+
+24:
+	%25 = call %Generic* @add(%Generic* %16, %Generic* %17)
+	call void @copy(%Generic* %25, %Generic* %16)
+	%26 = call %Generic* @lua_table_get_key_at(%Generic* %1, %Generic* %16)
+	call void @copy(%Generic* %26, %Generic* %18)
+	br label %19
+
+27:
+	call void @print(%Generic* %18)
+	br label %24
 }
