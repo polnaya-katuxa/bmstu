@@ -1,0 +1,25 @@
+func (v *Visitor) VisitStatWhile(ctx *parser.StatWhileContext) interface{} {
+	whileCheckBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	v.currentEntry().NewBr(whileCheckBlock)
+
+	v.entries = append(v.entries, whileCheckBlock)
+	whileExpression := v.currentEntry().NewCall(v.funcs["check"], v.VisitExp(ctx.Exp()).(value.Value))
+	v.entries = v.entries[:len(v.entries)-1]
+
+	bodyEndBlock := v.functions[len(v.functions)-1].NewBlock("")
+	v.endBlocks = append(v.endBlocks, bodyEndBlock)
+
+	whileBodyBlock := v.VisitBlock(ctx.Block().(*parser.BlockContext)).(*ir.Block)
+	bodyEndBlock.NewBr(whileCheckBlock)
+
+	v.endBlocks = v.endBlocks[:len(v.endBlocks)-1]
+
+	endBlock := v.functions[len(v.functions)-1].NewBlock("")
+
+	whileCheckBlock.NewCondBr(whileExpression, whileBodyBlock, endBlock)
+
+	v.entries[len(v.entries)-1] = endBlock
+
+	return endBlock
+}

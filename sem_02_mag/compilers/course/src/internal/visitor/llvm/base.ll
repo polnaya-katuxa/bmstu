@@ -12,6 +12,9 @@ declare void @exit(i64)
 @.str.error = private unnamed_addr constant [46 x i8] c"\0A\0A################\20PANIC\20################\0A%s\0A\00", align 1
 
 @.error.error = constant [6 x i8] c"Error\00"
+@.error.unknown.type = constant [13 x i8] c"Unknown type\00"
+@.error.diff.type = constant [24 x i8] c"Different operand types\00"
+@.error.invalid.type = constant [17 x i8] c"Invalid operands\00"
 
 define void @panic(i8* %msg) {
 entry:

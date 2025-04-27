@@ -1,0 +1,67 @@
+\documentclass{bmstu}
+
+\bibliography{biblio}
+
+\renewcommand\labelitemi{---}
+\renewcommand\labelitemii{---}
+
+\usepackage{tabularray}
+
+\usepackage{enumitem}
+
+\usepackage{biblatex}
+\setenumerate[1]{label=\arabic*)}
+
+\newcommand{\specialcell}[2][c]{%
+	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+% \usepackage[T1,T2A]{fontenc}    % Поддержка кириллицы
+% \usepackage[utf8]{inputenc}     % Кодировка документа
+
+% \usepackage{listingsutf8}
+% \lstset{columns=fixed,basicstyle=\small,breaklines=true,inputencoding=utf8,keywordstyle=\bfseries\underbar,frame=single,tabsize=2,xleftmargin=20pt,xrightmargin=5pt}
+% \lstset{extendedchars=true}
+% \lstset{numbers=left,numberstyle=\small}
+
+\geometry{a4paper,left=3.1cm,right=1.1cm,
+    top=2cm,bottom=2cm,bindingoffset=0cm}
+
+\usepackage{pdfpages}
+
+\setlength{\parindent}{1.25cm}
+
+\usepackage{ragged2e}
+\justifying
+
+\begin{document}
+
+\makecourseworktitle{Информатика и системы управления}{Программное обеспечение ЭВМ и информационные технологии}{Разработка компилятора языка Lua}{Карпова~Е.~О./ИУ7-22М}{Ступников~А.~А.}{}{}{}
+
+%Аналит: формализовать варианты использования и предоставляемые сервисом возможности и на их основе провести сравнительный анализ предложенного решения относительно существующих; формализовать и описать информацию, подлежащую хранению в БД и составить ER-диаграмму сущностей проектируемой БД в нотации Чена;
+%Конструкт: спроектировать сущности БД и накладываемые ограничения целостности; описать проектируемую ролевую модель на уровне БД и определить права доступа к внутренним структурам;
+%Технол: обосновать выбор средств реализации БД и приложения; описать интерфейс доступа к БД;
+%Исслед: сравнительный анализ различных СУБД для хранения и обработки аналитических данных.
+
+% \includepdf[pages={1}]{title.pdf}
+
+% \include{00-essay}
+
+\maketableofcontents
+
+% \include{01-definitions}
+% \include{02-abbreviations}
+
+\include{03-introduction}
+\include{04-analysis}
+\include{05-design}
+\include{06-implementation}
+% \include{07-research}
+\include{08-conclusion}
+
+\makebibliography
+
+\include{09-appendix}
+\include{10-appendix}
+% \include{11-appendix}
+
+\end{document}

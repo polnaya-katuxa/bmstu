@@ -1,12 +1,14 @@
 define %Generic* @neg(%Generic* %v) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
-  ; Проверка типов
   %type_eq_int = icmp eq i32 %a_type, 0
-  br i1 %type_eq_int, label %neg_int, label %neg_float
+  br i1 %type_eq_int, label %neg_int, label %check_float
+
+check_float:
+  %type_eq_float = icmp eq i32 %a_type, 1
+  br i1 %type_eq_float, label %neg_float, label %error
 
 neg_float:
   %v_fdata_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
@@ -15,7 +17,6 @@ neg_float:
   %v_fval = load double, double* %v_fptr
   %v_neg_fval = fneg double %v_fval
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.neg = alloca double
   store double %v_neg_fval, double* %temp.storage.neg
   %as.i8.neg = bitcast double* %temp.storage.neg to i8*
@@ -33,23 +34,24 @@ neg_int:
 
   %v_val = fptosi double %v_neg_fval_int to i64
   
-  ; Исправленное преобразование через временное хранение
   %v_val.i8.i_neg = inttoptr i64 %v_val to i8*
   %fresult.i_neg = call %Generic* @create(i32 0, i8* %v_val.i8.i_neg)
   ret %Generic* %fresult.i_neg
+
+error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
+  ret %Generic* null
 }
 
 
 define %Generic* @add(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %add_mixed
 
@@ -66,7 +68,6 @@ same_type:
   ]
 
 add_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -95,7 +96,6 @@ add_float:
   
   %fsum = fadd double %a_fval, %b_fval
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage = alloca double
   store double %fsum, double* %temp.storage
   %as.i8 = bitcast double* %temp.storage to i8*
@@ -117,7 +117,6 @@ add_mixed_float_first:
   
   %fmixedsum.mixed_float_first = fadd double %a_fval.mixed_float_first, %b_fval.mixed_float_first
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_first = alloca double
   store double %fmixedsum.mixed_float_first, double* %temp.storage.mixed_float_first
   %as.i8.mixed_float_first = bitcast double* %temp.storage.mixed_float_first to i8*
@@ -139,7 +138,6 @@ add_mixed_float_second:
   
   %fmixedsum.mixed_float_second = fadd double %a_fval.mixed_float_second, %b_fval.mixed_float_second
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_second = alloca double
   store double %fmixedsum.mixed_float_second, double* %temp.storage.mixed_float_second
   %as.i8.mixed_float_second = bitcast double* %temp.storage.mixed_float_second to i8*
@@ -148,19 +146,18 @@ add_mixed_float_second:
   ret %Generic* %fresult.mixed_float_second
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define %Generic* @sub(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %sub_mixed
 
@@ -177,7 +174,6 @@ sub_mixed:
   ]
 
 sub_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -206,7 +202,6 @@ sub_float:
   
   %fsum = fsub double %a_fval, %b_fval
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage = alloca double
   store double %fsum, double* %temp.storage
   %as.i8 = bitcast double* %temp.storage to i8*
@@ -228,7 +223,6 @@ sub_mixed_float_first:
   
   %fmixedsum.mixed_float_first = fsub double %a_fval.mixed_float_first, %b_fval.mixed_float_first
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_first = alloca double
   store double %fmixedsum.mixed_float_first, double* %temp.storage.mixed_float_first
   %as.i8.mixed_float_first = bitcast double* %temp.storage.mixed_float_first to i8*
@@ -250,7 +244,6 @@ sub_mixed_float_second:
   
   %fmixedsum.mixed_float_second = fsub double %a_fval.mixed_float_second, %b_fval.mixed_float_second
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_second = alloca double
   store double %fmixedsum.mixed_float_second, double* %temp.storage.mixed_float_second
   %as.i8.mixed_float_second = bitcast double* %temp.storage.mixed_float_second to i8*
@@ -259,19 +252,18 @@ sub_mixed_float_second:
   ret %Generic* %fresult.mixed_float_second
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define %Generic* @mul(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %mul_mixed
 
@@ -288,7 +280,6 @@ same_type:
   ]
 
 mul_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -317,7 +308,6 @@ mul_float:
   
   %fsum = fmul double %a_fval, %b_fval
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage = alloca double
   store double %fsum, double* %temp.storage
   %as.i8 = bitcast double* %temp.storage to i8*
@@ -339,7 +329,6 @@ mul_mixed_float_first:
   
   %fmixedsum.mixed_float_first = fmul double %a_fval.mixed_float_first, %b_fval.mixed_float_first
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_first = alloca double
   store double %fmixedsum.mixed_float_first, double* %temp.storage.mixed_float_first
   %as.i8.mixed_float_first = bitcast double* %temp.storage.mixed_float_first to i8*
@@ -361,7 +350,6 @@ mul_mixed_float_second:
   
   %fmixedsum.mixed_float_second = fmul double %a_fval.mixed_float_second, %b_fval.mixed_float_second
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_second = alloca double
   store double %fmixedsum.mixed_float_second, double* %temp.storage.mixed_float_second
   %as.i8.mixed_float_second = bitcast double* %temp.storage.mixed_float_second to i8*
@@ -370,19 +358,18 @@ mul_mixed_float_second:
   ret %Generic* %fresult.mixed_float_second
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define %Generic* @div(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %div_mixed
 
@@ -399,7 +386,6 @@ same_type:
   ]
 
 div_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -440,7 +426,6 @@ div_float:
 
 continue_float:
   %fsum = fdiv double %a_fval, %b_fval
-  ; Исправленное преобразование через временное хранение
   %temp.storage = alloca double
   store double %fsum, double* %temp.storage
   %as.i8 = bitcast double* %temp.storage to i8*
@@ -466,7 +451,6 @@ div_mixed_float_first:
 continue_mixed_float_first:
   %fmixedsum.mixed_float_first = fdiv double %a_fval.mixed_float_first, %b_fval.mixed_float_first
 
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_first = alloca double
   store double %fmixedsum.mixed_float_first, double* %temp.storage.mixed_float_first
   %as.i8.mixed_float_first = bitcast double* %temp.storage.mixed_float_first to i8*
@@ -492,7 +476,6 @@ div_mixed_float_second:
 continue_mixed_float_second:
   %fmixedsum.mixed_float_second = fdiv double %a_fval.mixed_float_second, %b_fval.mixed_float_second
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_second = alloca double
   store double %fmixedsum.mixed_float_second, double* %temp.storage.mixed_float_second
   %as.i8.mixed_float_second = bitcast double* %temp.storage.mixed_float_second to i8*
@@ -501,19 +484,18 @@ continue_mixed_float_second:
   ret %Generic* %fresult.mixed_float_second
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define %Generic* @mod(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %error
 
@@ -524,7 +506,6 @@ same_type:
   ]
 
 mod_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -545,19 +526,18 @@ continue_int:
   ret %Generic* %result
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define %Generic* @rem(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %error
 
@@ -568,7 +548,6 @@ same_type:
   ]
 
 rem_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -589,19 +568,18 @@ continue_int:
   ret %Generic* %result
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define %Generic* @power(%Generic* %a, %Generic* %b) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %a_type_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 0
   %a_type = load i32, i32* %a_type_ptr
   
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
   br i1 %type_eq, label %same_type, label %pow_mixed
 
@@ -618,7 +596,6 @@ same_type:
   ]
 
 pow_int:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП ДЛЯ %b
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
   %a_data = load i8*, i8** %a_data_ptr
   %a_ptr = bitcast i8* %a_data to i64*
@@ -651,7 +628,6 @@ pow_float:
   %b_fval = load double, double* %b_fptr
 
   %fsum = call double @pow(double %a_fval, double %b_fval)
-  ; Исправленное преобразование через временное хранение
   %temp.storage = alloca double
   store double %fsum, double* %temp.storage
   %as.i8 = bitcast double* %temp.storage to i8*
@@ -673,7 +649,6 @@ pow_mixed_float_first:
 
   %fmixedsum.mixed_float_first = call double @pow(double %a_fval.mixed_float_first, double %b_fval.mixed_float_first)
 
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_first = alloca double
   store double %fmixedsum.mixed_float_first, double* %temp.storage.mixed_float_first
   %as.i8.mixed_float_first = bitcast double* %temp.storage.mixed_float_first to i8*
@@ -695,7 +670,6 @@ pow_mixed_float_second:
 
   %fmixedsum.mixed_float_second = call double @pow(double %a_fval.mixed_float_second, double %b_fval.mixed_float_second)
   
-  ; Исправленное преобразование через временное хранение
   %temp.storage.mixed_float_second = alloca double
   store double %fmixedsum.mixed_float_second, double* %temp.storage.mixed_float_second
   %as.i8.mixed_float_second = bitcast double* %temp.storage.mixed_float_second to i8*
@@ -704,5 +678,6 @@ pow_mixed_float_second:
   ret %Generic* %fresult.mixed_float_second
   
 error:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret %Generic* null
 }

@@ -1,0 +1,34 @@
+function analyze_table(table) 
+    for k, v in table do
+        if k > v then
+            v = v + 1
+        elseif k < v then
+            table[k] = table[k] - 1
+        else 
+            table[k] = v + k
+        end
+    end
+
+    return table
+end
+
+t = {[-8]=-1, [1]=10, [6]=2, [5]=5, [7]=9}
+
+analyze_table(t)
+print(t)
+
+a,b,c,d,e = analyze_table(t)
+print(c)
+
+function fact(n)
+    if n <= 0 then 
+        return 1
+    else 
+        return n*fact(n-1)
+    end
+end
+
+for k, v in t do
+    t[k] = fact(v)
+end
+print(t)

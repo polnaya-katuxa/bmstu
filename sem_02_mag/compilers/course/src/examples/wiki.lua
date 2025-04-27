@@ -1,5 +1,16 @@
--- a = 2.0
 -- b = 2
+-- c = 0
+
+-- if b < 3 then 
+--     c = b + 3
+-- else
+--     c = b - 2
+-- end
+
+-- print(c)
+
+-- days1 = {"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"}
+-- print(days1)
 
 -- if b < 3 then 
 --     if b == 2 then
@@ -23,6 +34,9 @@
 --     print(v)
 -- end
 
+-- workDays = {["понедельник"]=true, ["вторник"]=true, ["среда"]=true, ["четверг"]=true, ["пятница"]=true}
+-- print(workDays)
+-- days1 = {"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"}
 -- for i = 0, 7 do
 --     if workDays[days1[i]] then
 --         if days1[i] == "среда" then
@@ -46,6 +60,8 @@
 --           sdate = "23.10.2013",              -- Дата приёма на работу
 --           bdate = "08.08.1973"}              -- Дата рождения 
 
+-- print(person)
+
 -- for i in person do
 --     print(i)
 -- end
@@ -65,6 +81,15 @@
 -- end
 
 -- print("end loop")
+
+-- a = 5.0
+-- b = 6
+-- print(a == b)
+-- print(a ~= b)
+-- print(a >= b)
+-- print(a <= b)
+-- print(a > b)
+-- print(a < b)
 
 -- print(5 and 6)
 
@@ -127,7 +152,6 @@
 -- Таблица общего вида:
 -- hello = "world"
 -- bebebe = "bababa"
-
 -- result = hello.." "..bebebe
 
 -- print(result)
@@ -144,11 +168,17 @@
 -- print(true or true)
 -- print(false or false)
 
--- print(5 * 8)
 -- a = 6.0
 -- b = 5.0
 -- print((a - 5) * (b - 1))
 -- print(5 * -8)
+
+-- print(5 * 8)
+-- a, b = 5, 6.0
+-- print((a - 5) * (b - 1))
+-- print(5 * -8)
+-- print(5 / 8)
+-- print(9 % 8)
 
 -- print(5 / 8)
 -- print((a - 5) / (b - 1))
@@ -236,6 +266,52 @@
 --   print (d.." - выходной день")
 -- end
 
+-- workDays = {["понедельник"]=true, ["вторник"]=true, ["среда"]=true, ["четверг"]=true, ["пятница"]=true}
 -- for k, v in workDays do
 --   print (k, v)
 -- end
+
+-- function dayInfo(day)
+--     workDays = {["понедельник"]=true, ["вторник"]=true, ["среда"]=true, ["четверг"]=true, ["пятница"]=true}
+--     if workDays[day] then
+--         return day.." - рабочий"
+--     else
+--         return day.." - выходной"
+--     end
+
+--     return ""
+-- end
+
+-- print(dayInfo("понедельник"))
+
+-- function fact(n)
+--     if n == 0 then 
+--         return 1
+--     else 
+--         return n*fact(n-1)
+--     end
+-- end
+
+-- print(fact(5))
+
+-- n = 1
+-- if n == 0 then 
+--     print(0)
+-- else 
+--     print(n + 1)
+-- end
+-- print(n)
+
+-- a = "hello \x43\u{2601}\43"
+-- print(a)
+
+-- c = 7
+
+function foo(n)
+    return n, n + 1
+end
+
+a, b = foo(5)
+print(a)
+print(b)
+-- print(c)

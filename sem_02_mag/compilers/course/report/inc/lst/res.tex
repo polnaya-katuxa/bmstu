@@ -1,0 +1,28 @@
+define i64 @main() {
+0:
+	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 2 to i8*))
+	%2 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%3 = call %Generic* @create(i32 0, i8* inttoptr (i64 3 to i8*))
+	%4 = call %Generic* @lt(%Generic* %1, %Generic* %3)
+	%5 = call i1 @check(%Generic* %4)
+	br i1 %5, label %8, label %6
+
+6:
+	br label %11
+
+7:
+	call void @print(%Generic* %2)
+	ret i64 0
+
+8:
+	%9 = call %Generic* @create(i32 0, i8* inttoptr (i64 3 to i8*))
+	%10 = call %Generic* @add(%Generic* %1, %Generic* %9)
+	call void @copy(%Generic* %10, %Generic* %2)
+	br label %7
+
+11:
+	%12 = call %Generic* @create(i32 0, i8* inttoptr (i64 2 to i8*))
+	%13 = call %Generic* @sub(%Generic* %1, %Generic* %12)
+	call void @copy(%Generic* %13, %Generic* %2)
+	br label %7
+}

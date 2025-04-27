@@ -1,28 +1,22 @@
 %Generic = type {
-  i32,     ; тип данных (0=int, 1=float, 2=string, 3=bool)
+  i32,     ; тип данных (0=int, 1=float, 2=string, 3=bool, 4=table, 5=nil)
   i8*      ; указатель на данные
 }
 
-; Определение типа nil (например, 5)
 @NIL_TYPE = constant i32 5
 
 @.error.null_value = private constant [11 x i8] c"Null value\00"
 
-; Создание nil-значения
 define %Generic* @create_nil() {
 entry:
-  ; Вычисление размера структуры Generic
   %size = ptrtoint %Generic* getelementptr inbounds (%Generic, %Generic* null, i32 1) to i64
   
-  ; Выделение памяти
   %nil = call i8* @malloc(i64 %size)
   %nil_generic = bitcast i8* %nil to %Generic*
   
-  ; Устанавливаем тип nil
   %type_ptr = getelementptr inbounds %Generic, %Generic* %nil_generic, i32 0, i32 0
   store i32 5, i32* %type_ptr, align 4
   
-  ; Устанавливаем данные nil
   %data_ptr = getelementptr inbounds %Generic, %Generic* %nil_generic, i32 0, i32 1
   store i8* null, i8** %data_ptr, align 8
   
@@ -64,7 +58,8 @@ init_float:
   ret %Generic* %g
 
 init_str:
-  %len = call i64 @strlen(i8* %value)
+  %len_str = call i64 @strlen(i8* %value)
+  %len = add i64 %len_str, 1
   %str_space = call i8* @malloc(i64 %len)
   call i8* @strcpy(i8* %str_space, i8* %value)
   %data_str = getelementptr inbounds %Generic, %Generic* %g, i32 0, i32 1
@@ -95,19 +90,13 @@ invalid:
 
 define void @copy(%Generic* %src, %Generic* %dst) {
 entry:
-  ; Копируем первое поле (i32 - тип данных)
-  ; Получаем указатель на src.type = gep %src, 0, 0
   %src.type.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 0
   %type = load i32, i32* %src.type.ptr
-  ; Записываем в dst.type
   %dst.type.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 0
   store i32 %type, i32* %dst.type.ptr
 
-  ; Копируем второе поле (i8* - данные)
-  ; Получаем указатель на src.data = gep %src, 0, 1
   %src.data.ptr = getelementptr %Generic, %Generic* %src, i32 0, i32 1
   %data = load i8*, i8** %src.data.ptr
-  ; Записываем в dst.data
   %dst.data.ptr = getelementptr %Generic, %Generic* %dst, i32 0, i32 1
   store i8* %data, i8** %dst.data.ptr
 
@@ -116,11 +105,9 @@ entry:
 
 define void @destroy(%Generic* %obj) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ТИПУ
   %type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
   %type = load i32, i32* %type_ptr
   
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ДАННЫМ
   %data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
   %data_ptr = load i8*, i8** %data_ptr_ptr
   

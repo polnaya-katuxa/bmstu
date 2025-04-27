@@ -1,0 +1,23 @@
+@.error.string_expected = private constant [23 x i8] c"Value should be string\00"
+
+define %Generic* @string_len(%Generic* %v) {
+entry:
+  %v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
+  %v_type = load i32, i32* %v_type_ptr
+  
+  %type_eq_string = icmp eq i32 %v_type, 2
+  br i1 %type_eq_string, label %len_string, label %error
+
+len_string:
+  %v_data_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
+  %v_data = load i8*, i8** %v_data_ptr
+  %v_len = call i64 @strlen(i8* %v_data)
+
+  %len_ptr = inttoptr i64 %v_len to i8*
+  %result = call %Generic* @create(i32 0, i8* %len_ptr)
+  ret %Generic* %result
+
+error:
+  call void @panic(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.error.string_expected, i32 0, i32 0))
+  ret %Generic* null
+}

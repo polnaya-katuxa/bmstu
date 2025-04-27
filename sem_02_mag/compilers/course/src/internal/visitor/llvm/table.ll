@@ -13,27 +13,19 @@
 @TABLE_TYPE = constant i32 4
 @INITIAL_CAPACITY = constant i32 16
 
-; =============================================
-; Исправленная функция создания таблицы
-; =============================================
 define %Generic* @lua_table_new() {
 entry:
   %capacity = load i32, i32* @INITIAL_CAPACITY
   
-  ; Вычисление размера одного элемента TableEntry
   %entry_size = ptrtoint %TableEntry* getelementptr inbounds (%TableEntry, %TableEntry* null, i32 1) to i64
   
-  ; Преобразуем capacity в i64
   %capacity_sext = sext i32 %capacity to i64
   
-  ; Вычисление общего размера массива
-  %entries_size = mul i64 %entry_size, %capacity_sext  ; Используем capacity_sext
+  %entries_size = mul i64 %entry_size, %capacity_sext
   
-  ; Выделение памяти для массива записей
   %entries = call i8* @malloc(i64 %entries_size)
   %entries_ptr = bitcast i8* %entries to %TableEntry*
   
-  ; Инициализация массива
   br label %init_loop
 
 init_loop:
@@ -46,7 +38,6 @@ init_loop:
   br i1 %done, label %create_table, label %init_loop
 
 create_table:
-  ; Выделение памяти для LuaTable
   %table_size = ptrtoint %LuaTable* getelementptr inbounds (%LuaTable, %LuaTable* null, i32 1) to i64
   %table = call i8* @malloc(i64 %table_size)
   %null_table = icmp eq i8* %table, null
@@ -55,7 +46,6 @@ create_table:
 continue:
   %table_ptr = bitcast i8* %table to %LuaTable*
   
-  ; Инициализация структуры LuaTable
   %size_ptr = getelementptr inbounds %LuaTable, %LuaTable* %table_ptr, i32 0, i32 0
   store i32 0, i32* %size_ptr, align 4
   %cap_ptr = getelementptr inbounds %LuaTable, %LuaTable* %table_ptr, i32 0, i32 1
@@ -63,7 +53,6 @@ continue:
   %entries_field = getelementptr inbounds %LuaTable, %LuaTable* %table_ptr, i32 0, i32 2
   store %TableEntry* %entries_ptr, %TableEntry** %entries_field, align 8
   
-  ; Упаковка в Generic с типом 4 (таблица)
   %generic = call %Generic* @create(i32 4, i8* %table)
   ret %Generic* %generic
 
@@ -72,9 +61,6 @@ error:
   ret %Generic* null
 }
 
-; =============================================
-; Исправленная функция сохранения значения
-; =============================================
 define void @lua_table_set(%Generic* %table, %Generic* %key, %Generic* %value) {
 entry:
   %tbl = call %LuaTable* @extract_table(%Generic* %table)
@@ -82,14 +68,12 @@ entry:
   br i1 %is_valid, label %proceed, label %error
 
 proceed:
-  ; Копирование ключа и значения
   %key_copy = call %Generic* @create_nil()
   call void @copy(%Generic* %key, %Generic* %key_copy)
   
   %value_copy = call %Generic* @create_nil()
   call void @copy(%Generic* %value, %Generic* %value_copy)
 
-  ; Получение данных таблицы
   %entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
   %entries = load %TableEntry*, %TableEntry** %entries_ptr, align 8
   %capacity_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 1
@@ -144,7 +128,7 @@ exit:
   ret void
 
 error:
-  call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.cannot_extract_table, i32 0, i32 0))
+  call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_table, i32 0, i32 0))
   ret void
 }
 
@@ -193,7 +177,7 @@ not_found:
   ret %Generic* %nil
 
 error:
-  call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.cannot_extract_table, i32 0, i32 0))
+  call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_table, i32 0, i32 0))
   ret %Generic* null
 }
 
@@ -215,10 +199,10 @@ error:
   ret %LuaTable* null
 }
 
-; Строка для ошибки
 @.error.table_expected = private constant [22 x i8] c"Value should be table\00"
 @.error.cannot_extract_table = private constant [21 x i8] c"Cannot extract table\00"
 @.error.null_table = private constant [11 x i8] c"Null table\00"
+@.error.out_of_table = private constant [13 x i8] c"Out of table\00"
 
 define void @resize_table(%LuaTable* %tbl) {
 entry:
@@ -226,26 +210,22 @@ entry:
   %old_capacity = load i32, i32* %old_capacity_ptr, align 4
   %new_capacity = mul i32 %old_capacity, 2
   
-  ; Выделение нового массива
   %entry_size = ptrtoint %TableEntry* getelementptr inbounds (%TableEntry, %TableEntry* null, i32 1) to i64
   %new_capacity_sext = sext i32 %new_capacity to i64
   %new_entries_size = mul i64 %entry_size, %new_capacity_sext
   %new_entries = call i8* @malloc(i64 %new_entries_size)
   %new_entries_ptr = bitcast i8* %new_entries to %TableEntry*
   
-  ; Копирование данных из старого массива
   %old_entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
   %old_entries = load %TableEntry*, %TableEntry** %old_entries_ptr, align 8
   
   br label %copy_loop
 
 copy_loop:
-  ; Исправлено: %next вместо несуществующего %copy_step
   %i = phi i32 [0, %entry], [%next_i, %next]
   %current_old = getelementptr inbounds %TableEntry, %TableEntry* %old_entries, i32 %i
   %current_new = getelementptr inbounds %TableEntry, %TableEntry* %new_entries_ptr, i32 %i
   
-  ; Копирование флага занятости
   %flag_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_old, i32 0, i32 2
   %flag = load i1, i1* %flag_ptr, align 1
   %new_flag_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_new, i32 0, i32 2
@@ -254,7 +234,6 @@ copy_loop:
   br i1 %flag, label %copy_data, label %next
 
 copy_data:
-  ; Копирование ключа
   %old_key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_old, i32 0, i32 0
   %old_key = load %Generic*, %Generic** %old_key_ptr, align 8
   %new_key_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_new, i32 0, i32 0
@@ -262,7 +241,6 @@ copy_data:
   call void @copy(%Generic* %old_key, %Generic* %key_copy)
   store %Generic* %key_copy, %Generic** %new_key_ptr, align 8
   
-  ; Копирование значения
   %old_value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_old, i32 0, i32 1
   %old_value = load %Generic*, %Generic** %old_value_ptr, align 8
   %new_value_ptr = getelementptr inbounds %TableEntry, %TableEntry* %current_new, i32 0, i32 1
@@ -278,11 +256,9 @@ next:
   br i1 %done, label %finish, label %copy_loop
 
 finish:
-  ; Освобождение старого массива
   %old_entries_i8 = bitcast %TableEntry* %old_entries to i8*
   call void @free(i8* %old_entries_i8)
   
-  ; Обновление структуры таблицы
   %new_entries_field = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
   store %TableEntry* %new_entries_ptr, %TableEntry** %new_entries_field, align 8
   
@@ -292,9 +268,6 @@ finish:
   ret void
 }
 
-; =============================================
-; Получение количества элементов в таблице
-; =============================================
 define %Generic* @lua_table_len(%Generic* %table) {
 entry:
   %tbl = call %LuaTable* @extract_table(%Generic* %table)
@@ -310,13 +283,11 @@ valid:
   ret %Generic* %size_gen
 
 error:
+  call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_table, i32 0, i32 0))
   %nil = call %Generic* @create_nil()
   ret %Generic* %nil
 }
 
-; =============================================
-; Получение i-го ключа в таблице
-; =============================================
 define %Generic* @lua_table_get_key_at(%Generic* %table, %Generic* %ind) {
 entry:
   %v_data_ptr_int = getelementptr inbounds %Generic, %Generic* %ind, i32 0, i32 1
@@ -327,7 +298,7 @@ entry:
 
   %tbl = call %LuaTable* @extract_table(%Generic* %table)
   %is_valid = icmp ne %LuaTable* %tbl, null
-  br i1 %is_valid, label %proceed, label %error
+  br i1 %is_valid, label %proceed, label %error_null
 
 proceed:
   %entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
@@ -367,14 +338,17 @@ next:
   %in_bounds = icmp ult i32 %next_i, %capacity
   br i1 %in_bounds, label %search_loop, label %error
 
+error_null:
+  call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_table, i32 0, i32 0))
+  %nil1 = call %Generic* @create_nil()
+  ret %Generic* %nil1
+
 error:
-  %nil = call %Generic* @create_nil()
-  ret %Generic* %nil
+  call void @panic(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.error.out_of_table, i32 0, i32 0))
+  %nil2 = call %Generic* @create_nil()
+  ret %Generic* %nil2
 }
 
-; =============================================
-; Получение i-го значения в таблице
-; =============================================
 define %Generic* @lua_table_get_value_at(%Generic* %table, %Generic* %ind) {
 entry:
   %v_data_ptr_int = getelementptr inbounds %Generic, %Generic* %ind, i32 0, i32 1
@@ -385,7 +359,7 @@ entry:
 
   %tbl = call %LuaTable* @extract_table(%Generic* %table)
   %is_valid = icmp ne %LuaTable* %tbl, null
-  br i1 %is_valid, label %proceed, label %error
+  br i1 %is_valid, label %proceed, label %error_null
 
 proceed:
   %entries_ptr = getelementptr inbounds %LuaTable, %LuaTable* %tbl, i32 0, i32 2
@@ -425,7 +399,13 @@ next:
   %in_bounds = icmp ult i32 %next_i, %capacity
   br i1 %in_bounds, label %search_loop, label %error
 
+error_null:
+  call void @panic(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.error.null_table, i32 0, i32 0))
+  %nil1 = call %Generic* @create_nil()
+  ret %Generic* %nil1
+
 error:
-  %nil = call %Generic* @create_nil()
-  ret %Generic* %nil
+  call void @panic(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.error.out_of_table, i32 0, i32 0))
+  %nil2 = call %Generic* @create_nil()
+  ret %Generic* %nil2
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -10,8 +11,18 @@ import (
 // TODO: cmp int & float
 // TODO: null checks
 
+var (
+	src = flag.String("i", "examples/wiki.lua", "source .lua file")
+)
+
 func main() {
-	err := compiler.Compile("examples/wiki.lua", "examples/out")
+	flag.Parse()
+
+	srcFilename := "examples/wiki.lua"
+	if src != nil {
+		srcFilename = *src
+	}
+	err := compiler.Compile(srcFilename, "examples/out")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

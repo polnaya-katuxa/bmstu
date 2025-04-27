@@ -4,8 +4,11 @@
 @.str.true = private unnamed_addr constant [6 x i8] c"true\0A\00", align 1
 @.str.false = private unnamed_addr constant [7 x i8] c"false\0A\00", align 1
 @.str.nil = private unnamed_addr constant [5 x i8] c"nil\0A\00", align 1
+@.str.brace.left = private unnamed_addr constant [3 x i8] c"{\0A\00", align 1
+@.str.brace.right = private unnamed_addr constant [3 x i8] c"}\0A\00", align 1
+@.str.tab = private unnamed_addr constant [5 x i8] c"    \00", align 1
+@.str.ln = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 
-; Функция печати
 define void @print(%Generic* %obj) {
 entry:
   %type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
@@ -19,6 +22,7 @@ entry:
     i32 1, label %print_float
     i32 2, label %print_string
     i32 3, label %print_bool
+    i32 4, label %print_table
     i32 5, label %print_nil
   ]
 
@@ -64,6 +68,54 @@ print_nil:
   call i32 (i8*, ...) @printf(i8* %nil_fmt)
   ret void
 
+print_table:
+  %brace_left_fmt = getelementptr inbounds [3 x i8], [3 x i8]* @.str.brace.left, i32 0, i32 0
+  call i32 (i8*, ...) @printf(i8* %brace_left_fmt)
+  %tbl = call %LuaTable* @extract_table(%Generic* %obj)
+  %valid = icmp ne %LuaTable* %tbl, null
+  br i1 %valid, label %proceed, label %unknown
+
+proceed:
+  %cur = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%inc = call %Generic* @create(i32 0, i8* inttoptr (i64 1 to i8*))
+	%nil1 = call %Generic* @create_nil()
+	%nil2 = call %Generic* @create_nil()
+	br label %check_tbl_len
+
+quit:
+  %brace_right_fmt = getelementptr inbounds [3 x i8], [3 x i8]* @.str.brace.right, i32 0, i32 0
+  call i32 (i8*, ...) @printf(i8* %brace_right_fmt)
+	ret void
+
+get_values: ;34
+	%cur_key = call %Generic* @lua_table_get_key_at(%Generic* %obj, %Generic* %cur)
+	%cur_val = call %Generic* @lua_table_get_value_at(%Generic* %obj, %Generic* %cur)
+	call void @copy(%Generic* %cur_key, %Generic* %nil1)
+	call void @copy(%Generic* %cur_val, %Generic* %nil2)
+	br label %body
+
+check_tbl_len:
+	%tbllen = call %Generic* @lua_table_len(%Generic* %obj)
+	%lencheck = call %Generic* @ge(%Generic* %cur, %Generic* %tbllen)
+	%lennotok = call i1 @check(%Generic* %lencheck)
+	br i1 %lennotok, label %quit, label %get_values
+
+inc_iter:
+	%iter = call %Generic* @add(%Generic* %cur, %Generic* %inc)
+	call void @copy(%Generic* %iter, %Generic* %cur)
+	br label %check_tbl_len
+
+body:
+  %tab_fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str.tab, i32 0, i32 0
+  call i32 (i8*, ...) @printf(i8* %tab_fmt)
+	call void @print(%Generic* %nil1)
+  call i32 (i8*, ...) @printf(i8* %tab_fmt)
+	call void @print(%Generic* %nil2)
+  %ln_fmt = getelementptr inbounds [2 x i8], [2 x i8]* @.str.ln, i32 0, i32 0
+  call i32 (i8*, ...) @printf(i8* %ln_fmt)
+	br label %inc_iter
+
 unknown:
+  call void @panic(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.error.unknown.type, i32 0, i32 0))
   ret void
 }

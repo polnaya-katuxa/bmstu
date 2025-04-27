@@ -1,10 +1,10 @@
+@.error.bool_expected = private constant [21 x i8] c"Value should be bool\00"
+
 define %Generic* @not(%Generic* %v) {
 entry:
-  ; ИСПРАВЛЕННЫЙ ДОСТУП К ПОЛЯМ СТРУКТУРЫ
   %v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
   %v_type = load i32, i32* %v_type_ptr
   
-  ; Проверка типов
   %type_eq_bool = icmp eq i32 %v_type, 3
   br i1 %type_eq_bool, label %not_bool, label %error
 
@@ -25,6 +25,7 @@ not_false:
   ret %Generic* %result.true
 
 error:
+  call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.bool_expected, i32 0, i32 0))
   ret %Generic* null
 }
 
@@ -36,13 +37,12 @@ entry:
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
-  br i1 %type_eq, label %same_type, label %error
+  br i1 %type_eq, label %same_type, label %error_diff
 
 same_type:
   %type_bool = icmp eq i32 %a_type, 3
-  br i1 %type_bool, label %and_bool, label %error
+  br i1 %type_bool, label %and_bool, label %error_bool
 
 and_bool:
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
@@ -58,8 +58,12 @@ and_bool:
   %result = call %Generic* @create(i32 3, i8* %and.i8)
   ret %Generic* %result
   
-error:
-  call void @panic(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.error.error, i32 0, i32 0))
+error_bool:
+  call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.bool_expected, i32 0, i32 0))
+  ret %Generic* null
+
+error_diff:
+  call void @panic(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @.error.diff.type, i32 0, i32 0))
   ret %Generic* null
 }
 
@@ -71,13 +75,12 @@ entry:
   %b_type_ptr = getelementptr inbounds %Generic, %Generic* %b, i32 0, i32 0
   %b_type = load i32, i32* %b_type_ptr
   
-  ; Проверка одинаковости типов
   %type_eq = icmp eq i32 %a_type, %b_type
-  br i1 %type_eq, label %same_type, label %error
+  br i1 %type_eq, label %same_type, label %error_diff
 
 same_type:
   %type_bool = icmp eq i32 %a_type, 3
-  br i1 %type_bool, label %or_bool, label %error
+  br i1 %type_bool, label %or_bool, label %error_bool
 
 or_bool:
   %a_data_ptr = getelementptr inbounds %Generic, %Generic* %a, i32 0, i32 1
@@ -93,14 +96,19 @@ or_bool:
   %result = call %Generic* @create(i32 3, i8* %or.i8)
   ret %Generic* %result
   
-error:
+error_bool:
+  call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.bool_expected, i32 0, i32 0))
+  ret %Generic* null
+
+error_diff:
+  call void @panic(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @.error.diff.type, i32 0, i32 0))
   ret %Generic* null
 }
 
 define i1 @check(%Generic* %obj) {
 entry:
   %is_null = icmp eq %Generic* %obj, null
-  br i1 %is_null, label %error, label %check_value
+  br i1 %is_null, label %error_inv, label %check_value
 
 check_value:
   %type_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 0
@@ -109,7 +117,7 @@ check_value:
   %data_ptr_ptr = getelementptr inbounds %Generic, %Generic* %obj, i32 0, i32 1
   %data_ptr = load i8*, i8** %data_ptr_ptr
   
-  switch i32 %type, label %error [
+  switch i32 %type, label %error_bool [
     i32 3, label %check_bool
   ]
 
@@ -126,6 +134,11 @@ ret_true:
 ret_false:
   ret i1 false
 
-error:
+error_bool:
+  call void @panic(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.error.bool_expected, i32 0, i32 0))
+  ret i1 false
+
+error_inv:
+  call void @panic(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.error.invalid.type, i32 0, i32 0))
   ret i1 false
 }

@@ -1,0 +1,52 @@
+a = {}     -- create a table and store its reference in `a'
+k = "x"
+a[k] = 10        -- new entry, with key="x" and value=10
+a[20] = "great"  -- new entry, with key=20 and value="great"
+print(a["x"])    --> 10
+k = 20
+print(a[k])      --> "great"
+a["x"] = a["x"] + 1     -- increments entry "x"
+print(a["x"])    --> 11
+
+a[20] = 30
+
+for i, v in a do
+    a[i] = a[i] + 1
+end
+
+print(a)
+
+for i in a do
+    print(i)
+end
+
+for i = 10, 0, -3 do
+    a[i] = i
+end
+
+print(a)
+
+days1 = {"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"}
+
+print(days1)
+
+person = {tabnum = 123342,                   -- Табельный номер
+          fio = "Иванов Степан Васильевич",  -- Ф.И.О.
+          post = "слесарь-инструментальщик", -- Должность
+          salary = 25800.45,                 -- Оклад
+          sdate = "23.10.2013",              -- Дата приёма на работу
+          bdate = "08.08.1973"}              -- Дата рождения 
+
+person.fio = "Иванов Иван Иванович"
+postfix="-гений-миллиардер"
+person.post = person.post..postfix
+
+for i, v in person do
+    print(i)
+    print(v)
+end
+
+print(person.aaabbb)
+
+
+
