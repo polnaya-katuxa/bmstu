@@ -3,11 +3,11 @@
 function main()
   clc;
 
-  debug = true;
+  debug = false;
 
   a = 1;
   b = 2;
-  eps = 1e-2;
+  eps = 1e-6;
 
   [x_min, f_min, n, xs, fs] = find_min(debug, a, b, eps);
   draw_plot(a, b, eps, x_min, f_min, xs, fs);

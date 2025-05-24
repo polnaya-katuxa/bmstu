@@ -1,0 +1,29 @@
+\chapter{Практический раздел}
+
+\includelistingpretty{main}{matlab}{Исходный код программы}
+
+\begin{table}[h!]
+    \caption{Результаты расчетов по индивидуальному варианту}
+    \label{tab:results}
+    \begin{tabular}{|l|l|r|r|r|}
+    \hline
+    \multicolumn{1}{|c|}{№} & \multicolumn{1}{c|}{\textbf{$\epsilon$}} & \multicolumn{1}{c|}{$N$} & \multicolumn{1}{c|}{\textbf{$x^{*}$}} & \multicolumn{1}{c|}{\textbf{$f(x^{*})$}} \\ \hline
+    1                                & $10^{-2}$                                             & 14                              & 1.3209353010                              & -0.4609645359                               \\ \hline
+    2                                & $10^{-4}$                                             & 16                              & 1.3211535883                              & -0.4609645959                                \\ \hline
+    3                                & $10^{-6}$                                             & 18                              & 1.3211615186                              & -0.4609645959                                \\ \hline
+    \end{tabular}
+    \end{table}
+
+\begin{table}[h!]
+    \caption{Сводная таблица по лабораторным работам для $\epsilon = 10^{-6}$}
+    \label{tab:results}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    № п/п & \multicolumn{1}{c|}{Метод} & \multicolumn{1}{c|}{N} & \multicolumn{1}{c|}{$x^{*}$} & \multicolumn{1}{c|}{$f(x^{*})$} \\ \hline
+    1     & Поразрядного поиска        & 55                     & 1.3211612701                 & -0.4609645959                   \\ \hline
+    2     & Золотого сечения           & 31                     & 1.3211617177                 & -0.4609645959                   \\ \hline
+    3     & Парабол                    & 12                     & 1.3211614113                 & -0.4609645959                   \\ \hline
+    4     & Ньютона модифицированный   & 18                     & 1.3211615186                 & -0.4609645959                   \\ \hline
+    5     & Функция fminbnd            & 9                      & 1.3211613111                 & -0.4609645959                   \\ \hline
+    \end{tabular}
+    \end{table}

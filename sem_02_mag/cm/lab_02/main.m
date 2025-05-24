@@ -7,12 +7,13 @@ function main()
 
   a = 1;
   b = 2;
-  eps = 1e-2;
+  eps = 1e-6;
 
   [x_min, f_min, n, xs, fs, as, bs] = find_min(debug, a, b, eps);
   draw_plot(a, b, eps, x_min, f_min, xs, fs, as, bs);
-  fprintf('\n\033[36mТочка минимума (x*, f(x*)) = (%f, %f), количество вычислений функции: %d.\033[0m\n', x_min, f_min, n);
-end
+  fprintf('\n\033[36mТочка минимума (x*, f(x*)) = (%.10f, %.10f), количество вычислений функции: %d.\033[0m\n', x_min, f_min, n);
+  %x_min - 1.777
+  end
 
 function [x_min, f_min, n, xs, fs, as, bs] = find_min(debug, a, b, eps)
   tau = (sqrt(5) - 1) / 2;
@@ -108,30 +109,31 @@ function draw_plot(a, b, step, x_min, f_min, xs, fs, as, bs)
 
   scatter(xs(1), fs(1), 8, 'r', 'filled');
   line([as(1), bs(1)], [f(as(1)), f(bs(1))], 'DisplayName', sprintf('шаг %d', 1), 'Color', 'r');
-  pause(2);
+  pause(0);
 
   for i = 2:length(xs)
       scatter(xs(i-1), fs(i-1), 8, 'b', 'filled');
       scatter(xs(i), fs(i), 8, 'r', 'filled');
-      pause(1);
+      pause(0);
 
       if i < length(as)
         line([bs(i-1), as(i)], [f(bs(i-1)), f(as(i))], 'DisplayName', sprintf('шаг %d', i), 'Color', 'r');
-        pause(1);
+        pause(0);
         line([as(i), bs(i)], [f(as(i)), f(bs(i))], 'DisplayName', sprintf('шаг %d', i), 'Color', 'r');
       endif
 
-      pause(2);
+      pause(0);
   end
 
   scatter(x_min, f_min, 10, 'g', 'filled');
-  text(x_min, f_min, sprintf('\n\n\n\n(%.3f, %.3f)', x_min, f_min), 'FontSize', 12);
+  text(x_min, f_min, sprintf('\n\n\n\n(%.10f, %.10f)', x_min, f_min), 'FontSize', 12);
 
   hold off;
 end
 
 function y = f(x)
   y = atan(x .^ 3 - 5 * x + 1) + ((x .^ 2) / (3 * x - 2)) .^ sqrt(3);
+  %y = (x-1.777).^6;
 end
 
 

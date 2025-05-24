@@ -1,0 +1,20 @@
+\documentclass{bmstu}
+
+\bibliography{biblio}
+
+\newcommand{\img}[3] {
+ \begin{figure}[H]
+  \center{\includegraphics[width=#1]{inc/img/#2}}
+  \caption{#3}
+  \label{img:#2}
+ \end{figure}
+}
+
+\begin{document}
+
+\makereporttitle{Информатика и системы управления}{Программное обеспечение ЭВМ и информационные технологии}{лабораторной работе №4}{Методы вычислений}{Метод Ньютона}{7}{Е.~О.~Карпова/ИУ7-22М}{П.~А.~Власов}
+
+\include{01-theoretical.tex}
+\include{02-practical.tex}
+
+\end{document}
