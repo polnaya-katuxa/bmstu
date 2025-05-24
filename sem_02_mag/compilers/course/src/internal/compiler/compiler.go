@@ -2,11 +2,13 @@ package compiler
 
 import (
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/course/src/internal/ast"
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/course/src/internal/parser"
 	"github.com/polnaya-katuxa/bmstu/sem_02_mag/compilers/course/src/internal/visitor"
 )
@@ -25,6 +27,17 @@ func Compile(in, out string) error {
 	tree := p.Chunk()
 	if lexerErrors.IsError {
 		return fmt.Errorf("there are syntax errors")
+	}
+
+	t := ast.BuildAst(tree.(antlr.ParseTree))
+	treeJson, err := json.MarshalIndent(t, "", "  ")
+	if err != nil {
+		return fmt.Errorf("there are errors during json marshal")
+	}
+
+	err = os.WriteFile("examples/tree.json", treeJson, 0666)
+	if err != nil {
+		return fmt.Errorf("write tree to file: %w", err)
 	}
 
 	v := visitor.New()

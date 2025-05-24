@@ -1,23 +1,13 @@
-@.error.string_expected = private constant [23 x i8] c"Value should be string\00"
-
-define %Generic* @string_len(%Generic* %v) {
+define %Generic* @create_nil() {
 entry:
-  %v_type_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 0
-  %v_type = load i32, i32* %v_type_ptr
+  %size = ptrtoint %Generic* getelementptr inbounds (%Generic, %Generic* null, i32 1) to i64
+  %nil = call i8* @malloc(i64 %size)
+  %nil_generic = bitcast i8* %nil to %Generic*
   
-  %type_eq_string = icmp eq i32 %v_type, 2
-  br i1 %type_eq_string, label %len_string, label %error
-
-len_string:
-  %v_data_ptr = getelementptr inbounds %Generic, %Generic* %v, i32 0, i32 1
-  %v_data = load i8*, i8** %v_data_ptr
-  %v_len = call i64 @strlen(i8* %v_data)
-
-  %len_ptr = inttoptr i64 %v_len to i8*
-  %result = call %Generic* @create(i32 0, i8* %len_ptr)
-  ret %Generic* %result
-
-error:
-  call void @panic(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.error.string_expected, i32 0, i32 0))
-  ret %Generic* null
+  %type_ptr = getelementptr inbounds %Generic, %Generic* %nil_generic, i32 0, i32 0
+  store i32 5, i32* %type_ptr, align 4
+  %data_ptr = getelementptr inbounds %Generic, %Generic* %nil_generic, i32 0, i32 1
+  store i8* null, i8** %data_ptr, align 8
+  
+  ret %Generic* %nil_generic
 }

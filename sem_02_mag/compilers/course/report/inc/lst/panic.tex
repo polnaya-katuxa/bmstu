@@ -1,0 +1,7 @@
+define void @panic(i8* %msg) {
+entry:
+  %fmt = getelementptr inbounds [46 x i8], [46 x i8]* @.str.error, i32 0, i32 0
+  call i32 (i8*, ...) @printf(i8* %fmt, i8* %msg)
+  call void @exit(i64 1)
+  ret void
+}

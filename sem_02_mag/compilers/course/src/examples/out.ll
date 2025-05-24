@@ -2176,25 +2176,47 @@ unknown:
 
 define i64 @main() {
 0:
-	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 5 to i8*))
-	%2 = call %Generic* @foo(%Generic* %1)
-	%3 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
-	%4 = call %Generic* @lua_table_get_value_at(%Generic* %2, %Generic* %3)
-	%5 = call %Generic* @create(i32 0, i8* inttoptr (i64 1 to i8*))
-	%6 = call %Generic* @lua_table_get_value_at(%Generic* %2, %Generic* %5)
-	call void @print(%Generic* %4)
-	call void @print(%Generic* %6)
+	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 7 to i8*))
+	%2 = call %Generic* @fibonacci(%Generic* %1)
+	call void @print(%Generic* %2)
 	ret i64 0
 }
 
-define %Generic* @foo(%Generic* %n) {
+define %Generic* @fibonacci(%Generic* %n) {
 0:
-	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 1 to i8*))
-	%2 = call %Generic* @add(%Generic* %n, %Generic* %1)
-	%3 = call %Generic* @lua_table_new()
+	%1 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
+	%2 = call %Generic* @create(i32 0, i8* inttoptr (i64 1 to i8*))
+	%3 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
 	%4 = call %Generic* @create(i32 0, i8* inttoptr (i64 0 to i8*))
-	call void @lua_table_set(%Generic* %3, %Generic* %4, %Generic* %n)
 	%5 = call %Generic* @create(i32 0, i8* inttoptr (i64 1 to i8*))
-	call void @lua_table_set(%Generic* %3, %Generic* %5, %Generic* %2)
-	ret %Generic* %3
+	br label %6
+
+6:
+	%7 = call %Generic* @lt(%Generic* %5, %Generic* %3)
+	%8 = call i1 @check(%Generic* %7)
+	br i1 %8, label %17, label %14
+
+9:
+	ret %Generic* %1
+
+10:
+	%11 = call %Generic* @add(%Generic* %4, %Generic* %5)
+	call void @copy(%Generic* %11, %Generic* %4)
+	br label %6
+
+12:
+	%13 = call %Generic* @add(%Generic* %1, %Generic* %2)
+	call void @copy(%Generic* %2, %Generic* %1)
+	call void @copy(%Generic* %13, %Generic* %2)
+	br label %10
+
+14:
+	%15 = call %Generic* @lt(%Generic* %4, %Generic* %n)
+	%16 = call i1 @check(%Generic* %15)
+	br i1 %16, label %12, label %9
+
+17:
+	%18 = call %Generic* @gt(%Generic* %4, %Generic* %n)
+	%19 = call i1 @check(%Generic* %18)
+	br i1 %19, label %12, label %9
 }

@@ -1,0 +1,631 @@
+{
+  "Name": "*parser.ChunkContext",
+  "Value": "functionfibonacci(n)a=0b=1fori=0,n,1doa,b=b,a+bendreturnaendprint(fibonacci(7))\u003cEOF\u003e",
+  "Children": [
+    {
+      "Name": "*parser.BlockContext",
+      "Value": "functionfibonacci(n)a=0b=1fori=0,n,1doa,b=b,a+bendreturnaendprint(fibonacci(7))",
+      "Children": [
+        {
+          "Name": "*parser.StatFunctionContext",
+          "Value": "functionfibonacci(n)a=0b=1fori=0,n,1doa,b=b,a+bendreturnaend",
+          "Children": [
+            {
+              "Name": "*antlr.TerminalNodeImpl",
+              "Value": "function",
+              "Children": []
+            },
+            {
+              "Name": "*parser.FuncnameContext",
+              "Value": "fibonacci",
+              "Children": [
+                {
+                  "Name": "*antlr.TerminalNodeImpl",
+                  "Value": "fibonacci",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Name": "*parser.FuncbodyContext",
+              "Value": "(n)a=0b=1fori=0,n,1doa,b=b,a+bendreturnaend",
+              "Children": [
+                {
+                  "Name": "*antlr.TerminalNodeImpl",
+                  "Value": "(",
+                  "Children": []
+                },
+                {
+                  "Name": "*parser.ParlistContext",
+                  "Value": "n",
+                  "Children": [
+                    {
+                      "Name": "*parser.NamelistContext",
+                      "Value": "n",
+                      "Children": [
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "n",
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Name": "*antlr.TerminalNodeImpl",
+                  "Value": ")",
+                  "Children": []
+                },
+                {
+                  "Name": "*parser.BlockContext",
+                  "Value": "a=0b=1fori=0,n,1doa,b=b,a+bendreturna",
+                  "Children": [
+                    {
+                      "Name": "*parser.StatAssignmentContext",
+                      "Value": "a=0",
+                      "Children": [
+                        {
+                          "Name": "*parser.VarlistContext",
+                          "Value": "a",
+                          "Children": [
+                            {
+                              "Name": "*parser.VarContext",
+                              "Value": "a",
+                              "Children": [
+                                {
+                                  "Name": "*antlr.TerminalNodeImpl",
+                                  "Value": "a",
+                                  "Children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "=",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExplistContext",
+                          "Value": "0",
+                          "Children": [
+                            {
+                              "Name": "*parser.ExpNumberContext",
+                              "Value": "0",
+                              "Children": [
+                                {
+                                  "Name": "*parser.NumberContext",
+                                  "Value": "0",
+                                  "Children": [
+                                    {
+                                      "Name": "*antlr.TerminalNodeImpl",
+                                      "Value": "0",
+                                      "Children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "Name": "*parser.StatAssignmentContext",
+                      "Value": "b=1",
+                      "Children": [
+                        {
+                          "Name": "*parser.VarlistContext",
+                          "Value": "b",
+                          "Children": [
+                            {
+                              "Name": "*parser.VarContext",
+                              "Value": "b",
+                              "Children": [
+                                {
+                                  "Name": "*antlr.TerminalNodeImpl",
+                                  "Value": "b",
+                                  "Children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "=",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExplistContext",
+                          "Value": "1",
+                          "Children": [
+                            {
+                              "Name": "*parser.ExpNumberContext",
+                              "Value": "1",
+                              "Children": [
+                                {
+                                  "Name": "*parser.NumberContext",
+                                  "Value": "1",
+                                  "Children": [
+                                    {
+                                      "Name": "*antlr.TerminalNodeImpl",
+                                      "Value": "1",
+                                      "Children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "Name": "*parser.StatNumericForContext",
+                      "Value": "fori=0,n,1doa,b=b,a+bend",
+                      "Children": [
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "for",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "i",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "=",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExpNumberContext",
+                          "Value": "0",
+                          "Children": [
+                            {
+                              "Name": "*parser.NumberContext",
+                              "Value": "0",
+                              "Children": [
+                                {
+                                  "Name": "*antlr.TerminalNodeImpl",
+                                  "Value": "0",
+                                  "Children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": ",",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExpPrefixExpContext",
+                          "Value": "n",
+                          "Children": [
+                            {
+                              "Name": "*parser.PrefixexpContext",
+                              "Value": "n",
+                              "Children": [
+                                {
+                                  "Name": "*parser.VarOrExpContext",
+                                  "Value": "n",
+                                  "Children": [
+                                    {
+                                      "Name": "*parser.VarContext",
+                                      "Value": "n",
+                                      "Children": [
+                                        {
+                                          "Name": "*antlr.TerminalNodeImpl",
+                                          "Value": "n",
+                                          "Children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": ",",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExpNumberContext",
+                          "Value": "1",
+                          "Children": [
+                            {
+                              "Name": "*parser.NumberContext",
+                              "Value": "1",
+                              "Children": [
+                                {
+                                  "Name": "*antlr.TerminalNodeImpl",
+                                  "Value": "1",
+                                  "Children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "do",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.BlockContext",
+                          "Value": "a,b=b,a+b",
+                          "Children": [
+                            {
+                              "Name": "*parser.StatAssignmentContext",
+                              "Value": "a,b=b,a+b",
+                              "Children": [
+                                {
+                                  "Name": "*parser.VarlistContext",
+                                  "Value": "a,b",
+                                  "Children": [
+                                    {
+                                      "Name": "*parser.VarContext",
+                                      "Value": "a",
+                                      "Children": [
+                                        {
+                                          "Name": "*antlr.TerminalNodeImpl",
+                                          "Value": "a",
+                                          "Children": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Name": "*antlr.TerminalNodeImpl",
+                                      "Value": ",",
+                                      "Children": []
+                                    },
+                                    {
+                                      "Name": "*parser.VarContext",
+                                      "Value": "b",
+                                      "Children": [
+                                        {
+                                          "Name": "*antlr.TerminalNodeImpl",
+                                          "Value": "b",
+                                          "Children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Name": "*antlr.TerminalNodeImpl",
+                                  "Value": "=",
+                                  "Children": []
+                                },
+                                {
+                                  "Name": "*parser.ExplistContext",
+                                  "Value": "b,a+b",
+                                  "Children": [
+                                    {
+                                      "Name": "*parser.ExpPrefixExpContext",
+                                      "Value": "b",
+                                      "Children": [
+                                        {
+                                          "Name": "*parser.PrefixexpContext",
+                                          "Value": "b",
+                                          "Children": [
+                                            {
+                                              "Name": "*parser.VarOrExpContext",
+                                              "Value": "b",
+                                              "Children": [
+                                                {
+                                                  "Name": "*parser.VarContext",
+                                                  "Value": "b",
+                                                  "Children": [
+                                                    {
+                                                      "Name": "*antlr.TerminalNodeImpl",
+                                                      "Value": "b",
+                                                      "Children": []
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Name": "*antlr.TerminalNodeImpl",
+                                      "Value": ",",
+                                      "Children": []
+                                    },
+                                    {
+                                      "Name": "*parser.ExpOperatorAddSubContext",
+                                      "Value": "a+b",
+                                      "Children": [
+                                        {
+                                          "Name": "*parser.ExpPrefixExpContext",
+                                          "Value": "a",
+                                          "Children": [
+                                            {
+                                              "Name": "*parser.PrefixexpContext",
+                                              "Value": "a",
+                                              "Children": [
+                                                {
+                                                  "Name": "*parser.VarOrExpContext",
+                                                  "Value": "a",
+                                                  "Children": [
+                                                    {
+                                                      "Name": "*parser.VarContext",
+                                                      "Value": "a",
+                                                      "Children": [
+                                                        {
+                                                          "Name": "*antlr.TerminalNodeImpl",
+                                                          "Value": "a",
+                                                          "Children": []
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "Name": "*parser.OperatorAddSubContext",
+                                          "Value": "+",
+                                          "Children": [
+                                            {
+                                              "Name": "*antlr.TerminalNodeImpl",
+                                              "Value": "+",
+                                              "Children": []
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "Name": "*parser.ExpPrefixExpContext",
+                                          "Value": "b",
+                                          "Children": [
+                                            {
+                                              "Name": "*parser.PrefixexpContext",
+                                              "Value": "b",
+                                              "Children": [
+                                                {
+                                                  "Name": "*parser.VarOrExpContext",
+                                                  "Value": "b",
+                                                  "Children": [
+                                                    {
+                                                      "Name": "*parser.VarContext",
+                                                      "Value": "b",
+                                                      "Children": [
+                                                        {
+                                                          "Name": "*antlr.TerminalNodeImpl",
+                                                          "Value": "b",
+                                                          "Children": []
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "end",
+                          "Children": []
+                        }
+                      ]
+                    },
+                    {
+                      "Name": "*parser.StatReturnContext",
+                      "Value": "returna",
+                      "Children": [
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "return",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExplistContext",
+                          "Value": "a",
+                          "Children": [
+                            {
+                              "Name": "*parser.ExpPrefixExpContext",
+                              "Value": "a",
+                              "Children": [
+                                {
+                                  "Name": "*parser.PrefixexpContext",
+                                  "Value": "a",
+                                  "Children": [
+                                    {
+                                      "Name": "*parser.VarOrExpContext",
+                                      "Value": "a",
+                                      "Children": [
+                                        {
+                                          "Name": "*parser.VarContext",
+                                          "Value": "a",
+                                          "Children": [
+                                            {
+                                              "Name": "*antlr.TerminalNodeImpl",
+                                              "Value": "a",
+                                              "Children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Name": "*antlr.TerminalNodeImpl",
+                  "Value": "end",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "*parser.StatFunctionCallContext",
+          "Value": "print(fibonacci(7))",
+          "Children": [
+            {
+              "Name": "*parser.FunctioncallContext",
+              "Value": "print(fibonacci(7))",
+              "Children": [
+                {
+                  "Name": "*parser.VarOrExpContext",
+                  "Value": "print",
+                  "Children": [
+                    {
+                      "Name": "*parser.VarContext",
+                      "Value": "print",
+                      "Children": [
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "print",
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Name": "*parser.NameAndArgsContext",
+                  "Value": "(fibonacci(7))",
+                  "Children": [
+                    {
+                      "Name": "*parser.ArgsContext",
+                      "Value": "(fibonacci(7))",
+                      "Children": [
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": "(",
+                          "Children": []
+                        },
+                        {
+                          "Name": "*parser.ExplistContext",
+                          "Value": "fibonacci(7)",
+                          "Children": [
+                            {
+                              "Name": "*parser.ExpPrefixExpContext",
+                              "Value": "fibonacci(7)",
+                              "Children": [
+                                {
+                                  "Name": "*parser.PrefixexpContext",
+                                  "Value": "fibonacci(7)",
+                                  "Children": [
+                                    {
+                                      "Name": "*parser.VarOrExpContext",
+                                      "Value": "fibonacci",
+                                      "Children": [
+                                        {
+                                          "Name": "*parser.VarContext",
+                                          "Value": "fibonacci",
+                                          "Children": [
+                                            {
+                                              "Name": "*antlr.TerminalNodeImpl",
+                                              "Value": "fibonacci",
+                                              "Children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Name": "*parser.NameAndArgsContext",
+                                      "Value": "(7)",
+                                      "Children": [
+                                        {
+                                          "Name": "*parser.ArgsContext",
+                                          "Value": "(7)",
+                                          "Children": [
+                                            {
+                                              "Name": "*antlr.TerminalNodeImpl",
+                                              "Value": "(",
+                                              "Children": []
+                                            },
+                                            {
+                                              "Name": "*parser.ExplistContext",
+                                              "Value": "7",
+                                              "Children": [
+                                                {
+                                                  "Name": "*parser.ExpNumberContext",
+                                                  "Value": "7",
+                                                  "Children": [
+                                                    {
+                                                      "Name": "*parser.NumberContext",
+                                                      "Value": "7",
+                                                      "Children": [
+                                                        {
+                                                          "Name": "*antlr.TerminalNodeImpl",
+                                                          "Value": "7",
+                                                          "Children": []
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "Name": "*antlr.TerminalNodeImpl",
+                                              "Value": ")",
+                                              "Children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "*antlr.TerminalNodeImpl",
+                          "Value": ")",
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "*antlr.TerminalNodeImpl",
+      "Value": "\u003cEOF\u003e",
+      "Children": []
+    }
+  ]
+}
